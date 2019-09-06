@@ -6,3 +6,5 @@
 
 (defn email [] true)
 
+(defmacro authfn [& body]
+    `())

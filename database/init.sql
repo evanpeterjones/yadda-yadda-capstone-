@@ -9,6 +9,7 @@ CREATE TABLE IF NOT EXISTS USERS (
        USR_Email VARCHAR (100) UNIQUE NOT NULL,
        USR_CreatedOn DATE NOT NULL,
        USR_LastLogin DATE,
+       USR_Validated BOOLEAN,
        PRIMARY KEY (USR_ID_PK)
 );
 
@@ -56,14 +57,19 @@ IF ( NOT IN (SELECT IAT_PK FROM IMAGE_ASSOC_TYPES)) THEN
    INSERT INTO IMAGE_ASSOC_TYPES(IAT_PK, IAT_Assoc) VALUES (1, 'profile');
 END IF;
 
+INSERT INTO Posts(PST_USR_ID_FK, PST_Content, PST_Time) VALUES (1, 'this is a test', now());
+
 CREATE TABLE IF NOT EXISTS POSTS (
-       PST_ID_PK SERIAL,
-       PST_USR_ID_FK INTEGER,
-       PST_Time DATE NOT NULL,
-       PST_EditTime DATE NULL,
-       PST_ShortUrl VARCHAR(50),
-       PRIMARY KEY (PST_ID_PK),
-       FOREIGN KEY (PST_USR_ID_FK) REFERENCES USERS(USR_ID_PK)
+  PST_ID_PK SERIAL,
+  PST_USR_ID_FK INTEGER,
+  PST_LOC_FK VARCHAR(10),
+  PST_Content VARCHAR(140),
+  PST_Time TIMESTAMPTZ NOT NULL,
+  PST_EditTime DATE NULL,
+  PST_ShortUrl VARCHAR(50),
+  PST_Anonymous BOOLEAN,
+  PRIMARY KEY (PST_ID_PK),
+  FOREIGN KEY (PST_USR_ID_FK) REFERENCES USERS(USR_ID_PK)
 );
 
 CREATE TABLE IF NOT EXISTS LOCATION (
@@ -72,13 +78,13 @@ CREATE TABLE IF NOT EXISTS LOCATION (
 );
 
 CREATE TABLE IF NOT EXISTS SESSIONS (
-       SES_ID VARCHAR(64), -- This is a generated random hash using the UserID and time?
-       SES_
+       SES_ID_PK SERIAL,
+       SES_ID VARCHAR(64) UNIQUE, -- This is a generated random hash using the UserID and time?
        SES_USR_ID_FK INT,
        SES_CreatedOn DATE,
        FOREIGN KEY (SES_USR_ID_FK) REFERENCES USERS(USR_ID_PK),
-       PRIMARY KEY (SES_ID, SES_USR_ID_FK)
+       PRIMARY KEY (SES_ID_PK, SES_USR_ID_FK)
 );
-     
+
 /* Always create my god-mode account on init ;) */
 CALL sp_CreateUser('evan', 'Avogadro6.02', 'evanpeterjones@gmail.com');

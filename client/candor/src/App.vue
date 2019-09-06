@@ -15,22 +15,22 @@ export default {
   components: { 
     NavigationBar, Splash
   },
-  created: function() {
-    var ck = document.cookies
-    //console.log(ck);
+  created() {
+    
   }
 }
 </script>
 
 <style>
 :root {
-  --primary: cyan;
+  --primary: pink; 
   --secondary: yellow;
   --tertiary: magenta;
 }
 
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;

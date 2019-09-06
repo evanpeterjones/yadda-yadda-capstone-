@@ -1,4 +1,4 @@
-CREATE OR REPLACE PROCEDURE sp_CreateUser(uname varchar, pass varchar, uemail varchar)
+CREATE OR REPLACE PROCEDURE sp_CreateUser (uname varchar, pass varchar, uemail varchar)
 LANGUAGE plpgsql
 AS $func$
 BEGIN

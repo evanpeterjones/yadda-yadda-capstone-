@@ -52,3 +52,9 @@
 
 (defn query []
   (jdbc/query db-spec ["SELECT * FROM USERS"]))
+
+(defn topPosts
+  ([] (topPosts 28607))
+  ([location] (jdbc/query db-spec [(str "SELECT * FROM POSTS
+                             WHERE PST_LOC_FK = '" location
+                                        "' ORDER BY PST_Time DESC")])))
