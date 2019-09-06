@@ -1,4 +1,5 @@
-TODO for Ducts/Candor/TikTak/Tak
+* yadda yadda 
+a yik-yak clone, made by a college student dearly missing the anonymous buzz. 
 
 * SERVER
 ** TODO Dynamically create routes for posts in a subcommunity
