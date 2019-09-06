@@ -1,0 +1,6 @@
+{
+  "name": "'Ducts' an API for the Candid network",
+  "description": "REST API",
+  "image": "heroku/clojure",
+  "addons": [ "heroku-postgresql" ]
+}
