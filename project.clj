@@ -9,7 +9,7 @@
                  [ring/ring-jetty-adapter "1.6.3"]
                  [ring/ring-json "0.4.0"]
                  [clojure.jdbc/clojure.jdbc-c3p0 "0.3.1"]
-                 [metosin/compojure-api "2.0.0-alpha30"]
+                 [metosin/compojure-api "1.1.12"]
 ;;                 [ring-cors "0.1.13"]
                  [environ "1.0.0"]
                  [org.clojure/java.jdbc "0.3.5"]

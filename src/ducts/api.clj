@@ -3,8 +3,9 @@
          ring.util.response)
    (:require [compojure.route :as route]
              [compojure.handler :as handler]
-;;             [compojure.api.sweet :refer :all]
-             [ring.util.http-response :refer :all]
+             [compojure.response :only [Sendable]]
+             [compojure.api.sweet :refer []]
+             [ring.util.http-response :only []]
              [schema.core :as s]
              [ducts.views :as views]
              [db-connection :as dbc]
@@ -30,13 +31,7 @@
    :pst-edittime s/Str})
 
 (def api-routes
-  (api
-   (GET "/hello" []
-        :query-params [name :- String]
-        (ok {:message (str "Hello, " name)}))))
-
-(def api-routes
-           (api
+           api
             {:swagger
              {:ui "/"
               :spec "/swagger.json"
@@ -67,4 +62,4 @@
                           ;(dbc/tick)
                           {:status 200
                            :headers {"Content-Type" "text/plain"}
-                           :body (str "Ticks: " (first (jdbc/query ["select count(*) from ducts"])))}))))
+                           :body (str "Ticks: " (first (jdbc/query ["select count(*) from ducts"])))})))
