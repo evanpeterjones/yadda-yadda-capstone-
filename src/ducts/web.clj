@@ -21,8 +21,8 @@
                                    :max-age (* 60 24 30)}}
         :body (views/web-app)})
   (route/resources "/")
-  (route/not-found (views/not-found))
-  (api/api-routes))
+  (route/not-found (views/not-found)))
+  ;(api/api-routes))
 
 ;(def app api/api-routes)
 ;(def application (wrap-json-response app))
