@@ -1,22 +1,21 @@
 <template>
-  <div id="app">
-    <NavigationBar />
-    <Splash />
+  <div> 
+    <navigation-bar></navigation-bar>
+    <div id="app">
+      <Login />
+    </div>
   </div>
 </template>
 
 <script>
 //import HelloWorld from './components/HelloWorld.vue'
 import NavigationBar from './components/NavigationBar.vue'
-import Splash from './components/Splash.vue'
+import Login from './components/Login.vue'
 
 export default {
   name: 'app',
   components: { 
-    NavigationBar, Splash
-  },
-  created() {
-    
+    NavigationBar, Login
   }
 }
 </script>

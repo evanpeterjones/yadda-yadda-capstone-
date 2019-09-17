@@ -1,15 +1,14 @@
-CREATE OR REPLACE PROCEDURE sp_CreateUser (uname varchar, pass varchar, uemail varchar)
-LANGUAGE plpgsql
-AS $func$
+CREATE OR REPLACE FUNCTION f_CreateUser(uname varchar, pass varchar, uemail varchar) RETURNS integer AS $$
 BEGIN
 
-    IF EXISTS (SELECT 1 FROM Users WHERE USR_Username = uname)
-    THEN
-        RAISE EXCEPTION 'User with that email already exists';
-    END IF;
+   IF 1 <> 0 THEN
+         RAISE EXCEPTION 'User already exists';
+   ELSE
+        INSERT INTO USERS(USR_Username, USR_Email, USR_CreatedOn)
+        VALUES(uname, uemail, NOW());
+   END IF;
 
-    INSERT INTO USERS(USR_Username, USR_Email, USR_CreatedOn)
-    VALUES(uname, uemail, NOW());
+   RETURN 1;
 
-END
-$func$;
+END;
+$$ LANGUAGE plpgsql;
