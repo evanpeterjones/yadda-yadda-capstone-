@@ -1,20 +1,30 @@
 <template>
+  <div>
     <div>
-        <div>
-            <span> 
-                <h1>{{appname}}</h1>
-            </span>
-        </div>
-        <div style="width:80%;margin:auto;max-width:500px;">
-            <br/>
-            <p>Please enter a location to view posts</p>
-            <b-form @submit="submit(zip)">
-                <b-form-input :state="valid" v-model="zip" placeholder="zip code"></b-form-input>
-                <br/>
-                <b-button pill variant="outline-primary" type="submit">Search</b-button>
-            </b-form>
-        </div>
+      <span> 
+        <h1>{{ appname }}</h1>
+      </span>
     </div>
+    <div style="width:80%;margin:auto;max-width:500px;">
+      <br>
+      <p>Please enter a location to view posts</p>
+      <b-form @submit="submit(zip)">
+        <b-form-input
+          v-model="zip"
+          :state="valid"
+          placeholder="zip code"
+        />
+        <br>
+        <b-button
+          pill
+          variant="outline-primary"
+          type="submit"
+        >
+          Search
+        </b-button>
+      </b-form>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -22,6 +32,13 @@
 
 export default {
     name: "Login",
+    data() {
+        return {
+            appname: 'yadda',
+            zip: null,
+            valid: null
+        }
+    },
     methods: {
         formSubmit: function (z) {
             var v = z.length == 5 && /(^\d{5}$)|(^\d{5}-\d{4}$)/.test(z);
@@ -36,13 +53,6 @@ export default {
             } else { 
                 this.$data.valid = null;
             }
-        }
-    },
-    data() {
-        return {
-            appname: 'yadda',
-            zip: null,
-            valid: null
         }
     }    
 }

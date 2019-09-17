@@ -1,8 +1,15 @@
 <template>
   <span>
-    <post-header :user=user :location=location :time=time></post-header>
-    <p> {{content}} </p>
-    <post-footer :edit=editTime :location=location></post-footer>
+    <post-header
+      :user="user"
+      :location="location"
+      :time="time"
+    />
+    <p> {{ content }} </p>
+    <post-footer
+      :edit="editTime"
+      :location="location"
+    />
   </span>
 </template>
 

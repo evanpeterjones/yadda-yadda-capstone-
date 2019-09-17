@@ -1,17 +1,17 @@
 <template>
-    <div class="container"> 
-        <div class="row">
-            <div class="col-xl">
-                {{  }}
-            </div>
-            <div class="col-xl">
-                {{  }}
-            </div>
-            <div class="col-xl">
-                {{ time }}
-            </div>
-        </div>
+  <div class="container"> 
+    <div class="row">
+      <div class="col-xl">
+        {{ }}
+      </div>
+      <div class="col-xl">
+        {{ }}
+      </div>
+      <div class="col-xl">
+        {{ time }}
+      </div>
     </div>
+  </div>
 </template>
 
 <script>

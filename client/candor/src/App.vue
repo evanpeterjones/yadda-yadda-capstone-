@@ -1,6 +1,6 @@
 <template>
   <div> 
-    <navigation-bar></navigation-bar>
+    <navigation-bar />
     <div id="app">
       <Login />
     </div>
@@ -13,9 +13,12 @@ import NavigationBar from './components/NavigationBar.vue'
 import Login from './components/Login.vue'
 
 export default {
-  name: 'app',
+  name: 'App',
   components: { 
     NavigationBar, Login
+  },
+  mount() {
+    console.log(this.$cookies);
   }
 }
 </script>
