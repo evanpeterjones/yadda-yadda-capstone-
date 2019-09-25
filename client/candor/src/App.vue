@@ -1,24 +1,22 @@
 <template>
-  <div> 
-    <navigation-bar />
-    <div id="app">
-      <Login />
-    </div>
+  <div id="app">
+    <NavigationBar />
+    <Splash />
   </div>
 </template>
 
 <script>
 //import HelloWorld from './components/HelloWorld.vue'
 import NavigationBar from './components/NavigationBar.vue'
-import Login from './components/Login.vue'
+import Splash from './components/Splash.vue'
 
 export default {
-  name: 'App',
+  name: 'app',
   components: { 
-    NavigationBar, Login
+    NavigationBar, Splash
   },
-  mount() {
-    console.log(this.$cookies);
+  created() {
+    
   }
 }
 </script>

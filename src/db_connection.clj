@@ -12,13 +12,7 @@
   (if (nil? (.getUserInfo db-uri))
     nil (clojure.string/split (.getUserInfo db-uri) #":")))
 
-(def db-spec 
-  { :classname "org.postgresql.Driver"
-    :dbtype "postgresql"
-    :dbname "evanpeterjones"
-    :url "postgresql://localhost:5432/evanpeterjones"
-    :user "evanpeterjones";(get user-and-password 0)
-    :password "Avogadro6.02" })           ;(get user-and-password 1)})
+(def db-spec "postgres://kvzhgjwupmfymm:e19fdd9e40d5783820d13ab6fe141ebb00c8a60b47efd63337180ea068b3a4ef@ec2-107-20-173-2.compute-1.amazonaws.com:5432/d2na7ais8vs462" "postgresql://localhost:5432/evanpeterjones")
 
 ;; TODO: fix connection to the postgresql db on heroku instead of my local db
 (comment (pool/make-datasource-spec
@@ -57,12 +51,11 @@
   {:connection db-spec})
 
 (defn query []
-  (jdbc/query db-spec ["select * from users"])
-;  (jdbc/query db-spec ["call f_CreateUser('asdfa', 'testttttt', 'asdf@asdf.com');"])
-  )
-
-(defn top-posts
-  ([] (top-posts 28607))
-  ([location] (jdbc/query db-spec [(str "SELECT * FROM POSTS
+  (jdbc/query db-spec ["SELECT * FROM USERS"]))
+ 
+(comment
+  (defn topPosts
+    ([] (topPosts 28607))
+    ([location] (jdbc/query db-spec [(str "SELECT * FROM POSTS
                                          WHERE PST_LOC_FK = '" location
-                                        "' ORDER BY PST_Time DESC")])))
+                                          "' ORDER BY PST_Time DESC")]))))
