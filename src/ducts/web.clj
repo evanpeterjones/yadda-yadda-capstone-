@@ -6,7 +6,6 @@
   (:require [compojure.route :as route]
             [compojure.handler :as handler]
             [ducts.views :as views]
-            ;[ducts.api :as api]
             [db-connection :as dbc]
             [clojure.java.jdbc :as jdbc])
   (:gen-class))
@@ -21,15 +20,6 @@
   (route/resources "/")
   (route/not-found (views/not-found)))
 
-  ;; import API Routing
-  ;;(api/api-routes))
-
-;(def application (wrap-json-response app))
-
 (defn -main [& [port]]
-  ;;(dbc/migrate)
   (let [port (Integer. (or (System/getenv "PORT") port 5000))]
     (jetty/run-jetty (handler/site #'app) {:port port :join? false})))
-
-;(.stop server)
-;(def server (-main))
