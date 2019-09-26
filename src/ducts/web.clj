@@ -15,11 +15,21 @@
        {:status 200
         :headers {"Content-Type" "text/html"}
         :cookies {"yadda-session" {:value "12345" ;; (dbc/
-                               :max-age (* 60 24 30)}}
+                                   :max-age (* 60 24 30)}}
         :body (views/web-app)})
+  (GET "/db" []
+       {:status 200
+        :headers {"Content-Type" "text/html"}
+        :body (dbc/query "select * from posts")})
+  (GET "/post:" []
+       {:status 200
+        :headers {"Content-Type" "text/html"}
+        :body (dbc/query "select * from posts")})
   (route/resources "/")
   (route/not-found (views/not-found)))
 
 (defn -main [& [port]]
   (let [port (Integer. (or (System/getenv "PORT") port 5000))]
     (jetty/run-jetty (handler/site #'app) {:port port :join? false})))
+
+(defn fake-request [routes ]

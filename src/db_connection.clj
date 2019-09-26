@@ -50,12 +50,11 @@
 (defqueries "createuser.sql"
   {:connection db-spec})
 
-(defn query []
-  (jdbc/query db-spec ["SELECT * FROM USERS"]))
+(defn query [q]
+  (jdbc/query db-spec [q]))
  
-(comment
-  (defn topPosts
-    ([] (topPosts 28607))
+(defn top-posts
+    ([] (top-posts 28607))
     ([location] (jdbc/query db-spec [(str "SELECT * FROM POSTS
                                          WHERE PST_LOC_FK = '" location
-                                          "' ORDER BY PST_Time DESC")]))))
+                                          "' ORDER BY PST_Time DESC")])))

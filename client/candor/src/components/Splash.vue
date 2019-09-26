@@ -7,12 +7,11 @@
         v-model="zip"
         :state="valid"
         placeholder="zip code"
-        @keyup="formSubmit(zip)"
       />
       <br>
       <b-button
         pill
-        variant="outline-primary"
+        @click="formSubmit(zip)"
       >
         Search
       </b-button>
@@ -23,6 +22,11 @@
 <style scoped>
 p { 
   color: white;
+}
+.btn-default {
+  background-color: gold;
+  color: gold;
+  border-radius: 25px;
 }
 </style>
 
@@ -41,6 +45,9 @@ export default {
     },
     methods: {
         formSubmit: function (z) {
+          axios.get("/db").then(response => { console.log(response); })
+            .error(error => { console.log(error); });
+
             var v = z.length == 5 && /(^\d{5}$)|(^\d{5}-\d{4}$)/.test(z);
 
             if (v) {

@@ -18,11 +18,8 @@
 export default {
     name: 'PostHeader',
     props: {
-        // TODO: need an icon for each postHeader
-        time: String,
-        user: String
+        time: { type: String, default: '' }
     }
-
 }
 </script>
 
