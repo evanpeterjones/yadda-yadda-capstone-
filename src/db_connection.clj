@@ -12,7 +12,8 @@
   (if (nil? (.getUserInfo db-uri))
     nil (clojure.string/split (.getUserInfo db-uri) #":")))
 
-(def db-spec "postgresql://localhost:5432/d2na7ais8vs462")
+(def db-spec (def db-spec (or (System/getenv "DATABASE_URL")
+                              "postgresql://localhost:5432/evanpeterjones")))
 
 ;; TODO: fix connection to the postgresql db on heroku instead of my local db
 (comment (pool/make-datasource-spec
