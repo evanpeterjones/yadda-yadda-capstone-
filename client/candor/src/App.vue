@@ -20,11 +20,11 @@ export default {
 
 <style>
 html {
-  background-color: black;
+  background-color: #222222;
 }
 
 :root {
-  --primary: pink; 
+  --primary: pink;
   --secondary: yellow;
   --tertiary: magenta;
 }
@@ -36,6 +36,6 @@ html {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
-  background-color: black;
+  background-color: #222222;
 }
 </style>

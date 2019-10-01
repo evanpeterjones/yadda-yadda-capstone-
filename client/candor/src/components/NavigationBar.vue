@@ -11,7 +11,7 @@ export default {
     name: "NavigationBar",
     data() {
         return {
-            appname : 'YAPP' //'yadda²'
+            appname : 'YAPP' //'yadda yadda' //²
         }
     }
 }
@@ -20,10 +20,6 @@ export default {
 <style>
 @import url('https://fonts.googleapis.com/css?family=Hepta+Slab:900&display=swap');
 
-:root { 
-    --primary: gold;
-}
-
 h1{
     font-family: 'Hepta Slab', serif;
     letter-spacing: 16px;
@@ -31,12 +27,12 @@ h1{
                 1px -1px 0 gold,
                 -1px 1px 0 gold,
                 1px 1px 0 gold;
-    color: black
+    color: #222222
 }
 h1 span {
     box-shadow:0 4px 10px 0 rgba(0,0,0,0.2),0 4px 20px 0 rgba(0,0,0,0.19);
     width: 100%;
     height: 20px;
-    background-color: var(--primary);
+    background-color: #222222;
 }
 </style>

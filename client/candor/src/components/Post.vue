@@ -20,12 +20,9 @@ export default {
     name: "Post",
     props: {
         postData : {
-            user : String,
-            content : String,
-            location : String,
-            time : String,
-            editTime : String
-        }
+	    type: Object,
+	    default: null
+	}
     },
     data () {
         return {}

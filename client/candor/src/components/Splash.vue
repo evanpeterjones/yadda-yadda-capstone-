@@ -7,7 +7,7 @@
         v-model="zip"
         :state="valid"
         placeholder="zip code"
-        onSubmit="return false;"
+        on-submit="return false;"
         @submit="formSubmit"
         @keyup="checkKey"
       />
@@ -19,7 +19,6 @@
         Search
       </b-button>
     </form>
-    <post v-for="post in posts" postData="${post}"></post>
   </div>
 </template>
 
@@ -27,9 +26,9 @@
 p { 
   color: white;
 }
+
 .btn-default {
   background-color: gold;
-  color: gold;
   border-radius: 25px;
 }
 </style>
@@ -39,53 +38,48 @@ import { Post } from "./Post";
 const axios = require('axios')
 
 export default {
-  name: "Splash",
-  components: [YButton],
-  data() {
-      return {
-          zip: null,
-          valid: null,
-          posts: {
-            type: Array,
-            default: []
-          }
-      }
-  },
-  methods: {
+    name: "Splash",
+    data() {
+	return {
+            zip: null,
+            valid: null,
+            posts: {
+		type: Array,
+		default: []
+            }
+	}
+    },
+    watch: {
+	'zip': function () {
+	    this.valid = (this.zip.length == 5 && /(^\d{5}$)|(^\d{5}-\d{4}$)/.test(this.zip)) ? true : null;
+	}
+    },
+    methods: {
     checkKey: function(event) {
       if (event.key == "Enter") {
-        //console.log('enter was pressed')
         formSubmit();
       } 
     },
 
     formSubmit: function() {
 
-      if (zip == null) {
-        zip = getLocation();
+      if (this.zip == null) {
+        this.zip = getLocation();
       }
 
       axios.get("/db").then(response => { console.log(response); this.posts = response.data; })
-        .error(error => { console.log(error); });
-
-        var v = z.length == 5 && /(^\d{5}$)|(^\d{5}-\d{4}$)/.test(zip);
-
-        if (v) {
-            this.$data.valid = v;
-            
-            // request session
-            
-            db.createSession();
-        } else { 
-            this.$data.valid = null;
-        }
+            .error(error => { console.log(error); });
+	// replace with post when server endpoint is setup
+	// this POST needs to return a cookie from the server that generates a key
+	// which will be used to identify the user
     },
     
     getLocation: function() {
       if (navigator.geolocation) {
-        this.detectedLocation = navigator.geolocation.getCurrentPosition(showPosition);
+	  return navigator.geolocation.getCurrentPosition(showPosition);
       } else {
-        console.log("Ensure that HTML5 Location Services are enabled for your browser")
+          console.log("Ensure that HTML5 Location Services are enabled for your browser")
+	  return null
       }
     },
   }
