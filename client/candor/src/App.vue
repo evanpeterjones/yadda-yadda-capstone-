@@ -11,6 +11,7 @@ import NavigationBar from './components/NavigationBar.vue'
 import Splash from './components/Splash.vue'
 
 export default {
+  title: 'YAPP',
   name: 'App',
   components: { 
     NavigationBar, Splash

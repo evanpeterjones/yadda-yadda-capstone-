@@ -45,4 +45,4 @@ VALUES (newHash, :user_id, NOW());
 
 -- top-posts
 -- return the top posts
-SELECT * FROM POSTS;
+SELECT TOP FROM POSTS;

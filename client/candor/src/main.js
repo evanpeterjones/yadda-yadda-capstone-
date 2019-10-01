@@ -1,10 +1,11 @@
 import Vue from 'vue'
 import App from './App.vue'
 import BootstrapVue from 'bootstrap-vue'
-import VueCookies from 'vue-cookies'
 import 'bootstrap/dist/css/bootstrap.min.css'
+import VueCookies from 'vue-cookies'
 import Axios from 'axios'
-import routes from './routes/index.js'
+import routes from '@/routes/index.js'
+import titleMixins from '@/mixins/titleMixin.js'
 
 // setup defaults and globals
 Vue.config.productionTip = false

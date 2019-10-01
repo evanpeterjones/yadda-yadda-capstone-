@@ -6,8 +6,7 @@
   (:require [compojure.route :as route]
             [compojure.handler :as handler]
             [ducts.views :as views]
-            [db-connection :as dbc]
-            [clojure.java.jdbc :as jdbc])
+            [db-connection :as dbc])
   (:gen-class))
 
 (defroutes app

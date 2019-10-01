@@ -11,11 +11,13 @@ export const routes = new Router({
 	{
 	    path: '/',
 	    name: 'Login',
-	    component: Splash
+	    component: Splash,
+	    title: 'YAPP'
 	},
 	{
 	    path: '/*',
 	    name: 'Yikes',
+	    title: 'Yikes',
 	    component: App
 	},	
     ]
