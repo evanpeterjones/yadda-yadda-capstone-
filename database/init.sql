@@ -5,10 +5,11 @@
 CREATE TABLE IF NOT EXISTS USERS (
        USR_ID_PK SERIAL PRIMARY KEY,
        USR_Username VARCHAR (50) UNIQUE, -- if these can be null then the client will have to generate user info
+       USR_Ses_FK VARCHAR(30) REFERENCES SESSIONS (SES_ID_PK)
        USR_Email VARCHAR (100) UNIQUE NOT NULL,
        USR_CreatedOn DATE NOT NULL,
        USR_LastLogin DATE,
-       USR_Validated BOOLEAN
+       USR_Validated BOOLEAN,
 );
 
 CREATE TABLE IF NOT EXISTS OLD_PASSWORDS (
@@ -29,10 +30,25 @@ CREATE TABLE IF NOT EXISTS PASSWORDS (
       PWD_Reset boolean,
 );
 
+-- Image Association Types 
+-- = describes what type of data an image is associated with
+CREATE TABLE IF NOT EXISTS IMAGE_ASSOC_TYPES (
+       IAT_PK INT PRIMARY KEY,
+       IAT_Type VARCHAR(10)
+);
+
+DO $$
+BEGIN
+  IF (1 NOT IN (SELECT IAT_PK FROM IMAGE_ASSOC_TYPES)) THEN
+    INSERT INTO IMAGE_ASSOC_TYPES(IAT_PK, IAT_Type) VALUES (0, 'post'   );
+    INSERT INTO IMAGE_ASSOC_TYPES(IAT_PK, IAT_Type) VALUES (1, 'profile');
+  END IF;
+END $$;
+
 CREATE TABLE IF NOT EXISTS IMAGES (
        IMG_ID_PK SERIAL,
        -- secondary FK to link with a post? Images could be stored without post
-       IMG_Type_FK INT, 
+       IMG_Type_FK INT REFERENCES IMAGE_ASSOC_TYPES(IAT_PK),
        IMG_Hash_PK CHAR(64),
        IMG_File VARCHAR(200), -- FILE ON DISK
        IMG_Thumbnail VARCHAR(200), -- ALSO ON DISK
@@ -41,21 +57,6 @@ CREATE TABLE IF NOT EXISTS IMAGES (
        PRIMARY KEY (IMG_ID_PK)
 );
 
--- Image Association Types 
--- = describes what type of data an image is associated with
-CREATE TABLE IF NOT EXISTS IMAGE_ASSOC_TYPES (
-       IAT_PK INT,
-       IAT_Assoc VARCHAR(10),
-       PRIMARY KEY (IAT_PK)
-);
-
-IF ( NOT IN (SELECT IAT_PK FROM IMAGE_ASSOC_TYPES)) THEN
-   INSERT INTO IMAGE_ASSOC_TYPES(IAT_PK, IAT_Assoc) VALUES (0, 'post'   );
-   INSERT INTO IMAGE_ASSOC_TYPES(IAT_PK, IAT_Assoc) VALUES (1, 'profile');
-END IF;
-
-INSERT INTO Posts(PST_USR_ID_FK, PST_Content, PST_Time) VALUES (1, 'this is a test', now());
-
 CREATE TABLE IF NOT EXISTS POSTS (
   PST_ID_PK SERIAL PRIMARY KEY,
   PST_USR_ID_FK INTEGER REFERENCES USERS(USR_ID_PK),
@@ -63,9 +64,10 @@ CREATE TABLE IF NOT EXISTS POSTS (
   PST_Content VARCHAR(140),
   PST_Time TIMESTAMPTZ NOT NULL,
   PST_EditTime DATE NULL,
-  PST_ShortUrl VARCHAR(50),
-  PST_Anonymous BOOLEAN,
+  PST_ShortUrl VARCHAR(50)
 );
+
+INSERT INTO Posts(PST_Content, PST_Time) VALUES ('Database Migrated', now());
 
 CREATE TABLE IF NOT EXISTS LOCATION (
        AREA_ID_PK varchar(10) PRIMARY KEY,
@@ -82,4 +84,4 @@ CREATE TABLE IF NOT EXISTS SESSIONS (
 );
 
 /* Always create my god-mode account on init ;) */
-CALL sp_CreateUser('evan', 'Avogadro6.02', 'evanpeterjones@gmail.com');
+-- CALL sp_CreateUser('evan', 'Avogadro6.02', 'evanpeterjones@gmail.com');
