@@ -21,7 +21,7 @@
        {:status 200
         :headers {"Content-Type" "text/html"}
         :body (dbc/query "select * from posts")})
-  (GET "/post:" []
+  (GET "/post:id" []
        {:status 200
         :headers {"Content-Type" "text/html"}
         :body (dbc/query "select * from posts")})
@@ -31,5 +31,3 @@
 (defn -main [& [port]]
   (let [port (Integer. (or (System/getenv "PORT") port 5000))]
     (jetty/run-jetty (handler/site #'app) {:port port :join? false})))
-
-(defn fake-request [routes ]

@@ -19,6 +19,10 @@ export default {
 </script>
 
 <style>
+html {
+  background-color: black;
+}
+
 :root {
   --primary: pink; 
   --secondary: yellow;

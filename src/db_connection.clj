@@ -45,9 +45,9 @@
 (defn tick []
   (jdbc/insert! db-spec :ducts [:body] ["hello"]))
 
-(declare create-user!)
+;(declare create-user!)
 
-(defqueries "createuser.sql"
+(defqueries "procedures.sql"
   {:connection db-spec})
 
 (defn query [q]
@@ -56,5 +56,5 @@
 (defn top-posts
     ([] (top-posts 28607))
     ([location] (jdbc/query db-spec [(str "SELECT * FROM POSTS
-                                         WHERE PST_LOC_FK = '" location
+                                           WHERE PST_LOC_FK = '" location
                                           "' ORDER BY PST_Time DESC")])))

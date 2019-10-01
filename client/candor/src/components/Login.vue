@@ -13,6 +13,7 @@
           v-model="zip"
           :state="valid"
           placeholder="zip code"
+          v-on:keyup="checkPost"
         />
         <br>
         <b-button
@@ -36,24 +37,39 @@ export default {
         return {
             appname: 'yapp',
             zip: null,
-            valid: null
+            valid: null,
+            detectedLocation: {
+              type: String, 
+              default: 'Location Services Not Enabled'
+            }
         }
     },
     methods: {
+        checkPost: function(event) {
+          if (event.key == 'Enter') {
+            console.log('enter was pressed')
+          } else {
+            console.log(event.key.toString())
+          }
+        },
+
         formSubmit: function (z) {
             var v = z.length == 5 && /(^\d{5}$)|(^\d{5}-\d{4}$)/.test(z);
 
             if (v) {
                 this.$data.valid = v;
-                
-                /* request posts
-                
-                var db = new DBResource();
-                db.createSession();*/
             } else { 
                 this.$data.valid = null;
             }
-        }
+        },
+
+        getLocation: function() {
+          if (navigator.geolocation) {
+            this.detectedLocation = navigator.geolocation.getCurrentPosition(showPosition);
+          } else {
+            console.log("Ensure that HTML5 Location Services are enabled for your browser")
+          }
+        },
     }    
 }
 </script>
@@ -62,5 +78,4 @@ export default {
 p { 
   color: gold;
 }
-
 </style>

@@ -1,4 +1,3 @@
-
 # NOTES/TODO
 NOTES:
 API should be organized so "intenetizens.com/den?=evan" loads a user page
