@@ -70,7 +70,10 @@ export default {
             console.log("Ensure that HTML5 Location Services are enabled for your browser")
           }
         },
-    }    
+    },
+    mounted() {
+      
+    } 
 }
 </script>
 
