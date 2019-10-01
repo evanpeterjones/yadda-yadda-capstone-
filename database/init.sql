@@ -1,35 +1,32 @@
 /*
-*  script to initialize all database tables with init data
+*  script to initialize database tables
 */
 
 CREATE TABLE IF NOT EXISTS USERS (
-       USR_ID_PK SERIAL,
-       USR_Username VARCHAR (50) UNIQUE NOT NULL,
-       USR_PWD_FK INTEGER,
+       USR_ID_PK SERIAL PRIMARY KEY,
+       USR_Username VARCHAR (50) UNIQUE, -- if these can be null then the client will have to generate user info
        USR_Email VARCHAR (100) UNIQUE NOT NULL,
        USR_CreatedOn DATE NOT NULL,
        USR_LastLogin DATE,
-       USR_Validated BOOLEAN,
-       PRIMARY KEY (USR_ID_PK)
+       USR_Validated BOOLEAN
 );
 
 CREATE TABLE IF NOT EXISTS OLD_PASSWORDS (
       OPD_Hash VARCHAR(64),
-      OPD_USR_FK INTEGER,
+      OPD_USR_FK INTEGER REFERENCES USERS(USR_ID_PK) ON DELETE CASCADE,
       PRIMARY KEY (OPD_Hash, OPD_USR_FK),
-      FOREIGN KEY (OPD_USR_FK) REFERENCES USERS(USR_ID_PK)
 );
 
 CREATE TABLE IF NOT EXISTS PASSWORDS (
+      PWD_PK SERIAL PRIMARY KEY,
       PWD_Hash VARCHAR(64), -- TODO: need to generate magic link email to set password
-      PWD_PK SERIAL,
-      PWD_USR_FK INTEGER,
+      -- also need createUser to generate a PWD_Hash which we email to the user
+      PWD_USR_FK INTEGER REFERENCES USERS(USR_ID_PK) ON DELETE CASCADE,
       PWD_UpdatedOn DATE,
+      PWD_CreatedOn DATE,
       PWD_LastLogin DATE,
       PWD_Locked boolean,
       PWD_Reset boolean,
-      PRIMARY KEY (PWD_PK),
-      FOREIGN KEY (OPD_USR_FK) REFERENCES USERS(USR_ID_PK)
 );
 
 CREATE TABLE IF NOT EXISTS IMAGES (
@@ -60,16 +57,14 @@ END IF;
 INSERT INTO Posts(PST_USR_ID_FK, PST_Content, PST_Time) VALUES (1, 'this is a test', now());
 
 CREATE TABLE IF NOT EXISTS POSTS (
-  PST_ID_PK SERIAL,
-  PST_USR_ID_FK INTEGER,
+  PST_ID_PK SERIAL PRIMARY KEY,
+  PST_USR_ID_FK INTEGER REFERENCES USERS(USR_ID_PK),
   PST_LOC_FK VARCHAR(10),
   PST_Content VARCHAR(140),
   PST_Time TIMESTAMPTZ NOT NULL,
   PST_EditTime DATE NULL,
   PST_ShortUrl VARCHAR(50),
   PST_Anonymous BOOLEAN,
-  PRIMARY KEY (PST_ID_PK),
-  FOREIGN KEY (PST_USR_ID_FK) REFERENCES USERS(USR_ID_PK)
 );
 
 CREATE TABLE IF NOT EXISTS LOCATION (

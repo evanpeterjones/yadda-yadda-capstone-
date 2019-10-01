@@ -5,6 +5,10 @@ THEN
 RAISE EXCEPTION 'User with that username already exists';
 END IF;
 
+-- TODO: need to generate a password to email/text to users in order to reset
+INSERT INTO PASSWORDS(PWD_Hash, PWD_Reset, PWD_CreatedOn)
+VALUES(/*somefunction*/'a32id$d', 1, NOW());
+
 INSERT INTO USERS(USR_Username, USR_Email, USR_CreatedOn)
 VALUES(:username, :email, NOW());
 
