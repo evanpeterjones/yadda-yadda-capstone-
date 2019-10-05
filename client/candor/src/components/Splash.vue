@@ -75,10 +75,33 @@ export default {
 	},
 	
 	getLocation: function() {
+
+		var options = {
+  enableHighAccuracy: true,
+  timeout: 5000,
+  maximumAge: 0
+};
+
+function success(pos) {
+  var crd = pos.coords;
+
+  console.log('Your current position is:');
+  console.log(`Latitude : ${crd.latitude}`);
+  console.log(`Longitude: ${crd.longitude}`);
+  console.log(`More or less ${crd.accuracy} meters.`);
+}
+
+function error(err) {
+  console.warn(`ERROR(${err.code}): ${err.message}`);
+}
+
+navigator.geolocation.getCurrentPosition(success, error, options);
+		/*
 	    var theZip = null;
 	    if (navigator.geolocation) {
 		navigator.geolocation.getCurrentPosition(function(response) {
 		    theZip = response;
+			console.log(response);
 		    return theZip;
 		}, function(error) {
 		    console.error(error);
@@ -92,7 +115,8 @@ export default {
 		return null
 	    }
 
-	    if (theZip == null) { console.error("big yikes"); }
+		if (theZip == null) { console.error("big yikes"); }
+		*/
 	},
     }
 }
