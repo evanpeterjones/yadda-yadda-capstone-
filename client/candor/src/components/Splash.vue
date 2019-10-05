@@ -38,64 +38,64 @@ import { Post } from "./Post";
 const axios = require('axios')
 
 export default {
-    name: "Splash",
-    data() {
-	return {
-            zip: null,
-            valid: null,
-            posts: {
-		type: Array,
-		default: []
-            }
-	}
+  name: "Splash",
+  data() {
+    return {
+      zip: null,
+      valid: null,
+      posts: {
+	type: Array,
+	default: []
+      }
+    }
+  },
+  watch: {
+    'zip': function () {
+      this.valid = (this.zip.length == 5 && /(^\d{5}$)|(^\d{5}-\d{4}$)/.test(this.zip)) ? true : null;
+    }
+  },
+  methods: {
+    checkKey: function(event) {
+      if (event.key == "Enter") {
+	formSubmit();
+      } 
     },
-    watch: {
-	'zip': function () {
-	    this.valid = (this.zip.length == 5 && /(^\d{5}$)|(^\d{5}-\d{4}$)/.test(this.zip)) ? true : null;
-	}
+    
+    formSubmit: function() {
+      
+      if (this.zip == null) {
+	this.zip = this.getLocation();
+      }
+      
+      axios.get("/db").then(response => { console.log(response); this.posts = response.data; })
+	.error(error => { console.log(error); });
+      // replace with post when server endpoint is setup
+      // this POST needs to return a cookie from the server that generates a key
+      // which will be used to identify the user
     },
-    methods: {
-	checkKey: function(event) {
-	    if (event.key == "Enter") {
-		formSubmit();
-	    } 
-	},
-	
-	formSubmit: function() {
-	    
-	    if (this.zip == null) {
-		this.zip = this.getLocation();
-	    }
-	    
-	    axios.get("/db").then(response => { console.log(response); this.posts = response.data; })
-		.error(error => { console.log(error); });
-	    // replace with post when server endpoint is setup
-	    // this POST needs to return a cookie from the server that generates a key
-	    // which will be used to identify the user
-	},
-	
-	getLocation: function() {
+    
+    getLocation: function() {
+      
+      var options = {
+        enableHighAccuracy: true,
+        timeout: 5000,
+        maximumAge: 0
+      };
+      
+      function success(pos) {
+        var crd = pos.coords;
+        
+        console.log('Your current position is:');
+        console.log(`Latitude : ${crd.latitude}`);
+        console.log(`Longitude: ${crd.longitude}`);
+        console.log(`More or less ${crd.accuracy} meters.`);
+      }
+      
+      function error(err) {
+        console.warn(`ERROR(${err.code}): ${err.message}`);
+      }
 
-		var options = {
-  enableHighAccuracy: true,
-  timeout: 5000,
-  maximumAge: 0
-};
-
-function success(pos) {
-  var crd = pos.coords;
-
-  console.log('Your current position is:');
-  console.log(`Latitude : ${crd.latitude}`);
-  console.log(`Longitude: ${crd.longitude}`);
-  console.log(`More or less ${crd.accuracy} meters.`);
-}
-
-function error(err) {
-  console.warn(`ERROR(${err.code}): ${err.message}`);
-}
-
-navigator.geolocation.getCurrentPosition(success, error, options);
+      navigator.geolocation.getCurrentPosition(success, error, options);
 		/*
 	    var theZip = null;
 	    if (navigator.geolocation) {

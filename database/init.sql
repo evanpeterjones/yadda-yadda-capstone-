@@ -64,7 +64,8 @@ CREATE TABLE IF NOT EXISTS POSTS (
   PST_Content VARCHAR(140),
   PST_Time TIMESTAMPTZ NOT NULL,
   PST_EditTime DATE NULL,
-  PST_ShortUrl VARCHAR(50)
+  PST_ShortUrl VARCHAR(50),
+  PST_IsDecentral BOOLEAN DEFAULT FALSE
 );
 
 INSERT INTO Posts(PST_Content, PST_Time) VALUES ('Database Migrated', now());

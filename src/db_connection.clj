@@ -12,18 +12,15 @@
   (if (nil? (.getUserInfo db-uri))
     nil (clojure.string/split (.getUserInfo db-uri) #":")))
 
-(def db-spec (def db-spec (or (System/getenv "DATABASE_URL")
-                              "postgresql://localhost:5432/evanpeterjones")))
-
-;; TODO: fix connection to the postgresql db on heroku instead of my local db
-(comment (pool/make-datasource-spec
-   {:classname "org.postgresql.Driver"
-    :subprotocol "postgresql"
-    :user (get user-and-password 0)
-    :password (get user-and-password 1)
-    :subname (if (= -1 (.getPort db-uri))
-               (format "//%s%s" (.getHost db-uri) (.getPort db-uri))
-               (format "//%s:%s%s" (.getHost db-uri) (.getPort db-uri) (.getPath db-uri)))}))
+(def db-spec (or (System/getenv "DATABASE_URL")
+                                  {:dbtype "postgresql"
+                                   :dbname "evanpeterjones"
+                                   :subprotocol "postgresql"
+                                   :subname "//localhost:5432/evanpeterjones"
+                                   :host "localhost"
+                                   :port "5432"
+                                   :user "evanpeterjones"
+                                   :password "Avogadro6.02"}))
 
 (defn migrated? []
   "Query to check if db is up"
@@ -45,8 +42,6 @@
 
 (defn tick []
   (jdbc/insert! db-spec :ducts [:body] ["hello"]))
-
-;(declare create-user!)
 
 (defqueries "procedures.sql"
   {:connection db-spec})

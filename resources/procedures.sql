@@ -1,17 +1,20 @@
 -- name: create-user!
 -- create a new user object given {:username :email}
-IF EXISTS (SELECT 1 FROM Users WHERE USR_Username = :username)
-THEN
-RAISE EXCEPTION 'User with that username already exists';
+DO $$
+BEGIN 
+
+IF EXISTS (SELECT 1 FROM Users WHERE USR_Username = :username) THEN
+    RAISE EXCEPTION 'User with that username already exists';
 END IF;
 
 -- TODO: need to generate a password to email/text to users in order to reset
-INSERT INTO PASSWORDS(PWD_Hash, PWD_Reset, PWD_CreatedOn)
-VALUES(/*somefunction*/'a32id$d', 1, NOW());
+-- INSERT INTO PASSWORDS(PWD_Hash, PWD_Reset, PWD_CreatedOn)
+-- VALUES(/*somefunction*/'a32id$d', 1, NOW());
 
 INSERT INTO USERS(USR_Username, USR_Email, USR_CreatedOn)
 VALUES(:username, :email, NOW());
 
+END$$;
 
 -- name: image-type!
 -- insert a new image type
@@ -43,6 +46,16 @@ END IF;
 INSERT INTO Passwords(PWD_Hash, PWD_USR_FK, PWD_UpdatedOn)
 VALUES (newHash, :user_id, NOW());
 
--- top-posts
--- return the top posts
-SELECT TOP FROM POSTS;
+-- name: get-posts
+-- return posts for feed
+-- TODO: select next posts between certain values
+SELECT * FROM POSTS
+
+-- name: create-post!
+-- TODO: calls to NOW() need a replacement resource
+INSERT INTO POSTS(PST_USR_ID_FK, PST_Content, PST_Time, PST_Decentral)
+VALUES(:usr_id, :content, NOW(), :decentral);
+
+-- name: delete-post!
+-- delete a post when given {:post_key}
+DELETE FROM POSTS WHERE PST_ID_PK = :post_key
