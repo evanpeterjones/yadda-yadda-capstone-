@@ -1,12 +1,13 @@
 <template>
-  <div id="app">
-    <NavigationBar />
+<div id="app">
+  <NavigationBar />
+  <div v-if="!$location">
     <Splash />
   </div>
+</div>
 </template>
 
 <script>
-//import HelloWorld from './components/HelloWorld.vue'
 import NavigationBar from './components/NavigationBar.vue'
 import Splash from './components/Splash.vue'
 
