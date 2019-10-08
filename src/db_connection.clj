@@ -46,11 +46,19 @@
 (defqueries "procedures.sql"
   {:connection db-spec})
 
-(defn query [q]
-  (jdbc/query db-spec [q]))
- 
-(defn top-posts
-    ([] (top-posts 28607))
-    ([location] (jdbc/query db-spec [(str "SELECT * FROM POSTS
-                                           WHERE PST_LOC_FK = '" location
-                                          "' ORDER BY PST_Time DESC")])))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; SESSION QUERIES ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defn session-exists? [ses-id]
+  (let [results (query (str "SELECT 1 FROM SESSIONS WHERE SES_ID = '" ses-id "';"))]
+    (not-empty results)))
+
+(defn get-session-id []
+  (:md5 (first (query "SELECT MD5(RANDOM()::text);"))))
+
+(defn create-session []
+  "generates a session ID for client and inserts into DB"
+  (let [ses-id (get-session-id)]
+    (if-not (session-exists? ses-id)
+      (jdbc/db-do-commands db-spec [(str "INSERT INTO Sessions(SES_ID, SES_CreatedOn) "
+                                         "VALUES('" ses-id "', NOW());")])) ;; TODO: Replace NOW() call
+    ses-id))

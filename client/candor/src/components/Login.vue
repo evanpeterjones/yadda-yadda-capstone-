@@ -13,7 +13,7 @@
           v-model="zip"
           :state="valid"
           placeholder="zip code"
-          v-on:keyup="checkPost"
+          @keyup="checkPost"
         />
         <br>
         <b-button
@@ -44,6 +44,9 @@ export default {
             }
         }
     },
+    mounted() {
+      getLocation
+    },
     methods: {
         checkPost: function(event) {
           if (event.key == 'Enter') {
@@ -70,9 +73,6 @@ export default {
             console.log("Ensure that HTML5 Location Services are enabled for your browser")
           }
         },
-    },
-    mounted() {
-      getLocation
     } 
 }
 </script>

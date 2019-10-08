@@ -6,24 +6,29 @@
   (:require [compojure.route :as route]
             [compojure.handler :as handler]
             [ducts.views :as views]
+            [ducts.cookie-util :as cku]
             [db-connection :as dbc])
   (:gen-class))
 
 (defroutes app
-  (GET "/" []
+  (GET "/" request
        {:status 200
         :headers {"Content-Type" "text/html"}
-        :cookies {"yadda-session" {:value "12345" ;; (dbc/
-                                   :max-age (* 60 24 30)}}
+        :cookies {"yapp-session" {:value (let [ses-id (cku/get-cookie-from-request request)]
+                                           (if (dbc/session-exists? ses-id)
+                                             ses-id
+                                             (dbc/create-session)))
+                                  :max-age (* 60 24 30)}}
         :body (views/web-app)})
   (GET "/db" []
        {:status 200
         :headers {"Content-Type" "text/html"}
         :body (dbc/query "select * from posts")})
-  (GET "/post:id" []
+  (GET "/feed" []
        {:status 200
         :headers {"Content-Type" "text/html"}
-        :body (dbc/query "select * from posts")})
+        :body "asdf"})
+                  ;; TODO: /feed overloading with pagination
   (route/resources "/")
   (route/not-found (views/not-found)))
 

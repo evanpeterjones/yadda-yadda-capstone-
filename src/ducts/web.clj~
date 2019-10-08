@@ -1,0 +1,37 @@
+(ns ducts.web
+  (:use compojure.core
+        ring.middleware.json
+        ring.util.response
+        [ring.adapter.jetty :as jetty])
+  (:require [compojure.route :as route]
+            [compojure.handler :as handler]
+            [ducts.views :as views]
+            [db-connection :as dbc])
+  (:gen-class))
+
+  (declare request-obj)
+
+(defroutes app
+  (GET "/" request
+      ;; TODO: cookies need to be included in the request
+        (println (get request "yapp-session"))
+        (def request-obj request)
+       {:status 200
+        :headers {"Content-Type" "text/html"}
+        :cookies {"yapp-session" {:value "testing"
+                                   :max-age (* 60 24 30)}}
+        :body (views/web-app)})
+  (GET "/db" []
+       {:status 200
+        :headers {"Content-Type" "text/html"}
+        :body (dbc/query "select * from posts")})
+  (GET "/feed" []
+       {:status 200
+        :headers {"Content-Type" "text/html"}
+        :body (dbc/query "select * from posts")})
+  (route/resources "/")
+  (route/not-found (views/not-found)))
+
+(defn -main [& [port]]
+  (let [port (Integer. (or (System/getenv "PORT") port 5000))]
+    (jetty/run-jetty (handler/site #'app) {:port port :join? false})))

@@ -1,10 +1,11 @@
 <template>
-<div id="app">
-  <NavigationBar />
-  <div v-if="!$location">
-    <Splash />
+  <div id="app">
+    <NavigationBar />
+    <h1> {{ location }} </h1>
+    <div v-if="location">
+      <Splash />
+    </div>
   </div>
-</div>
 </template>
 
 <script>
@@ -14,8 +15,16 @@ import Splash from './components/Splash.vue'
 export default {
   title: 'YAPP',
   name: 'App',
+  computed: {
+    location: function() {
+      return this.$store.getters.location
+    }
+  },
   components: { 
     NavigationBar, Splash
+  }, 
+  mounted() {
+    console.log(this.$store.getters.location)
   }
 }
 </script>

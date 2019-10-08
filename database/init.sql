@@ -78,10 +78,10 @@ CREATE TABLE IF NOT EXISTS LOCATION (
 CREATE TABLE IF NOT EXISTS SESSIONS (
        SES_ID_PK SERIAL,
        SES_ID VARCHAR(64) UNIQUE, -- This is a generated random hash using the UserID and time?
-       SES_USR_ID_FK INT,
+       SES_USR_ID_FK INT NULL,
        SES_CreatedOn DATE,
        FOREIGN KEY (SES_USR_ID_FK) REFERENCES USERS(USR_ID_PK),
-       PRIMARY KEY (SES_ID_PK, SES_USR_ID_FK)
+       PRIMARY KEY (SES_ID_PK)
 );
 
 /* Always create my god-mode account on init ;) */
