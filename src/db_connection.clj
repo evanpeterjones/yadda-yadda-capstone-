@@ -43,6 +43,9 @@
 (defn tick []
   (jdbc/insert! db-spec :ducts [:body] ["hello"]))
 
+(defn query [q]
+  (jdbc/query db-spec [q]))
+
 (defqueries "procedures.sql"
   {:connection db-spec})
 
