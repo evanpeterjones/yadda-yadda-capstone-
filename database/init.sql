@@ -72,8 +72,9 @@ CREATE TABLE IF NOT EXISTS POSTS (
 INSERT INTO Posts(PST_Content, PST_Time) VALUES ('Database Migrated', now());
 
 CREATE TABLE IF NOT EXISTS LOCATION (
-       AREA_ID_PK varchar(10) PRIMARY KEY,
-       AREA_Alias varchar(20) NOT NULL
+       LOC_ID_PK varchar(10) PRIMARY KEY, -- zipcode, maybe rename to be more specific?
+       LOC_Alias varchar(20) NOT NULL, -- this needs to be generated with server utility
+       LOC_State varchar(2)
 );
 
 CREATE TABLE IF NOT EXISTS SESSIONS (

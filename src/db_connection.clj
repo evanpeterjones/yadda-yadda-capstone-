@@ -4,15 +4,6 @@
             [clj-time.core :as t]
             [clojure.java.jdbc :as jdbc]))
 
-(def db-uri
-  (java.net.URI. (or
-                  (System/getenv "DATABASE_URL")
-                  "postgres://kvzhgjwupmfymm:e19fdd9e40d5783820d13ab6fe141ebb00c8a60b47efd63337180ea068b3a4ef@ec2-107-20-173-2.compute-1.amazonaws.com:5432/d2na7ais8vs462")))
-
-(def user-and-password
-  (if (nil? (.getUserInfo db-uri))
-    nil (clojure.string/split (.getUserInfo db-uri) #":")))
-
 (def db-spec (or (System/getenv "DATABASE_URL")
                  {:dbtype "postgresql"
                   :dbname "evanpeterjones"
@@ -24,27 +15,18 @@
                   :password "Avogadro6.02"}))
 
 (defn migrated? []
-  "Query to check if db is up"
+  "Query to check if db is up" ;; this needs to be updated because it's not accurate
   (-> (jdbc/query db-spec
                   [(str "select count(*) from information_schema.tables "
                         "where table_name='ducts'")])
       first :count pos?))
 
-(defn migrate []
-  (when (not (migrated?))
-    (print "Creating Database Structure...") (flush)
-    (jdbc/db-do-commands db-spec
-                         (jdbc/create-table-ddl
-                          :ducts
-                          [:id :serial "PRIMARY KEY"]
-                          [:body :varchar "NOT NULL"]
-                          [:ducts :timestamp "NOT NULL" "DEFAULT CURRENT_TIMESTAMP"]
-                          (println " done")))))
-
 (defn query [q]
   (jdbc/query db-spec [q]))
 
 ;; generate yesql procedures
+(defqueries "upgrade.sql"
+  {:connection db-spec})
 
 (defqueries "procedures.sql"
   {:connection db-spec})
@@ -66,3 +48,9 @@
   (let [ses-id (get-session-id)]
     (jdbc/insert! db-spec :sessions {:ses_id ses-id, :ses_createdon (t/now)})
     ses-id))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; LOCATION QUERIES ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defn get-location [zip-code]
+ (query (str "SELECT * FROM LOCATION WHERE AREA_ID_PK = '" zip-code "';")))
+      
