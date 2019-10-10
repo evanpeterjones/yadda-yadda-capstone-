@@ -10,15 +10,18 @@
             [db-connection :as dbc])
   (:gen-class))
 
+(declare req-obj)
+
 (defroutes app
   (GET "/" request
+       (def req-obj request)
        {:status 200
         :headers {"Content-Type" "text/html"}
         :cookies {"yapp-session" {:value (let [ses-id (cku/get-cookie-from-request request)]
                                            (if (dbc/session-exists? ses-id)
                                              ses-id
                                              (dbc/create-session)))
-                                  :max-age (* 60 24 30)}}
+                                  :max-age (* 60 24 30 365)}} ;; cookie should last for 1 year (?)
         :body (views/web-app)})
   (GET "/db" []
        {:status 200

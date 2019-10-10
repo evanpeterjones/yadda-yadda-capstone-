@@ -11,7 +11,7 @@
         (recur (rest rest-vec) (assoc cmap (get spl 0) (get spl 1))))
       cmap)))
         
-(defn get-cookie-from-request [request &optional ck]
+(defn get-cookie-from-request [request & ck]
   (get
    (get-cookie-map (get (:headers request) "cookie"))
    (or ck "yapp-session")))

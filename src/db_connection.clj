@@ -1,26 +1,27 @@
 (ns db-connection
   (:require [yesql.core :refer [defqueries]]
-            [jdbc.pool.c3p0 :as pool]
+;;            [jdbc.pool.c3p0 :as pool] ;; this is unecessary right now for the prototype
+            [clj-time.core :as t]
             [clojure.java.jdbc :as jdbc]))
 
 (def db-uri
   (java.net.URI. (or
-                 (System/getenv "DATABASE_URL")
-                 "postgres://kvzhgjwupmfymm:e19fdd9e40d5783820d13ab6fe141ebb00c8a60b47efd63337180ea068b3a4ef@ec2-107-20-173-2.compute-1.amazonaws.com:5432/d2na7ais8vs462")))
+                  (System/getenv "DATABASE_URL")
+                  "postgres://kvzhgjwupmfymm:e19fdd9e40d5783820d13ab6fe141ebb00c8a60b47efd63337180ea068b3a4ef@ec2-107-20-173-2.compute-1.amazonaws.com:5432/d2na7ais8vs462")))
 
 (def user-and-password
   (if (nil? (.getUserInfo db-uri))
     nil (clojure.string/split (.getUserInfo db-uri) #":")))
 
 (def db-spec (or (System/getenv "DATABASE_URL")
-                                  {:dbtype "postgresql"
-                                   :dbname "evanpeterjones"
-                                   :subprotocol "postgresql"
-                                   :subname "//localhost:5432/evanpeterjones"
-                                   :host "localhost"
-                                   :port "5432"
-                                   :user "evanpeterjones"
-                                   :password "Avogadro6.02"}))
+                 {:dbtype "postgresql"
+                  :dbname "evanpeterjones"
+                  :subprotocol "postgresql"
+                  :subname "//localhost:5432/evanpeterjones"
+                  :host "localhost"
+                  :port "5432"
+                  :user "evanpeterjones"
+                  :password "Avogadro6.02"}))
 
 (defn migrated? []
   "Query to check if db is up"
@@ -34,17 +35,16 @@
     (print "Creating Database Structure...") (flush)
     (jdbc/db-do-commands db-spec
                          (jdbc/create-table-ddl
-                           :ducts
+                          :ducts
                           [:id :serial "PRIMARY KEY"]
                           [:body :varchar "NOT NULL"]
                           [:ducts :timestamp "NOT NULL" "DEFAULT CURRENT_TIMESTAMP"]
                           (println " done")))))
 
-(defn tick []
-  (jdbc/insert! db-spec :ducts [:body] ["hello"]))
-
 (defn query [q]
   (jdbc/query db-spec [q]))
+
+;; generate yesql procedures
 
 (defqueries "procedures.sql"
   {:connection db-spec})
@@ -56,12 +56,13 @@
     (not-empty results)))
 
 (defn get-session-id []
-  (:md5 (first (query "SELECT MD5(RANDOM()::text);"))))
+  (let [id (:md5 (first (query "SELECT MD5(RANDOM()::text);")))]
+    (if (session-exists? id)
+      (get-session-id)
+      id)))
 
 (defn create-session []
   "generates a session ID for client and inserts into DB"
   (let [ses-id (get-session-id)]
-    (if-not (session-exists? ses-id)
-      (jdbc/db-do-commands db-spec [(str "INSERT INTO Sessions(SES_ID, SES_CreatedOn) "
-                                         "VALUES('" ses-id "', NOW());")])) ;; TODO: Replace NOW() call
+    (jdbc/insert! db-spec :sessions {:ses_id ses-id, :ses_createdon (t/now)})
     ses-id))
