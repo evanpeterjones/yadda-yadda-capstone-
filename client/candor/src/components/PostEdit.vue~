@@ -5,12 +5,10 @@
     export default {
     name: "PostEdit",
     data() {
-  
+        
     }
     }
   </script>
 
-  <style>
-    <style />
-  </style>
+  <style />
 </template>

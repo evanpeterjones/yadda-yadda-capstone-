@@ -3,7 +3,6 @@
     <NavigationBar />
     <h1> {{ location }} </h1>
     <div v-if="location">
-      <!-- invert after location services work -->
       <Splash />
     </div>
   </div>
@@ -16,14 +15,14 @@ import Splash from './components/Splash.vue'
 export default {
   title: 'YAPP',
   name: 'App',
-  components: { 
-    NavigationBar, Splash
-  }, 
   computed: {
     location: function() {
       return this.$store.getters.location
     }
   },
+  components: { 
+    NavigationBar, Splash
+  }, 
   mounted() {
     console.log(this.$store.getters.location)
   }

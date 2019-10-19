@@ -1,14 +1,14 @@
 <template>
   <span>
     <post-header
-      :user="postData.user"
-      :location="postData.location"
-      :time="postData.time"
+      :user="user"
+      :location="location"
+      :time="time"
     />
     <p> {{ content }} </p>
     <post-footer
-      :edit="postData.editTime"
-      :location="postData.location"
+      :edit="editTime"
+      :location="location"
     />
   </span>
 </template>
@@ -23,6 +23,9 @@ export default {
 	    type: Object,
 	    default: null
 	}
+    },
+    data () {
+        return {}
     }
 }
 </script>
