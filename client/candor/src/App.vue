@@ -2,16 +2,19 @@
   <div id="app">
     <NavigationBar />
     <h1> {{ location }} </h1>
-    <div v-if="location">
-      <!-- invert after location services work -->
+    <div v-if="!location">
       <Splash />
+    </div>
+    <div v-if="location">
+      <!-- Feed /-->      
     </div>
   </div>
 </template>
 
 <script>
 import NavigationBar from './components/NavigationBar.vue'
-import Splash from './components/Splash.vue'
+import Splash from './Pages/Splash.vue'
+//import Feed from './components/Feed.vue'
 
 export default {
   title: 'YAPP',
@@ -24,8 +27,16 @@ export default {
       return this.$store.getters.location
     }
   },
-  mounted() {
-    console.log(this.$store.getters.location)
+  watch: {
+    'location': function() {
+
+			axios.get("/db").then(response => {
+				console.log(response)
+			}).catch(error => {
+				console.log(error)
+			});
+			
+    }
   }
 }
 </script>

@@ -2,6 +2,7 @@
   (:require [yesql.core :refer [defqueries]]
             [clojure.java.jdbc :as jdbc]
             [clojure.spec.alpha :as s]
+            [ducts.utils.location :as loc]
             [clj-time.core :as t])
   (:import (java.sql Timestamp)))
 
@@ -37,14 +38,6 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; SESSION QUERIES ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; DB SPEC ;; 
-
-(s/def ::ses-id-pk int?)
-(s/def ::ses-id (s/and string? #(< (count %) 64)))
-;; (s/def ::ses-createdon date?)
-
-(def ::session (s/keys #{::ses-id ::ses-id}))
-
 ;; QUERIES ;;
 
 (defn session-exists? [ses-id]
@@ -71,12 +64,34 @@
 
 ;;(s/def 
 
-(defn create-location [zip]
-  (jdbc/insert! db-spec :location
-                {::loc-id-pk zip
-                 ::loc-alias (loc/generate-location-alias zip)}))
+(defn location-exists? [zip]
+  (not-empty (query (str "SELECT 1 FROM Location WHERE LOC_ID_PK = '" zip "';"))))
 
-(defn get-location-alias [zip]
+(defn associate-session-and-zip [loc-data session-id]
+  (let [zip (loc/get-location-value loc-data :zip)]
+    (if (and (location-exists? zip) (session-exists? session-id))
+      (jdbc/update! db-spec
+                    :sessions
+                    {:ses_loc_fk zip}
+                    ["ses_id=?" session-id])
+      (do
+        (create-location loc-data)
+        (associate-session-and-zip loc-data session-id)))))
+
+(defn get-location-alias 
   "get location alias from zip"
- (query (str "SELECT LOC_ALIAS FROM LOCATION WHERE LOC_ID_PK = '" zip "';")))
-      
+  ([] (get-location-alias "28607"))
+  ([zip] (query (str "SELECT LOC_ALIAS FROM LOCATION WHERE LOC_ID_PK = '" zip "';"))))
+
+(defn create-location 
+  "create a new location in db"
+  ([zip city state]
+   (jdbc/insert! db-spec :location
+                 {:loc_id_pk zip
+                  :loc_alias city
+                  :loc_state state}))
+  ([loc-data]
+   (create-location
+    (loc/get-location-value loc-data :zip)
+    (loc/get-location-value loc-data :city)
+    (loc/get-location-value loc-data :state))))

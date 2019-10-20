@@ -4,6 +4,8 @@
   :license {:name "Eclipse Public License v1.0"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.10.0"]
+                 [org.clojure/data.json "0.2.6"]
+                 [com.google.api-client/google-api-client "1.30.4"]                        [clj-http "3.10.0"]
                  [compojure "1.4.0"]
                  [ring/ring-core "1.6.3"]
                  [ring/ring-jetty-adapter "1.6.3"]
@@ -12,7 +14,7 @@
                  [metosin/compojure-api "2.0.0-alpha30"]
                  [environ "1.0.0"]
                  [org.clojure/java.jdbc "0.3.5"]
-                 [org.postgresql/postgresql "9.4-1201-jdbc4"]
+                 [org.postgresql/postgresql "42.2.4"];;"9.4-1201-jdbc4"]
                  [hiccup "1.0.5"]
                  [yesql "0.5.3"]]
   :min-lein-version "2.0.0"

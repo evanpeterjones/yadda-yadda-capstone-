@@ -5,8 +5,8 @@ import BootstrapVue from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import VueCookies from 'vue-cookies'
 import Axios from 'axios'
-import routes from '@/routes/index.js'
 import titleMixins from '@/mixins/titleMixin.js'
+import routes from '@/components/routes/index.js'
 
 // setup defaults and globals
 Vue.config.productionTip = false
@@ -18,11 +18,9 @@ VueCookies.config('7d')
 VueCookies.set('theme','default')
 VueCookies.set('hover-time','1s')
 
-Axios.defaults.baseURL = process.env.API_ENDPOINT
-
 const store = new Vuex.Store({
   state: {
-    location: 'Boone, NC',
+    location: '',
     posts: null
   },
   getters: {
@@ -34,6 +32,9 @@ const store = new Vuex.Store({
     }
   }
 });
+
+Axios.defaults.baseURL = process.env.API_ENDPOINT
+Vue.prototype.$http = Axios
 
 store.watch((store) => store.location, (newLocation, oldLocation) => {
   console.log("New Location: "+ newLocation)

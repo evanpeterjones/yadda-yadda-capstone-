@@ -1,4 +1,4 @@
-(ns ducts.cookie-util
+(ns ducts.utils.cookies
   (:require [clojure.string :as str]))
 
 (defn get-cookie-map [cookie-string]
