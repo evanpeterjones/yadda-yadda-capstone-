@@ -67,6 +67,19 @@
 (defn location-exists? [zip]
   (not-empty (query (str "SELECT 1 FROM Location WHERE LOC_ID_PK = '" zip "';"))))
 
+(defn create-location 
+  "create a new location in db"
+  ([zip city state]
+   (jdbc/insert! db-spec :location
+                 {:loc_id_pk zip
+                  :loc_alias city
+                  :loc_state state}))
+  ([loc-data]
+   (create-location
+    (loc/get-location-value loc-data :zip)
+    (loc/get-location-value loc-data :city)
+    (loc/get-location-value loc-data :state))))
+
 (defn associate-session-and-zip [loc-data session-id]
   (let [zip (loc/get-location-value loc-data :zip)]
     (if (and (location-exists? zip) (session-exists? session-id))
@@ -82,16 +95,3 @@
   "get location alias from zip"
   ([] (get-location-alias "28607"))
   ([zip] (query (str "SELECT LOC_ALIAS FROM LOCATION WHERE LOC_ID_PK = '" zip "';"))))
-
-(defn create-location 
-  "create a new location in db"
-  ([zip city state]
-   (jdbc/insert! db-spec :location
-                 {:loc_id_pk zip
-                  :loc_alias city
-                  :loc_state state}))
-  ([loc-data]
-   (create-location
-    (loc/get-location-value loc-data :zip)
-    (loc/get-location-value loc-data :city)
-    (loc/get-location-value loc-data :state))))
