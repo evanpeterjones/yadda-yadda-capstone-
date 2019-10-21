@@ -32,6 +32,10 @@
        {:status 200
         :headers {"Content-Type" "application/json"}
         :body (dbc/get-posts)})
+  (GET "/bounce" request
+       {:status 200
+        :headers {"Content-Type" "application/json"}
+        :body (dbc/get-posts)})
   (GET "/getzip" [lat long :as req]
        "this route returns a zipcode when given lat and longitude"
        ;; TODO: ensure parameters are doubles
@@ -46,5 +50,6 @@
   (route/not-found (views/not-found)))
 
 (defn -main [& [port]]
+  (dbc/upgrade)
   (let [port (Integer. (or (System/getenv "PORT") port 5000))]
     (jetty/run-jetty (handler/site #'app) {:port port :join? false})))
