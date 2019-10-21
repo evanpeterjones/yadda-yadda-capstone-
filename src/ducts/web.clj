@@ -50,6 +50,6 @@
   (route/not-found (views/not-found)))
 
 (defn -main [& [port]]
-  (dbc/upgrade)
+;;  (dbc/upgrade)
   (let [port (Integer. (or (System/getenv "PORT") port 5000))]
     (jetty/run-jetty (handler/site #'app) {:port port :join? false})))
