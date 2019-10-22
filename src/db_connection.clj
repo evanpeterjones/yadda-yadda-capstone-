@@ -65,13 +65,13 @@
 ;;(s/def 
 
 (defn location-exists? [zip]
-  (not-empty (query (str "SELECT 1 FROM Location WHERE LOC_ID_PK = '" zip "';"))))
+  (not-empty (query (str "SELECT 1 FROM Location WHERE LOC_ID = '" zip "';"))))
 
 (defn create-location 
   "create a new location in db"
   ([zip city state]
    (jdbc/insert! db-spec :location
-                 {:loc_id_pk zip
+                 {:loc_id zip
                   :loc_alias city
                   :loc_state state}))
   ([loc-data]
@@ -80,18 +80,26 @@
     (loc/get-location-value loc-data :city)
     (loc/get-location-value loc-data :state))))
 
-(defn associate-session-and-zip [loc-data session-id]
-  (let [zip (loc/get-location-value loc-data :zip)]
-    (if (and (location-exists? zip) (session-exists? session-id))
-      (jdbc/update! db-spec
-                    :sessions
-                    {:ses_loc_fk zip}
-                    ["ses_id=?" session-id])
-      (do
-        (create-location loc-data)
-        (associate-session-and-zip loc-data session-id)))))
+(defn get-location-id [zip]
+  (query (str "SELECT LOC_ID_PK FROM Location "
+              "WHERE LOC_ID = '" zip "'")))
 
 (defn get-location-alias 
   "get location alias from zip"
   ([] (get-location-alias "28607"))
-  ([zip] (query (str "SELECT LOC_ALIAS FROM LOCATION WHERE LOC_ID_PK = '" zip "';"))))
+  ([zip] (query (str "SELECT LOC_ALIAS FROM LOCATION WHERE LOC_ID = '" zip "';"))))
+
+(defn associate-session-and-zip [loc-data session-id]
+  (let [zip (loc/get-location-value loc-data :zip)
+        zip-id (if (location-exists? zip)
+                    (get-location-id zip)
+                    nil)]
+    (if (and (location-exists? zip) (session-exists? session-id))
+      (jdbc/update! db-spec
+                    :sessions
+                    {:ses_loc_fk zip-id}
+                    ["ses_id=?" session-id])
+      (do
+        ;; TODO: this assumes session exists, there might be an edge case where it does not
+        (create-location loc-data)
+        (associate-session-and-zip loc-data session-id)))))

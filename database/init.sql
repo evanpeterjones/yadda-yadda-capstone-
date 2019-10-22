@@ -72,8 +72,9 @@ CREATE TABLE IF NOT EXISTS POSTS (
 INSERT INTO Posts(PST_Content, PST_Time) VALUES ('Database Migrated', now());
 
 CREATE TABLE IF NOT EXISTS LOCATION (
-       LOC_ID_PK varchar(10) PRIMARY KEY, -- zipcode, maybe rename to be more specific?
-       LOC_Alias varchar(20) NOT NULL, -- this needs to be generated with server utility
+       LOC_ID_PK SERIAL PRIMARY KEY,
+       LOC_ID varchar(10), -- zipcode, maybe rename to be more specific?
+       LOC_Alias varchar(20), -- this needs to be generated with server utility
        LOC_State varchar(2)
 );
 
@@ -82,6 +83,7 @@ CREATE TABLE IF NOT EXISTS SESSIONS (
        SES_ID VARCHAR(64) UNIQUE, -- This is a generated random hash using the UserID and time?
        SES_USR_ID_FK INT NULL,
        SES_CreatedOn DATE,
+       SES_LOC_FK integer,
        FOREIGN KEY (SES_USR_ID_FK) REFERENCES USERS(USR_ID_PK),
        PRIMARY KEY (SES_ID_PK)
 );
