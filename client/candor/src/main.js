@@ -20,29 +20,34 @@ VueCookies.set('hover-time','1s')
 
 const store = new Vuex.Store({
   state: {
-    loggedIn: false,
     location: '',
-    posts: null
+    posts: []
   },
   getters: {
-    location: state => state.location
+    location: state => state.location,
+    posts: state => state.posts
   },
   mutations: {
     setLocation(state, loc) {
       state.location = loc;
+    },
+    setPosts(state, newPosts) {
+      state.posts.push(newPosts)
     }
   }
 });
 
-Axios.defaults.baseURL = process.env.API_ENDPOINT
-Vue.prototype.$http = Axios
+const ax = Axios.create({
+  crossDomain: true,
+  //baseURL: process.env.NODE_ENV === "development" ? "localhost:5000" : "https://www.internetizens.com"
+});
+Vue.prototype.$http = ax;
 
 store.watch((store) => store.location, (newLocation, oldLocation) => {
   console.log("New Location: "+ newLocation)
-  Axios.get("/db").then((result) => { console.log(result) })
+  // TODO: change this query ?
+  Vue.prototype.$http.get("/db").then((result) => { store.commit("setPosts", result); })
 });
-
-//store.watch((store) => store.loggedIn, (new))
 
 new Vue({
   store,

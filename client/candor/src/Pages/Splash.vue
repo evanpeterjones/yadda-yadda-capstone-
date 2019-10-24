@@ -14,9 +14,8 @@
       <br>
       <b-button
         pill
-        @click="formSubmit
-		"
-      >
+        @click="formSubmit"
+		>
         Search
       </b-button>
     </form>
@@ -35,8 +34,6 @@ p {
 </style>
 
 <script>
-const axios = require('axios')
-
 export default {
     name: "Splash",
     data() {
@@ -66,7 +63,9 @@ export default {
 		
 		formSubmit: function() {
 
-			if (!this.zip) {
+			if (this.zip) {
+				this.$store.commit('setLocation', this.zip);
+			} else {
 				this.zip = this.getLocation();
 			}
 
@@ -79,12 +78,6 @@ export default {
 
 		},
 
-		setLocation: function(loc) {
-			if (loc) {
-				this.$commit('setLocation', loc)
-			}
-		},
-		
 		getLocation: function() {
 
 			var options = {
@@ -102,7 +95,7 @@ export default {
 				console.log(`Longitude: ${crd.longitude}`);
 				console.log(`More or less ${crd.accuracy} meters.`);
 				
-				axios.get('/getzip', {
+				this.$http.get('/getzip', {
 					withCredentials: true,
 					params: {
 						lat : crd.latitude, 
@@ -112,7 +105,6 @@ export default {
 				.then(response => {
 					console.log(response.data)
 					this.$store.commit('setLocation', response.data)
-					console.log(res)
 				}).catch(error => {
 					console.log(error);
 				});

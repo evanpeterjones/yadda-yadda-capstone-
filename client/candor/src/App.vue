@@ -6,7 +6,8 @@
       <Splash />
     </div>
     <div v-if="location">
-      <!-- Feed /-->      
+      <!-- Feed /-->
+      <p> {{ posts }} </p>
     </div>
   </div>
 </template>
@@ -22,6 +23,11 @@ export default {
   components: { 
     NavigationBar, Splash
   }, 
+  data() {
+    return {
+      posts: 'no posts'
+    }
+  },
   computed: {
     location: function() {
       return this.$store.getters.location
@@ -29,13 +35,7 @@ export default {
   },
   watch: {
     'location': function() {
-
-			axios.get("/db").then(response => {
-				console.log(response)
-			}).catch(error => {
-				console.log(error)
-			});
-			
+			this.posts = this.$store.getters.posts;
     }
   }
 }

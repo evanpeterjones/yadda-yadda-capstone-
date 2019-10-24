@@ -22,7 +22,7 @@
                                            (if (dbc/session-exists? ses-id)
                                              ses-id
                                              (dbc/create-session)))
-                                  :max-age (* 60 24 30 365)}} ;; cookie should last for 1 year (?)
+                                  :max-age (* 60 24 30 365)}}
         :body (views/web-app)})
   (GET "/db" []
        {:status 200

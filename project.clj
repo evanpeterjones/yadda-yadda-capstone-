@@ -5,13 +5,16 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.10.0"]
                  [org.clojure/data.json "0.2.6"]
-                 [com.google.api-client/google-api-client "1.30.4"]                        [clj-http "3.10.0"]
+                 [com.google.api-client/google-api-client "1.30.4"]
+                 [clj-http "3.10.0"]
                  [compojure "1.4.0"]
                  [ring/ring-core "1.6.3"]
                  [ring/ring-jetty-adapter "1.6.3"]
                  [ring/ring-json "0.4.0"]
+                 [metosin/compojure-api "1.1.12"]
                  [clojure.jdbc/clojure.jdbc-c3p0 "0.3.1"]
-                 [metosin/compojure-api "2.0.0-alpha30"]
+;                 [metosin/compojure-api "2.0.0-alpha30"]
+                 [metosin/compojure-api "1.1.12"]
                  [environ "1.0.0"]
                  [org.clojure/java.jdbc "0.3.5"]
                  [org.postgresql/postgresql "42.2.4"];;"9.4-1201-jdbc4"]
@@ -25,7 +28,6 @@
   :ring {:handler ducts.web/application
          :auto-reload? true
          :auto-refresh? false}
-  :hooks [environ.leiningen.hooks]
   :main ducts.web
   :aot :all
   :uberjar-name "ducts-standalone.jar"

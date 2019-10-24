@@ -9,14 +9,15 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; GENERAL SETUP ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (def db-spec (or (System/getenv "DATABASE_URL")
-                 {:dbtype "postgresql"
+                 {:connection
+                  {:dbtype "postgresql"
                   :dbname "evanpeterjones"
                   :subprotocol "postgresql"
                   :subname "//localhost:5432/evanpeterjones"
                   :host "localhost"
                   :port "5432"
                   :user "evanpeterjones"
-                  :password "Avogadro6.02"}))
+                  :password "Avogadro6.02"}}))
 
 (defn migrated? []
   "Query to check if db is up" ;; this needs to be updated because it's not accurate
@@ -33,8 +34,7 @@
 (defqueries "upgrade.sql"
   {:connection db-spec})
 
-(defqueries "procedures.sql"
-  {:connection db-spec})
+(defqueries "procedures.sql" db-spec)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; SESSION QUERIES ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
