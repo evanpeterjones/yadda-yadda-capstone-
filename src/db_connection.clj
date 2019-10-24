@@ -1,4 +1,5 @@
 (ns db-connection
+  (:use [nrepl.middleware.print :as pr])
   (:require [yesql.core :refer [defqueries]]
             [clojure.java.jdbc :as jdbc]
             [clojure.spec.alpha :as s]
@@ -92,8 +93,9 @@
 (defn associate-session-and-zip [loc-data session-id]
   (let [zip (loc/get-location-value loc-data :zip)
         zip-id (if (location-exists? zip)
-                    (get-location-id zip)
+                    (:loc_id_pk (get-location-id zip))
                     nil)]
+    (pr (str "zip: " zip "\nzipid: " zip-id))
     (if (and (location-exists? zip) (session-exists? session-id))
       (jdbc/update! db-spec
                     :sessions

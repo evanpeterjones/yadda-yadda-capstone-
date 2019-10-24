@@ -20,6 +20,7 @@ VueCookies.set('hover-time','1s')
 
 const store = new Vuex.Store({
   state: {
+    loggedIn: false,
     location: '',
     posts: null
   },
@@ -40,6 +41,8 @@ store.watch((store) => store.location, (newLocation, oldLocation) => {
   console.log("New Location: "+ newLocation)
   Axios.get("/db").then((result) => { console.log(result) })
 });
+
+//store.watch((store) => store.loggedIn, (new))
 
 new Vue({
   store,
