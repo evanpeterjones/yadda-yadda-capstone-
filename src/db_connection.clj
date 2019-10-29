@@ -19,12 +19,15 @@
                   :user "evanpeterjones"
                   :password "Avogadro6.02"}))
 
-(defn migrated? []
+(defn upgrade? [version]
   "Query to check if db is up" ;; this needs to be updated because it's not accurate
-  (-> (jdbc/query db-spec
-                  [(str "select count(*) from information_schema.tables "
-                        "where table_name='ducts'")])
-      first :count pos?))
+  (let [res (-> (jdbc/query db-spec
+                            [(str "select curr from version;")])
+                first
+                :curr
+                (< version))]
+    (jdbc/update! db-spec :version {:curr version} [])
+    res))
 
 (defn query [q]
   "A function for testing sql queries"
@@ -32,14 +35,14 @@
 
 ;; declare and init all HugSQL queries ;;
 
-(declare get-posts upgrade? upgrade)
+(declare get-posts upgrade)
 
 (hugsql/def-db-fns "upgrade.sql")
 (hugsql/def-db-fns "procedures.sql")
 
 (defn checkup [version]
   "check if db needs to be upgraded"
-  (if (upgrade? db-spec {:version version})
+  (if (upgrade? version)
     (do
       (upgrade db-spec)
       (pprint "database upgraded"))
