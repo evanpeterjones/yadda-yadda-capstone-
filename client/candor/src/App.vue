@@ -6,8 +6,7 @@
       <Splash />
     </div>
     <div v-if="location">
-      <!-- Feed /-->
-      <p> {{ posts }} </p>
+      <Feed />
     </div>
   </div>
 </template>
@@ -15,27 +14,20 @@
 <script>
 import NavigationBar from './components/NavigationBar.vue'
 import Splash from './Pages/Splash.vue'
-//import Feed from './components/Feed.vue'
+import Feed from './components/Feed.vue'
 
 export default {
   title: 'YAPP',
   name: 'App',
   components: { 
-    NavigationBar, Splash
-  }, 
-  data() {
-    return {
-      posts: 'no posts'
-    }
+    NavigationBar, Splash, Feed
   },
   computed: {
     location: function() {
       return this.$store.getters.location
-    }
-  },
-  watch: {
-    'location': function() {
-			this.posts = this.$store.getters.posts;
+    }, 
+    posts: function() {
+      return this.$store.getters.posts;
     }
   }
 }

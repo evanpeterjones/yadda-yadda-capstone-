@@ -8,6 +8,7 @@
                  [com.google.api-client/google-api-client "1.30.4"]
                  [clj-http "3.10.0"]
                  [compojure "1.4.0"]
+                 [com.layerware/hugsql "0.5.1"]
                  [ring/ring-core "1.6.3"]
                  [ring/ring-jetty-adapter "1.6.3"]
                  [ring/ring-json "0.4.0"]
@@ -19,7 +20,8 @@
                  [org.clojure/java.jdbc "0.3.5"]
                  [org.postgresql/postgresql "42.2.4"];;"9.4-1201-jdbc4"]
                  [hiccup "1.0.5"]
-                 [yesql "0.5.3"]]
+                 ;[yesql "0.5.3"]
+                 ]
   :min-lein-version "2.0.0"
   :source-paths ["src"]
   :resource-paths ["resources"]

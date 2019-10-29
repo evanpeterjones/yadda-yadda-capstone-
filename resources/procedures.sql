@@ -1,10 +1,5 @@
--- name: create-user
--- create an anonymous user
-INSERT INTO USERS(USR_Username, USR_Email, USR_CreatedOn)
-VALUES(null, null, NOW());
-
--- name: create-user!
--- create a new user object given {:username :email}
+-- :name create-user!
+-- :doc create a new user object given {:username :email}
 DO $$
 BEGIN 
 
@@ -21,13 +16,8 @@ VALUES(:username, :email, NOW());
 
 END$$;
 
--- name: image-type!
--- insert a new image type
-INSERT INTO IMAGE_ASSOC_TYPES(IAT_PK, IAT_Assoc) VALUES (1, 'profile');
-
-
--- name: update-password!
--- update a password hash given {:password :user-id &optional :update-old-passwords}
+-- :name update-password!
+-- :doc update a password hash given {:password :user-id &optional :update-old-passwords}
 DECLARE newhash varchar(64) = f_PBKDF2(:password);
 DECLARE oldhash varchar(64) = (SELECT PWD_Hash
 FROM Passwords
@@ -51,16 +41,11 @@ END IF;
 INSERT INTO Passwords(PWD_Hash, PWD_USR_FK, PWD_UpdatedOn)
 VALUES (newHash, :user_id, NOW());
 
--- name: get-posts
--- return posts for feed
+-- :name get-posts
+-- :result :json
 -- TODO: select next posts between certain values
-SELECT * FROM POSTS;
+SELECT json_agg(posts) FROM POSTS;
 
--- name: create-post!
--- TODO: calls to NOW() need a replacement resource
-INSERT INTO POSTS(PST_USR_ID_FK, PST_Content, PST_Time, PST_Decentral)
-VALUES(:usr_id, :content, NOW(), :decentral);
-
--- name: delete-post!
--- delete a post when given {:post_key (string)}
+-- :name delete-post!
+-- :doc delete a post when given {:post_key (string)}
 DELETE FROM POSTS WHERE PST_ID_PK = :post_key

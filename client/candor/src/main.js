@@ -37,16 +37,18 @@ const store = new Vuex.Store({
   }
 });
 
+
 const ax = Axios.create({
   crossDomain: true,
-  //baseURL: process.env.NODE_ENV === "development" ? "localhost:5000" : "https://www.internetizens.com"
 });
+
 Vue.prototype.$http = ax;
+
 
 store.watch((store) => store.location, (newLocation, oldLocation) => {
   console.log("New Location: "+ newLocation)
   // TODO: change this query ?
-  Vue.prototype.$http.get("/db").then((result) => { store.commit("setPosts", result); })
+  Vue.prototype.$http.get("/db").then((result) => { store.commit("setPosts", result.data); })
 });
 
 new Vue({

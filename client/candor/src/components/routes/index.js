@@ -19,6 +19,7 @@ export const routes = new Router({
 	    name: 'Yikes',
 	    title: 'Yikes',
 	    component: App
-	},	
+	},
+	// TODO: implement automatic routing
     ]
 })

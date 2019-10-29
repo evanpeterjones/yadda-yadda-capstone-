@@ -1,5 +1,6 @@
 (ns db-connection
-  (:require [yesql.core :refer [defqueries]]
+  (:use [clojure.pprint])
+  (:require [hugsql.core :as hugsql]
             [clojure.java.jdbc :as jdbc]
             [clojure.spec.alpha :as s]
             [ducts.utils.location :as loc]
@@ -9,15 +10,14 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; GENERAL SETUP ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (def db-spec (or (System/getenv "DATABASE_URL")
-                 {:connection
-                  {:dbtype "postgresql"
+                 {:dbtype "postgresql"
                   :dbname "evanpeterjones"
                   :subprotocol "postgresql"
                   :subname "//localhost:5432/evanpeterjones"
                   :host "localhost"
                   :port "5432"
                   :user "evanpeterjones"
-                  :password "Avogadro6.02"}}))
+                  :password "Avogadro6.02"}))
 
 (defn migrated? []
   "Query to check if db is up" ;; this needs to be updated because it's not accurate
@@ -30,15 +30,25 @@
   "A function for testing sql queries"
   (jdbc/query db-spec [q]))
 
-;; generate yesql procedures
-(defqueries "upgrade.sql"
-  {:connection db-spec})
+;; declare and init all HugSQL queries ;;
 
-(defqueries "procedures.sql" db-spec)
+(declare get-posts upgrade? upgrade)
+
+(hugsql/def-db-fns "upgrade.sql")
+(hugsql/def-db-fns "procedures.sql")
+
+(defn checkup [version]
+  "check if db needs to be upgraded"
+  (if (upgrade? db-spec {:version version})
+    (do
+      (upgrade db-spec)
+      (pprint "database upgraded"))
+    (do 
+      (pprint "database up to date"))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; SESSION QUERIES ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; QUERIES ;;
+;; Queries ;;
 
 (defn session-exists? [ses-id]
   (let [results (query (str "SELECT 1 FROM SESSIONS WHERE SES_ID = '" ses-id "';"))]
@@ -61,8 +71,6 @@
 (defn clear-used-sessions [])
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; LOCATION QUERIES ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;;(s/def 
 
 (defn location-exists? [zip]
   (not-empty (query (str "SELECT 1 FROM Location WHERE LOC_ID = '" zip "';"))))
@@ -92,8 +100,8 @@
 (defn associate-session-and-zip [loc-data session-id]
   (let [zip (loc/get-location-value loc-data :zip)
         zip-id (if (location-exists? zip)
-                    (:loc_id_pk (get-location-id zip))
-                    nil)]
+                 (:loc_id_pk (get-location-id zip))
+                 nil)]
     (if (and (location-exists? zip) (session-exists? session-id))
       (jdbc/update! db-spec
                     :sessions
@@ -103,3 +111,13 @@
         ;; TODO: this assumes session exists, there might be an edge case where it does not
         (create-location loc-data)
         (associate-session-and-zip loc-data session-id)))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; POST QUERIES ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defn recent-posts []
+  "get most recent posts"
+  (let [res (query (str "SELECT * FROM POSTS;"))]
+    (if res
+      (do (println res)
+          res)
+      nil)))
