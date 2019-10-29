@@ -1,14 +1,14 @@
 <template>
   <span>
     <post-header
-      :user="user"
-      :location="location"
-      :time="time"
+      :user="postData.user"
+      :location="postData.location"
+      :time="postData.time"
     />
     <p> {{ content }} </p>
     <post-footer
-      :edit="editTime"
-      :location="location"
+      :edit="postData.editTime"
+      :location="postData.location"
     />
   </span>
 </template>
@@ -20,15 +20,9 @@ export default {
     name: "Post",
     props: {
         postData : {
-            user : String,
-            content : String,
-            location : String,
-            time : String,
-            editTime : String
-        }
-    },
-    data () {
-        return {}
+	    type: Object,
+	    default: null
+	}
     }
 }
 </script>

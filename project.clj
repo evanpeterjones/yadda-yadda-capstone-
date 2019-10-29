@@ -3,19 +3,25 @@
   :url "http://ducts.herokuapp.com"
   :license {:name "Eclipse Public License v1.0"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
-  :dependencies [[org.clojure/clojure "1.8.0"]
+  :dependencies [[org.clojure/clojure "1.10.0"]
+                 [org.clojure/data.json "0.2.6"]
+                 [com.google.api-client/google-api-client "1.30.4"]
+                 [clj-http "3.10.0"]
                  [compojure "1.4.0"]
+                 [com.layerware/hugsql "0.5.1"]
                  [ring/ring-core "1.6.3"]
                  [ring/ring-jetty-adapter "1.6.3"]
                  [ring/ring-json "0.4.0"]
-                 [clojure.jdbc/clojure.jdbc-c3p0 "0.3.1"]
                  [metosin/compojure-api "1.1.12"]
-;                 [ring-cors "0.1.13"]
+                 [clojure.jdbc/clojure.jdbc-c3p0 "0.3.1"]
+;                 [metosin/compojure-api "2.0.0-alpha30"]
+                 [metosin/compojure-api "1.1.12"]
                  [environ "1.0.0"]
                  [org.clojure/java.jdbc "0.3.5"]
-                 [org.postgresql/postgresql "9.4-1201-jdbc4"]
+                 [org.postgresql/postgresql "42.2.4"];;"9.4-1201-jdbc4"]
                  [hiccup "1.0.5"]
-                 [yesql "0.5.3"]]
+                 ;[yesql "0.5.3"]
+                 ]
   :min-lein-version "2.0.0"
   :source-paths ["src"]
   :resource-paths ["resources"]
@@ -24,7 +30,6 @@
   :ring {:handler ducts.web/application
          :auto-reload? true
          :auto-refresh? false}
-  :hooks [environ.leiningen.hooks]
   :main ducts.web
   :aot :all
   :uberjar-name "ducts-standalone.jar"

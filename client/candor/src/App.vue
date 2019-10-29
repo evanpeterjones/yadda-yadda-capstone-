@@ -1,42 +1,56 @@
 <template>
-  <div> 
-    <navigation-bar />
-    <div id="app">
-      <Login />
+  <div id="app">
+    <NavigationBar />
+    <h1> {{ location }} </h1>
+    <div v-if="!location">
+      <Splash />
+    </div>
+    <div v-if="location">
+      <Feed />
     </div>
   </div>
 </template>
 
 <script>
-//import HelloWorld from './components/HelloWorld.vue'
 import NavigationBar from './components/NavigationBar.vue'
-import Login from './components/Login.vue'
+import Splash from './Pages/Splash.vue'
+import Feed from './components/Feed.vue'
 
 export default {
+  title: 'YAPP',
   name: 'App',
   components: { 
-    NavigationBar, Login
+    NavigationBar, Splash, Feed
   },
-  mount() {
-    console.log(this.$cookies);
+  computed: {
+    location: function() {
+      return this.$store.getters.location
+    }, 
+    posts: function() {
+      return this.$store.getters.posts;
+    }
   }
 }
 </script>
 
 <style>
+html {
+  background-color: #222222;
+}
+
 :root {
-  --primary: pink; 
+  --primary: pink;
   --secondary: yellow;
   --tertiary: magenta;
 }
 
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+  background-color: #222222;
 }
 </style>

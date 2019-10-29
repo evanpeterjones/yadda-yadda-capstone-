@@ -1,6 +1,6 @@
 const messages = {
-    appname: "Yap",
-    welcome: `Welcome to ${ appname }`
+    appname: "YAPP",
+    welcom: "Welcome to YAPP"
 };
 
 export default messages;

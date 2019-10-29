@@ -6,28 +6,47 @@
   (:require [compojure.route :as route]
             [compojure.handler :as handler]
             [ducts.views :as views]
-            [ducts.api :as api]
-            [db-connection :as dbc]
-            [clojure.java.jdbc :as jdbc])
+            [ducts.utils.cookies :as cku]
+            [ducts.utils.location :as loc]
+            [db-connection :as dbc])
   (:gen-class))
 
-(declare server)
+(declare request-obj)
 
 (defroutes app
-  (GET "/" []
+  (GET "/" request
+       (def request-obj request)
        {:status 200
         :headers {"Content-Type" "text/html"}
-        :cookies {"yadda-session" {:value "12345" ;; (dbc/generate-cookie)
-                                   :max-age (* 60 24 30)}}
+        :cookies {"yapp-session" {:value (let [ses-id (cku/get-cookie-from-request request)]
+                                           (if (dbc/session-exists? ses-id)
+                                             ses-id
+                                             (dbc/create-session)))
+                                  :max-age (* 60 24 30 365)}}
         :body (views/web-app)})
+  (GET "/feed" []
+       {:status 200
+        :headers {"Content-Type" "application/json"}
+        :body (:json_agg (first (dbc/get-posts dbc/db-spec)))})
+  (GET "/bounce" request
+       {:status 200
+        :headers {"Content-Type" "application/json"}
+        :body "adsf" ;(dbc/get-posts)
+        })
+  (GET "/getzip" [lat long :as req]
+       "this route returns a zipcode when given lat and longitude"
+       ;; TODO: ensure parameters are doubles
+       {:status 200
+        :headers {"Content-Type" "application/json"}
+        :body (let [data (loc/get-location-data lat long)]
+                (dbc/associate-session-and-zip data (cku/get-cookie-from-request req))
+                (loc/get-location-value data :zip))})
+
+  ;; TODO: /feed overloading with pagination
   (route/resources "/")
   (route/not-found (views/not-found)))
-  ;(api/api-routes))
-
-;(def app api/api-routes)
-;(def application (wrap-json-response app))
 
 (defn -main [& [port]]
-  ;;(dbc/migrate)
+  (dbc/checkup 1)
   (let [port (Integer. (or (System/getenv "PORT") port 5000))]
     (jetty/run-jetty (handler/site #'app) {:port port :join? false})))
