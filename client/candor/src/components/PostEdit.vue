@@ -1,15 +1,14 @@
 <template>
-<template />
+  <template />
 
-<script>
-  export default {
-  name: "PostEdit",
-  data() {
+  <script>
+    export default {
+    name: "PostEdit",
+    data() {
 
-  }
-  }
-</script>
+    }
+    }
+  </script>
 
-<style>
-  
-</style>
+  <style />
+</template>

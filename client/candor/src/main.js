@@ -48,7 +48,7 @@ Vue.prototype.$http = ax;
 store.watch((store) => store.location, (newLocation, oldLocation) => {
   console.log("New Location: "+ newLocation)
   // TODO: change this query ?
-  Vue.prototype.$http.get("/db").then((result) => { store.commit("setPosts", result.data); })
+  Vue.prototype.$http.get("/feed").then((result) => { store.commit("setPosts", result.data); })
 });
 
 new Vue({

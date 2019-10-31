@@ -1,32 +1,67 @@
 <template>
-  <span>
-    <post-header
-      :user="postData.user"
-      :location="postData.location"
-      :time="postData.time"
-    />
-    <p> {{ content }} </p>
-    <post-footer
-      :edit="postData.editTime"
-      :location="postData.location"
-    />
-  </span>
+  <card>
+    <div>
+      <post-header
+        :userId="user"
+        :time="time" />
+      <p> {{ content }} </p>
+      <post-footer
+        :id="id"
+        :edited="edited" />
+    </div>
+  </card>
 </template>
 
 <script>
 import PostHeader from './PostHeader.vue';
+import PostFooter from './PostFooter'
+import Card from './Card.vue'
 
 export default {
     name: "Post",
+    components: {
+      Card, PostHeader, PostFooter
+    },
     props: {
-        postData : {
-	    type: Object,
-	    default: null
-	}
+      id: {
+        type: String,
+        default: null
+      },
+      user: {
+        type: String,
+        default: null
+      },
+      time: {
+        type: String,
+        default: null
+      },
+      edited: {
+        type: String,
+        default: null
+      },
+      content: {
+        type: String,
+        default: null
+      },
+      decentral: {
+        type: String,
+        default: null
+      }
+    },
+    mounted() {
+      console.log(this.pst_content);
     }
 }
 </script>
 
 <style>
+post {
+  color: white;
+  border-radius: 10px;
+}
 
+p {
+  padding-left: 5%;
+  text-align: left;
+}
 </style>

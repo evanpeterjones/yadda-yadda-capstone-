@@ -27,7 +27,7 @@
   (GET "/feed" []
        {:status 200
         :headers {"Content-Type" "application/json"}
-        :body (:json_agg (first (dbc/get-posts dbc/db-spec)))})
+        :body (.getValue (:json_agg (first (dbc/get-posts dbc/db-spec))))})
   (GET "/bounce" request
        {:status 200
         :headers {"Content-Type" "application/json"}

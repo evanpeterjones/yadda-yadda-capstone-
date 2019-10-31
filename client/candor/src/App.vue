@@ -14,13 +14,14 @@
 <script>
 import NavigationBar from './components/NavigationBar.vue'
 import Splash from './Pages/Splash.vue'
-import Feed from './components/Feed.vue'
+import Feed from './Pages/Feed.vue'
+import BModal from 'bootstrap'
 
 export default {
   title: 'YAPP',
   name: 'App',
   components: { 
-    NavigationBar, Splash, Feed
+    NavigationBar, Splash, Feed, BModal
   },
   computed: {
     location: function() {
@@ -28,6 +29,24 @@ export default {
     }, 
     posts: function() {
       return this.$store.getters.posts;
+    }
+  },
+  methods: {
+    cookies_required: function() {
+      this.$bvModal.msgBoxConfirm("Yapp relies on giving you a cookie to identify you so you don't have to give up your personal information like other social media sites.", {
+            title: 'Please Enable Cookies',
+            size: 'sm',
+            buttonSize: 'sm',
+            okVariant: 'danger',
+            okTitle: 'Okay',
+            hideHeaderClose: false,
+            centered: true
+          })
+    }
+  },
+  mounted() {
+    if (!navigator.cookieEnabled) {
+      this.cookies_required();
     }
   }
 }

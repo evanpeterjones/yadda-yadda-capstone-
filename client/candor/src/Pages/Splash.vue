@@ -15,7 +15,7 @@
       <b-button
         pill
         @click="formSubmit"
-		>
+      >
         Search
       </b-button>
     </form>
@@ -87,13 +87,15 @@ export default {
 			};
 			
 			navigator.geolocation.getCurrentPosition(pos => {
-				console.log(pos)
+				//console.log(pos)
 				var crd = pos.coords;
-					
+				
+				/*
 				console.log('Your current position is:');
 				console.log(`Latitude : ${crd.latitude}`);
 				console.log(`Longitude: ${crd.longitude}`);
 				console.log(`More or less ${crd.accuracy} meters.`);
+				*/
 				
 				this.$http.get('/getzip', {
 					withCredentials: true,
