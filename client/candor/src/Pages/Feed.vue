@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-bind:class="feedclass">
     <div v-for="(post, index) in posts" :key="index">
       <post 
         :id="post['pst_id_pk']"
@@ -7,7 +7,7 @@
         :time="post['pst_time']"
         :edited="post['pst_edittime']"
         :content="post['pst_content']"
-        :decentral="post['pst_decentral']"></post>
+        :decentral="post['pst_decentral']" />
     </div>
   </div>
 </template>
@@ -23,14 +23,13 @@ export default {
     computed: {
       posts : function() {
         return (this.$store.getters.posts[0]);
+      },
+      feedclass: function() {
+        return {
+          'margin' : 'auto',
+          'width' : '50%'
+        };
       }
-    }, 
-    mounted() {
-      console.log(this.posts)
     }
 }
 </script>
-
-<style>
-
-</style>

@@ -6,7 +6,7 @@
         {{ }}
       </div>
       <div class="col-xl-2">
-        {{ time }}
+        {{ parsedTime }}
       </div>
     </div>
   </div>
@@ -14,6 +14,7 @@
 
 <script>
 import getName from '../utils/name-service.js'
+import getTime from '../utils/time-service.js'
 
 export default {
   name: 'PostHeader',
@@ -28,6 +29,13 @@ export default {
       }
 
       return 'Purple Otter';
+    }, 
+    'parsedTime': function() {
+      if (this.time) {
+        return getTime(this.time);
+      }
+
+      return '0:00';
     }
   }
 }
