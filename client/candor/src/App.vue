@@ -1,11 +1,11 @@
 <template>
   <div id="app">
     <NavigationBar />
-    <h1> {{ location }} </h1>
+
     <div v-if="!location">
       <Splash />
     </div>
-    <div v-if="location">
+    <div v-else>
       <Feed />
     </div>
   </div>

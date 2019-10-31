@@ -8,7 +8,7 @@
         {{  }}
       </div>
       <div class="col-xl-2">
-        <b-button
+        <b-button pill
             @click="reply(id)">
             Reply
         </b-button>

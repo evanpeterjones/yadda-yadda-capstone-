@@ -1,17 +1,43 @@
 <template>
-  <span>
-    <h1>{{ appname }}</h1>
-  </span>
+  <div>
+    <div v-if="!location" class="login">
+        <h1>{{ appname }}</h1>
+    </div>
+    <div class="container" v-else>
+        <div class="row">
+            <div class="col-xl-6">
+                <h1>{{ appname }}</h1>
+            </div>
+            <div class="col-xl-6">
+                <b-button pill @click="newPost">New Yapp</b-button>
+            </div>
+        </div>
+    </div>
+  </div>
 </template>
     
 <script>
 //import { messages } from '../en-us.js'
+import NewPost from './NewPost'
 
 export default {
     name: "NavigationBar",
+    components: {
+        NewPost
+    },
     data() {
         return {
             appname : 'YAPP' //'yadda yadda' //²
+        }
+    },
+    computed : {
+        'location' : function() {
+            return this.$store.getters.location;
+        }
+    },
+    methods: {
+        newPost: function() {
+            
         }
     }
 }

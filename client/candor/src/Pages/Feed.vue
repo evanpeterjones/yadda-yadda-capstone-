@@ -1,5 +1,5 @@
 <template>
-  <div v-bind:class="feedclass">
+  <div style="margin:auto;width: 50%;">
     <div v-for="(post, index) in posts" :key="index">
       <post 
         :id="post['pst_id_pk']"
@@ -20,15 +20,17 @@ export default {
     components: {
       Post
     },
+    data () {
+      return {
+        feedClass : {
+          'margin' : 'auto',
+          'width' : '50%'
+        }
+      }
+    },
     computed: {
       posts : function() {
         return (this.$store.getters.posts[0]);
-      },
-      feedclass: function() {
-        return {
-          'margin' : 'auto',
-          'width' : '50%'
-        };
       }
     }
 }

@@ -31,8 +31,7 @@
   (GET "/bounce" request
        {:status 200
         :headers {"Content-Type" "application/json"}
-        :body "adsf" ;(dbc/get-posts)
-        })
+        :body "adsf" })
   (GET "/getzip" [lat long :as req]
        "this route returns a zipcode when given lat and longitude"
        ;; TODO: ensure parameters are doubles

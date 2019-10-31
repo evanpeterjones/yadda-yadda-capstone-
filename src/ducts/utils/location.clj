@@ -1,5 +1,5 @@
 (ns ducts.utils.location
-  ;; server resource to generate db location data from a zipcode
+  ;; server resource to generate location data from latitude and longitude
   (:require [clojure.string]
             [clojure.data.json :as json]
             [clj-http.client :as client]))
@@ -48,7 +48,7 @@
 
   (defn authenticate-location [zip]
     "given a location, determine if the location is valid"
-    (let [loc-row (dbc/get-location zip)] ;; TODO: need location queries
+    (let [loc-row (dbc/get-location zip)]
       (if-not loc-row
         (authenticate-location (generate-location-data zip))
         loc-row))))

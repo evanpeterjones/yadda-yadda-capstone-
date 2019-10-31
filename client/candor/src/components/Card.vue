@@ -22,5 +22,6 @@ export default {
 
 .container {
     padding: 2px 16px;
+    border-radius: 10px;
 }
 </style>
