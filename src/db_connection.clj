@@ -23,8 +23,8 @@
 
 (declare get-posts upgrade get-location-from-session)
 
-(hugsql/def-db-fns "upgrade.sql")
-(hugsql/def-db-fns "procedures.sql")
+(hugsql/def-db-fns "upgrade.sql" {:quoting :psql})
+(hugsql/def-db-fns "procedures.sql" {:quoting :psql})
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; MISCELLANEOUS ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -32,13 +32,18 @@
   "A function for testing sql queries"
   (jdbc/query db-spec [q]))
 
+(defn get-db-version 
+  []
+  (-> (query "SELECT CURR FROM VERSION;")
+      first
+      :curr))
+
 (defn checkup []
   "check if db needs to be upgraded and perform upgrade"
-  (let [version (-> (query "SELECT CURR FROM VERSION;")
-                    first
-                    :curr)]
+  (let [version (get-db-version)]
+    (pprint (str "Database v." version))
     (upgrade db-spec {:version version})
-    (pprint "database upgraded")))
+    (pprint (str "Upgraded v." (get-db-version)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; SESSION QUERIES ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

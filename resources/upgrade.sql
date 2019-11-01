@@ -1,5 +1,4 @@
 -- :name upgrade
--- :command :execute
 -- :doc run all database upgrades
 DO $$
 BEGIN
