@@ -19,35 +19,26 @@
                   :user "evanpeterjones"
                   :password "Avogadro6.02"}))
 
-(defn upgrade? [version]
-  "Query to check if db is up" ;; this needs to be updated because it's not accurate
-  (let [res (-> (jdbc/query db-spec
-                            [(str "select curr from version;")])
-                first
-                :curr
-                (< version))]
-    (jdbc/update! db-spec :version {:curr version} [])
-    res))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; HUG SQL QUERIES ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(declare get-posts upgrade get-location-from-session)
+
+(hugsql/def-db-fns "upgrade.sql")
+(hugsql/def-db-fns "procedures.sql")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; MISCELLANEOUS ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defn query [q]
   "A function for testing sql queries"
   (jdbc/query db-spec [q]))
 
-;; declare and init all HugSQL queries ;;
-
-(declare get-posts upgrade)
-
-(hugsql/def-db-fns "upgrade.sql")
-(hugsql/def-db-fns "procedures.sql")
-
-(defn checkup [version]
-  "check if db needs to be upgraded"
-  (if (upgrade? version)
-    (do
-      (upgrade db-spec)
-      (pprint "database upgraded"))
-    (do 
-      (pprint "database up to date"))))
+(defn checkup []
+  "check if db needs to be upgraded and perform upgrade"
+  (let [version (-> (query "SELECT CURR FROM VERSION;")
+                    first
+                    :curr)]
+    (upgrade db-spec {:version version})
+    (pprint "database upgraded")))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; SESSION QUERIES ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -78,6 +69,15 @@
 (defn location-exists? [zip]
   (not-empty (query (str "SELECT 1 FROM Location WHERE LOC_ID = '" zip "';"))))
 
+(defn get-location-from-session [session]
+  "given a sessionid find the associated location id"
+  (-> (query (str "SELECT LOC_ID_PK "
+                  "FROM SESSIONS, LOCATION "
+                  "WHERE SES_ID = '"
+                  session "'"))
+      first
+      :loc_id_pk))
+
 (defn create-location 
   "create a new location in db"
   ([zip city state]
@@ -106,6 +106,7 @@
                  (:loc_id_pk (get-location-id zip))
                  nil)]
     (if (and (location-exists? zip) (session-exists? session-id))
+      ;; update session table to reference location
       (jdbc/update! db-spec
                     :sessions
                     {:ses_loc_fk zip-id}

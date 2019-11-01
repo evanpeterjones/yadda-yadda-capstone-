@@ -9,6 +9,7 @@
                  [clj-http "3.10.0"]
                  [compojure "1.4.0"]
                  [com.layerware/hugsql "0.5.1"]
+                 [org.clojure/data.json "0.2.6"]
                  [ring/ring-core "1.6.3"]
                  [ring/ring-jetty-adapter "1.6.3"]
                  [ring/ring-json "0.4.0"]

@@ -43,9 +43,13 @@ VALUES (newHash, :user_id, NOW());
 
 -- :name get-posts
 -- :result :json
--- TODO: select next posts between certain values
-SELECT json_agg(posts) FROM POSTS;
+-- TODO: select next posts between certain values {:location int}
+SELECT json_agg(posts)
+FROM POSTS
+WHERE PST_LOC_FK = :location
+GROUP BY PST_TIME
+ORDER BY PST_TIME DESC;
 
 -- :name delete-post!
--- :doc delete a post when given {:post_key (string)}
+-- :doc delete a post when given {:post_key String}
 DELETE FROM POSTS WHERE PST_ID_PK = :post_key

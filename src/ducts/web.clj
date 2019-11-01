@@ -8,6 +8,7 @@
             [ducts.views :as views]
             [ducts.utils.cookies :as cku]
             [ducts.utils.location :as loc]
+            [ducts.utils.database-util :as dbu]
             [db-connection :as dbc])
   (:gen-class))
 
@@ -24,17 +25,18 @@
                                              (dbc/create-session)))
                                   :max-age (* 60 24 30 365)}}
         :body (views/web-app)})
-  (GET "/feed" []
+  (GET "/feed" request
        {:status 200
         :headers {"Content-Type" "application/json"}
-        :body (.getValue (:json_agg (first (dbc/get-posts dbc/db-spec))))})
+        :body (let [loc (dbc/get-location-from-session (cku/get-cookie-from-request request))]
+                (->  (dbc/get-posts dbc/db-spec {:location loc})
+                     dbu/construct-json))})
   (GET "/bounce" request
        {:status 200
         :headers {"Content-Type" "application/json"}
         :body "adsf" })
   (GET "/getzip" [lat long :as req]
        "this route returns a zipcode when given lat and longitude"
-       ;; TODO: ensure parameters are doubles
        {:status 200
         :headers {"Content-Type" "application/json"}
         :body (let [data (loc/get-location-data lat long)]
@@ -43,9 +45,9 @@
 
   ;; TODO: /feed overloading with pagination
   (route/resources "/")
-  (route/not-found (views/not-found)))
+  (route/not-found (views/not-found))) 
 
 (defn -main [& [port]]
-  (dbc/checkup 1)
+;;  (dbc/checkup)
   (let [port (Integer. (or (System/getenv "PORT") port 5000))]
     (jetty/run-jetty (handler/site #'app) {:port port :join? false})))
