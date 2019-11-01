@@ -30,11 +30,12 @@
 (defn upgrade [current-version]
   (let [upgrade-fns (hugsql.core/map-of-db-fns "upgrade.sql")
         newest-version (apply max (map #(Integer. (name %)) (keys upgrade-fns)))]
-    (->> (keys upgrade-fns)
-         (filter #(< current-version (-> % name Integer.)))
-         (apply #((-> % 
-                      upgrade-fns
-                      :fn) db-spec)))
+    (if (> newest-version current-version)
+      (->> (keys upgrade-fns)
+           (filter #(< current-version (-> % name Integer.)))
+           (apply #((-> % 
+                        upgrade-fns
+                        :fn) db-spec))))
     (upgrade-version newest-version)))
 
 (hugsql/def-db-fns "procedures.sql")
