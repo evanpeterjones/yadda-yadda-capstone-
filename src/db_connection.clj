@@ -21,10 +21,23 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; HUG SQL QUERIES ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(declare get-posts upgrade get-location-from-session)
+(declare get-posts get-location-from-session)
 
-(hugsql/def-db-fns "upgrade.sql" {:quoting :psql})
-(hugsql/def-db-fns "procedures.sql" {:quoting :psql})
+(defn upgrade-version [newest-version]
+  "update version table to reflect most recently run database scripts"
+  (jdbc/execute! db-spec [(str "UPDATE VERSION SET CURR = " newest-version ";")]))
+
+(defn upgrade [current-version]
+  (let [upgrade-fns (hugsql.core/map-of-db-fns "upgrade.sql")
+        newest-version (apply max (map #(Integer. (name %)) (keys upgrade-fns)))]
+    (->> (keys upgrade-fns)
+         (filter #(< current-version (-> % name Integer.)))
+         (apply #((-> % 
+                      upgrade-fns
+                      :fn) db-spec)))
+    (upgrade-version newest-version)))
+
+(hugsql/def-db-fns "procedures.sql")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; MISCELLANEOUS ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -42,7 +55,7 @@
   "check if db needs to be upgraded and perform upgrade"
   (let [version (get-db-version)]
     (pprint (str "Database v." version))
-    (upgrade db-spec {:version version})
+    (upgrade version)
     (pprint (str "Upgraded v." (get-db-version)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; SESSION QUERIES ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

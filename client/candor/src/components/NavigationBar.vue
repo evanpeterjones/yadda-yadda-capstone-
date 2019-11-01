@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-if="!location" class="login">
-        <h1>{{ appname }}</h1>
+        <h1>{{ appname[0] }}<span class="logo">{{ appname1 }}</span></h1>
     </div>
     <div class="container" v-else>
         <div class="row">
@@ -30,7 +30,8 @@ export default {
     },
     data() {
         return {
-            appname : 'YAPP' //'yadda yadda' //²
+            appname : 'YAPP', //'yadda yadda' //²
+            appname1 : 'APP' //'yadda yadda' //²
         }
     },
     computed : {
@@ -49,6 +50,15 @@ export default {
 <style>
 @import url('https://fonts.googleapis.com/css?family=Hepta+Slab:900&display=swap');
 
+.logo {
+    font-family: 'Hepta Slab', serif;
+    letter-spacing: 16px;
+    color: gold;
+    text-shadow: -1px -1px 0 #222222,
+                1px -1px 0 #222222,
+                -1px 1px 0 #222222,
+                1px 1px 0 #222222;
+}
 h1{
     font-family: 'Hepta Slab', serif;
     letter-spacing: 16px;
