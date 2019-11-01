@@ -5,11 +5,14 @@
     </div>
     <div class="container" v-else>
         <div class="row">
-            <div class="col-xl-6">
+            <div class="col-xl-4">
                 <h1>{{ appname }}</h1>
             </div>
-            <div class="col-xl-6">
+            <div class="col-xl-4">
                 <b-button pill @click="newPost">New Yapp</b-button>
+            </div>
+            <div class="col-xl-4">
+                <h4>{{ location }}</h4>
             </div>
         </div>
     </div>
@@ -54,6 +57,11 @@ h1{
                 -1px 1px 0 gold,
                 1px 1px 0 gold;
     color: #222222
+}
+h4{
+    font-family: 'Hepta Slab', serif;
+    letter-spacing: 16px;
+    color: gold;
 }
 h1 span {
     box-shadow:0 4px 10px 0 rgba(0,0,0,0.2),0 4px 20px 0 rgba(0,0,0,0.19);
