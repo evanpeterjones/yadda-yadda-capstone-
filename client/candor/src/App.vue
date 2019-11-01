@@ -1,7 +1,6 @@
 <template>
   <div id="app">
     <NavigationBar />
-
     <div v-if="!location">
       <Splash />
     </div>
@@ -29,6 +28,9 @@ export default {
     }, 
     posts: function() {
       return this.$store.getters.posts;
+    }, 
+    mobile: function() {
+      return this.$store.getters.isMobile;
     }
   },
   methods: {
@@ -48,6 +50,12 @@ export default {
     if (!navigator.cookieEnabled) {
       this.cookies_required();
     }
+    
+    this.$nextTick(() => {
+      window.addEventListener('resize', () => {
+        this.$store.commit("setIsMobile", window.innerWidth < 960);
+      });
+    })
   }
 }
 </script>

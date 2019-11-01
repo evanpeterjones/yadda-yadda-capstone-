@@ -36,7 +36,7 @@ export default {
 
             const message = h('div', { class: ['foobar'] }, [
                 h('p', { class: ['text-center'] }, [
-                    "Reply Posts are a feature I'm still workin on ya ungrateful ass"
+                    "Replies too ya ungrateful ass"
                 ]),
                 h('p', { class: ['text-center'] }, [h('b-spinner')])
             ])

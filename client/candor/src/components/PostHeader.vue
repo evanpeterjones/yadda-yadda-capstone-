@@ -2,19 +2,14 @@
   <div class="container"> 
     <div class="row">
       <p>{{ userName }}</p>
-      <div class="col-xl">
-        {{ }}
-      </div>
-      <div class="col-xl-2">
-        {{ parsedTime }}
-      </div>
+      <p style="align:right;">{{ parsedTime }}</p>
     </div>
   </div>
 </template>
 
 <script>
 import getName from '../utils/name-service.js'
-import getTime from '../utils/time-service.js'
+import getTimeSince from '../utils/time-service.js'
 
 export default {
   name: 'PostHeader',
@@ -32,7 +27,7 @@ export default {
     }, 
     'parsedTime': function() {
       if (this.time) {
-        return getTime(this.time);
+        return getTimeSince(this.time);
       }
 
       return '0:00';
@@ -43,6 +38,7 @@ export default {
 
 <style>
 .container {
+  width: 100%;
   margin: 5px;
   color: grey;
 }

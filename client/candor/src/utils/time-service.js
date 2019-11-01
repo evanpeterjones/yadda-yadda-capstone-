@@ -1,19 +1,8 @@
+import moment from 'moment';
 
-function getDayAlias(time){
-    var d = new Date (time);
-
-    if (d.getDate()) {
-
-    }
+function getTimeSince(time, mobile) {
+    var res = moment(time).fromNow();
+    return res;
 }
 
-function getTime(time) {
-    var d = new Date(time);
-
-    var sign = (d.getHours() >= 12) ? "pm" : "am";
-    var hour = (d.getHours() % 12) == 0 ? 12 : d.getHours() % 12;
-    var min = (d.getMinutes() < 10) ? '0'+ d.getMinutes() : d.getMinutes();
-    return hour + ":" + min + sign;
-}
-
-export default getTime;
+export default getTimeSince;

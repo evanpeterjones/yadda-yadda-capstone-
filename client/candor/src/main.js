@@ -21,11 +21,13 @@ VueCookies.set('hover-time','1s')
 const store = new Vuex.Store({
   state: {
     location: '',
-    posts: []
+    posts: [],
+    isMobile: false
   },
   getters: {
     location: state => state.location,
-    posts: state => state.posts
+    posts: state => state.posts,
+    isMobile: state => state.isMobile
   },
   mutations: {
     setLocation(state, loc) {
@@ -33,6 +35,9 @@ const store = new Vuex.Store({
     },
     setPosts(state, newPosts) {
       state.posts.push(newPosts)
+    },
+    setIsMobile(state, isMobileCheck) {
+      state.isMobile = isMobileCheck;
     }
   }
 });
@@ -43,7 +48,6 @@ const ax = Axios.create({
 });
 
 Vue.prototype.$http = ax;
-
 
 store.watch((store) => store.location, (newLocation, oldLocation) => {
   console.log("New Location: "+ newLocation)

@@ -1,7 +1,7 @@
 <template>
   <div style="width:80%;margin:auto;max-width:500px;">
     <br>
-    <p>Please enter a location to view posts</p>
+    <p style="text-align:center">Please enter a location to view posts</p>
     <form>
       <b-form-input
         v-model="zip"

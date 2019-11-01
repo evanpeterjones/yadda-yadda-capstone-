@@ -28,9 +28,11 @@
   (GET "/feed" request
        {:status 200
         :headers {"Content-Type" "application/json"}
-        :body (let [loc (dbc/get-location-from-session (cku/get-cookie-from-request request))]
-                (->  (dbc/get-posts dbc/db-spec {:location loc})
-                     dbu/construct-json))})
+        :body (->> (cku/get-cookie-from-request request)
+                   (dbc/get-location-from-session)
+                   (hash-map :location)
+                   (dbc/get-posts dbc/db-spec)
+                   dbu/construct-json)})
   (GET "/bounce" request
        {:status 200
         :headers {"Content-Type" "application/json"}

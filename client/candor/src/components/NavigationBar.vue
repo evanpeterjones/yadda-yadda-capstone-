@@ -4,15 +4,27 @@
         <h1>{{ appname[0] }}<span class="logo">{{ appname1 }}</span></h1>
     </div>
     <div class="container" v-else>
-        <div class="row">
-            <div class="col-xl-4">
-                <h1>{{ appname }}</h1>
+        <div v-if="!mobile">
+            <div class="row">
+                <div class="col">
+                    <h1>{{ appname }}</h1>
+                </div>
+                <div class="col">
+                    <b-button pill @click="newPost">New Yapp 📣</b-button>
+                </div>
+                <div class="col">
+                    <h4>{{ location }}</h4>
+                </div>
             </div>
-            <div class="col-xl-4">
-                <b-button pill @click="newPost">New Yapp</b-button>
-            </div>
-            <div class="col-xl-4">
-                <h4>{{ location }}</h4>
+        </div>
+        <div v-else>
+            <div class="row">
+                <div class="col">
+                    <h1>{{ appname }}</h1>
+                </div>
+                <div class="col">
+                    <b-button pill @click="newPost">📣</b-button>
+                </div>
             </div>
         </div>
     </div>
@@ -37,11 +49,26 @@ export default {
     computed : {
         'location' : function() {
             return this.$store.getters.location;
+        }, 
+        'mobile' : function() {
+            return this.$store.getters.isMobile;
         }
     },
     methods: {
         newPost: function() {
-            
+            const h = this.$createElement
+
+            const message = h('div', { class: ['foobar'] }, [
+                h('p', { class: ['text-center'] }, [
+                    "I'll start allowing New Yapps soon, check back fam ;)"
+                ]),
+                h('p', { class: ['text-center'] }, [h('b-spinner')])
+            ])
+
+            this.$bvModal.msgBoxOk([message], {
+                buttonSize: 'sm',
+                centered: true, size: 'sm',
+            })            
         }
     }
 }
@@ -51,13 +78,9 @@ export default {
 @import url('https://fonts.googleapis.com/css?family=Hepta+Slab:900&display=swap');
 
 .logo {
-    font-family: 'Hepta Slab', serif;
-    letter-spacing: 16px;
     color: gold;
-    text-shadow: -1px -1px 0 #222222,
-                1px -1px 0 #222222,
-                -1px 1px 0 #222222,
-                1px 1px 0 #222222;
+    text-shadow: 0px 0px 0 #222222;
+    box-shadow:0 0px 0px 0 rgba(0,0,0,0),0 0px 0px 0 rgba(0,0,0,0);
 }
 h1{
     font-family: 'Hepta Slab', serif;
