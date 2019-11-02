@@ -8,7 +8,7 @@ export let animals = [
 ];
 
 export let colors = [
-    'Amaranth', 'Antique', 'Amber', 'Apricot', 'Aqua', 'Arctic', 'Auburn', 'Almond'
+    'Amaranth', 'Amber', 'Apricot', 'Aqua', 'Arctic', 'Auburn', 'Almond'
 ];
 
 function getName(user_id) {
