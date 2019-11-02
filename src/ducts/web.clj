@@ -16,38 +16,44 @@
 
 (defroutes app
   (GET "/" request
-       (def request-obj request)
-       {:status 200
-        :headers {"Content-Type" "text/html"}
-        :cookies {"yapp-session" {:value (let [ses-id (cku/get-cookie-from-request request)]
-                                           (if (dbc/session-exists? ses-id)
-                                             ses-id
-                                             (dbc/create-session)))
-                                  :max-age (* 60 24 30 365)}}
-        :body (views/web-app)})
+    (def request-obj request)
+    {:status 200
+     :headers {"Content-Type" "text/html"}
+     :cookies {"yapp-session" {:value (let [ses-id (cku/get-cookie-from-request request)]
+                                        (if (dbc/session-exists? ses-id)
+                                          ses-id
+                                          (dbc/create-session)))
+                               :max-age (* 60 24 30 365)}}
+     :body (views/web-app)})
   (GET "/feed" request
-       {:status 200
-        :headers {"Content-Type" "application/json"}
-        :body (->> (cku/get-cookie-from-request request)
-                   (dbc/get-location-from-session)
-                   (hash-map :location)
-                   (dbc/get-posts dbc/db-spec)
-                   dbu/construct-json)})
+    ;; this still needs pagination so we don't just ship out all of our posts (long term)
+    {:status 200
+     :headers {"Content-Type" "application/json"}
+     :body (->> (cku/get-cookie-from-request request)
+                (dbc/get-location-from-session)
+                (hash-map :location)
+                (dbc/get-posts dbc/db-spec)
+                dbu/construct-json)})
   (GET "/bounce" request
-       {:status 200
-        :headers {"Content-Type" "application/json"}
-        :body "adsf" })
+    {:status 200
+     :headers {"Content-Type" "application/json"}
+     :body "adsf"})
   (GET "/getzip" [lat long :as req]
-       "this route returns a zipcode when given lat and longitude"
-       {:status 200
-        :headers {"Content-Type" "application/json"}
-        :body (let [data (loc/get-location-data lat long)]
-                (dbc/associate-session-and-zip data (cku/get-cookie-from-request req))
-                (loc/get-location-value data :zip))})
+    "this route returns a zipcode when given lat and longitude"
+    {:status 200
+     :headers {"Content-Type" "application/json"}
+     :body (let [data (loc/get-location-data lat long)]
+             (dbc/associate-session-and-zip data (cku/get-cookie-from-request req))
+             (loc/get-location-value data :zip))})
+  (POST "/newPost" request
+        (let [ses (cku/get-cookie-from-request request)
+              user (dbc/get-user-from-session-id ses)
+              content (get (:params request) :content)
+              location-fk (dbc/get-location-from-session ses)]
+          (dbc/create-new-post user content location-fk)))
 
-  ;; TODO: /feed overloading with pagination
   (route/resources "/")
-  (route/not-found (views/not-found))) 
+  (route/not-found (views/not-found)))
 
 (defn -main [& [port]]
   (dbc/checkup)

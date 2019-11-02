@@ -59,6 +59,13 @@
     (upgrade version)
     (pprint (str "Upgraded v." (get-db-version)))))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; USER QUERIES ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defn get-user-from-session-id [session-id]
+  (query ["SELECT USR_ID_PK "
+          "FROM SESSIONS, USERS"
+          "WHERE SES_ID = '" session-id "';"]))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; SESSION QUERIES ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; Queries ;;
@@ -78,6 +85,7 @@
   (let [ses-id (get-session-id)]
     (jdbc/insert! db-spec :sessions
                   {:ses_id ses-id
+                   :ses_usr_id_fk (-> (create-user db-spec) first :usr_id_pk)
                    :ses_createdon (new Timestamp (.getMillis (t/now)))})
     ses-id))
 
@@ -144,3 +152,8 @@
       (do (println res)
           res)
       nil)))
+
+(defn create-new-post [user content location-fk]
+  (jdbc/execute! db-spec 
+                 [(str "INSERT INTO POSTS (pst_usr_id_fk, pst_content, pst_loc_fk, pst_time)"
+                       "VALUES(?,?,?,now())") user content location-fk]))

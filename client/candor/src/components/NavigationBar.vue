@@ -10,7 +10,7 @@
                     <h1>{{ appname }}</h1>
                 </div>
                 <div class="col">
-                    <b-button pill @click="newPost">New Yapp 📣</b-button>
+                    <b-button pill @click="newPostDialog">New Yapp 📣</b-button>
                 </div>
                 <div class="col">
                     <h4>{{ location }}</h4>
@@ -23,7 +23,7 @@
                     <h1>{{ appname }}</h1>
                 </div>
                 <div class="col">
-                    <b-button pill @click="newPost">📣</b-button>
+                    <b-button pill @click="newPostDialog">📣</b-button>
                 </div>
             </div>
         </div>
@@ -55,7 +55,18 @@ export default {
         }
     },
     methods: {
-        newPost: function() {
+        newPost: function(data) {
+            this.$http.post("/newPost", {
+                content : "test post from the client"
+            }).then(response => {
+                console.log(response)
+                console.log('HOLY FUCKING SHIT!!!!!!!');
+            }).catch(error => {
+                console.log(error)
+                console.log("it's alright, try again");
+            });
+        },
+        newPostDialog: function() {
             const h = this.$createElement
 
             const message = h('div', { class: ['foobar'] }, [
@@ -68,7 +79,12 @@ export default {
             this.$bvModal.msgBoxOk([message], {
                 buttonSize: 'sm',
                 centered: true, size: 'sm',
-            })            
+                headerClass: 'p-2 border-bottom-0',
+                footerClass: 'p-2 border-top-0',
+            }).then(value => {
+                console.log("sending post");
+                this.newPost();
+            })
         }
     }
 }

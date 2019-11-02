@@ -1,8 +1,8 @@
 {
     "name": "Yapp",
     "short_name": "Yapp",
-    "start_url": "index.html",
+    "start_url": "https://www.internetizens.net/index.html",
     "display": "standalone",
-    "theme_color": "#0476F2",
+    "theme_color": "#04726",
     "background_color": "#222222"
 }

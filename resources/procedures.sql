@@ -1,20 +1,12 @@
--- :name create-user!
+-- :name create-user :<!
 -- :doc create a new user object given {:username :email}
-DO $$
-BEGIN 
-
-IF EXISTS (SELECT 1 FROM Users WHERE USR_Username = :username) THEN
-    RAISE EXCEPTION 'User with that username already exists';
-END IF;
 
 -- TODO: need to generate a password to email/text to users in order to reset
 -- INSERT INTO PASSWORDS(PWD_Hash, PWD_Reset, PWD_CreatedOn)
 -- VALUES(/*somefunction*/'a32id$d', 1, NOW());
+INSERT INTO USERS(USR_CreatedOn)
+VALUES(NOW()) RETURNING usr_id_pk;
 
-INSERT INTO USERS(USR_Username, USR_Email, USR_CreatedOn)
-VALUES(:username, :email, NOW());
-
-END$$;
 
 -- :name update-password!
 -- :doc update a password hash given {:password :user-id &optional :update-old-passwords}
