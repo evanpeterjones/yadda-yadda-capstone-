@@ -31,11 +31,10 @@
   (let [upgrade-fns (hugsql.core/map-of-db-fns "upgrade.sql")
         newest-version (apply max (map #(Integer. (name %)) (keys upgrade-fns)))]
     (if (> newest-version current-version)
+      ;; "apply the database upgrades where the current version is <
       (->> (keys upgrade-fns)
            (filter #(< current-version (-> % name Integer.)))
-           (apply #((-> % 
-                        upgrade-fns
-                        :fn) db-spec))))
+           (apply #((-> % upgrade-fns :fn) db-spec))))
     (upgrade-version newest-version)))
 
 (hugsql/def-db-fns "procedures.sql")
@@ -62,9 +61,9 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; USER QUERIES ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defn get-user-from-session-id [session-id]
-  (query ["SELECT USR_ID_PK "
-          "FROM SESSIONS, USERS"
-          "WHERE SES_ID = '" session-id "';"]))
+  (-> (query (str "select USR_ID_PK FROM SESSIONS, USERS WHERE SES_ID = '" session-id "';"))
+      first
+      :usr_id_pk))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; SESSION QUERIES ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

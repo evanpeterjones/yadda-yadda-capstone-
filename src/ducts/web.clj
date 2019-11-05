@@ -46,10 +46,14 @@
              (dbc/associate-session-and-zip data (cku/get-cookie-from-request req))
              (loc/get-location-value data :zip))})
   (POST "/newPost" request
+;;        (pprint (str "newpost: " request))
+        (def request-obj request)
+
         (let [ses (cku/get-cookie-from-request request)
               user (dbc/get-user-from-session-id ses)
               content (get (:params request) :content)
               location-fk (dbc/get-location-from-session ses)]
+          (pprint (str "test: " ses "\n" user "\n" content "\n" location-fk))
           (dbc/create-new-post user content location-fk)))
 
   (route/resources "/")
