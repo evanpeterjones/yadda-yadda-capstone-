@@ -22,12 +22,14 @@ const store = new Vuex.Store({
   state: {
     location: '',
     posts: [],
-    isMobile: false
+    isMobile: window.innerWidth < 500, 
+    userId : null
   },
   getters: {
     location: state => state.location,
     posts: state => state.posts,
-    isMobile: state => state.isMobile
+    isMobile: state => state.isMobile,
+    userId: state => state.userId
   },
   mutations: {
     setLocation(state, loc) {
@@ -37,11 +39,13 @@ const store = new Vuex.Store({
       state.posts.push(newPosts)
     },
     setIsMobile(state, isMobileCheck) {
-      state.isMobile = isMobileCheck;
+      state.isMobile = isMobileCheck < 800;
+    }, 
+    setUserId(state, newUser) {
+      state.userId = newUser;
     }
   }
 });
-
 
 const ax = Axios.create({
   crossDomain: true,
@@ -52,6 +56,10 @@ Vue.prototype.$http = ax;
 store.watch((store) => store.location, (newLocation, oldLocation) => {
   console.log("New Location: "+ newLocation)
   // TODO: change this query ?
+  Vue.prototype.$http.get("/getUserFromSession").then((result) => { 
+    console.log("new userid: "+result.data);
+    store.commit("setUserId", result.data);
+   })
   Vue.prototype.$http.get("/feed").then((result) => { store.commit("setPosts", result.data); })
 });
 

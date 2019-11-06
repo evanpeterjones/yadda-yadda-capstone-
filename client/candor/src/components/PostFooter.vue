@@ -1,13 +1,13 @@
 <template>
   <div class="container"> 
     <div class="row">
-      <div class="col-xl">
+      <div class="col">
         {{  }}
       </div>
-      <div class="col-xl">
-        {{  }}
+      <div class="col">
+        <p v-if="myPost">Edit</p>
       </div>
-      <div class="col-xl-2">
+      <div class="col">
         <b-button pill
             @click="reply(id)">
             Reply
@@ -21,14 +21,23 @@
 export default {
     name: "PostFooter", 
     props: {
+        user: {
+          type: Number,
+          default: null
+        },
         id: {
-            type: String,
-            default: ''
+            type: Number,
+            default: -1
         }, 
         edited: {
             type: String,
             default: null
         }
+    },
+    computed: {
+      myPost: function() {
+        return this.user && this.$store.getters.userId == this.user;
+      }
     },
     methods: {
         reply: function(post_id) {

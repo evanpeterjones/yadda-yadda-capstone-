@@ -6,6 +6,7 @@
         :time="time" />
       <p> {{ content }} </p>
       <post-footer
+        :user="user"
         :id="id"
         :edited="edited" />
     </div>
@@ -24,11 +25,11 @@ export default {
     },
     props: {
       id: {
-        type: String,
+        type: Number,
         default: null
       },
       user: {
-        type: String,
+        type: Number,
         default: null
       },
       time: {
@@ -47,9 +48,6 @@ export default {
         type: String,
         default: null
       }
-    },
-    mounted() {
-      console.log(this.pst_content);
     }
 }
 </script>

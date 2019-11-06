@@ -54,15 +54,4 @@ PERFORM F_DBVERSION(3);
 
 END $$;
 
--- will be next upgrade
-
-DO $$
-BEGIN
-
-ALTER TABLE POSTS ALTER COLUMN PST_LOC_FK NOT NULL;
-
-PERFORM F_DBVERSION(4);
-
-END $$
-
 -- yeet

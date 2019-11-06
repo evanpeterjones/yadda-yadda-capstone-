@@ -12,7 +12,7 @@
             [db-connection :as dbc])
   (:gen-class))
 
-(declare request-obj)
+(declare ro)
 
 (defroutes app
   (GET "/" request
@@ -45,16 +45,27 @@
      :body (let [data (loc/get-location-data lat long)]
              (dbc/associate-session-and-zip data (cku/get-cookie-from-request req))
              (loc/get-location-value data :zip))})
+  (GET "/getUserFromSession" request
+       {:status 200
+        :headers {"Content-Type" "application/json"}
+        :body (str (->> (cku/get-cookie-from-request request)
+                        dbc/get-user-from-session-id))})
   (POST "/newPost" request
-;;        (pprint (str "newpost: " request))
-        (def request-obj request)
-
+        (def ro request)
         (let [ses (cku/get-cookie-from-request request)
               user (dbc/get-user-from-session-id ses)
-              content (get (:params request) :content)
+              content (if (-> request
+                              :query-string)
+                        (-> request
+                            :query-string
+                            (.split "=")
+                            (get 1)
+                            (.replace "+" " "))
+                        "")
               location-fk (dbc/get-location-from-session ses)]
-          (pprint (str "test: " ses "\n" user "\n" content "\n" location-fk))
-          (dbc/create-new-post user content location-fk)))
+          ;;          (pprint (str "test: " ses "\n" user "\n" content "\n" location-fk))
+          (if (not (-> content .trim .isEmpty))
+            (dbc/create-new-post user content location-fk))))
 
   (route/resources "/")
   (route/not-found (views/not-found)))

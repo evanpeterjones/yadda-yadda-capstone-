@@ -56,20 +56,26 @@ export default {
     },
     methods: {
         newPost: function(data) {
-            this.$http.post("/newPost", {
-                content : "test post from the client"
+            if (!data) { console.log("data can't be null"); return; }
+
+            this.$http.post("/newPost", null, {
+                params: {
+                   content : (data) ? data : ""
+                }
             }).then(response => {
                 console.log(response)
-                console.log('HOLY FUCKING SHIT!!!!!!!');
+                console.log('Yay, new post!!!');
             }).catch(error => {
-                console.log(error)
-                console.log("it's alright, try again");
+                console.error(error)
             });
         },
         newPostDialog: function() {
+            this.$emit('newPostDialog');
+/*
             const h = this.$createElement
 
             const message = h('div', { class: ['foobar'] }, [
+                h('input', { id: ['post-content']}),
                 h('p', { class: ['text-center'] }, [
                     "I'll start allowing New Yapps soon, check back fam ;)"
                 ]),
@@ -83,9 +89,10 @@ export default {
                 footerClass: 'p-2 border-top-0',
             }).then(value => {
                 console.log("sending post");
-                this.newPost();
+                //this.newPost("");
             })
-        }
+            */
+        }        
     }
 }
 </script>

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="feed-container">
     <div v-if="mobile">
       <div v-for="(post, index) in posts" :key="index">
         <post 
@@ -51,3 +51,9 @@ export default {
     }
 }
 </script>
+
+<style scoped>
+.feed-container{
+  height: 20px;
+}
+</style>

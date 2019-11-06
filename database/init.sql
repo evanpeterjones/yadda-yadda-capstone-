@@ -68,7 +68,7 @@ CREATE TABLE IF NOT EXISTS POSTS (
   PST_IsDecentral BOOLEAN DEFAULT FALSE
 );
 
-INSERT INTO Posts(PST_Content, PST_Time) VALUES ('Database Migrated', now());
+-- INSERT INTO Posts(PST_Content, PST_Time) VALUES ('Database Migrated', now());
 
 CREATE TABLE IF NOT EXISTS LOCATION (
        LOC_ID_PK SERIAL PRIMARY KEY,

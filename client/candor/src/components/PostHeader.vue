@@ -1,8 +1,12 @@
 <template>
   <div class="container"> 
     <div class="row">
-      <p>{{ userName }}</p>
-      <p style="align:right;">{{ parsedTime }}</p>
+      <div class="col font-weight-bold text-nowrap">
+        <p>{{ userName }}</p>
+      </div>
+      <div class="col text-nowrap text-lg-right">
+          <p style="align:right;">{{ parsedTime }}</p>
+      </div>
     </div>
   </div>
 </template>
@@ -14,7 +18,7 @@ import getTimeSince from '../utils/time-service.js'
 export default {
   name: 'PostHeader',
   props: {
-    userId: { type: String, default: null },
+    userId: { type: Number, default: -1 },
     time: { type: String, default: '' }
   }, 
   computed: {

@@ -61,7 +61,10 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; USER QUERIES ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defn get-user-from-session-id [session-id]
-  (-> (query (str "select USR_ID_PK FROM SESSIONS, USERS WHERE SES_ID = '" session-id "';"))
+  (-> (query (str "select USR_ID_PK "
+                  "FROM SESSIONS, USERS "
+                  "WHERE SES_ID = '" session-id "' "
+                  "AND SES_USR_ID_FK = USR_ID_PK"))
       first
       :usr_id_pk))
 

@@ -1,18 +1,23 @@
 <template>
   <div id="app">
-    <NavigationBar />
+    <NavigationBar 
+      @newPostDialog="swapDialog('newPost')"/>
     <div v-if="!location">
       <Splash />
     </div>
     <div v-else>
       <Feed />
     </div>
+    <component 
+      :is="CurrDialog"
+      @closeDialog="swapDialog(null)"></component>
   </div>
 </template>
 
 <script>
 import NavigationBar from './components/NavigationBar.vue'
 import Splash from './Pages/Splash.vue'
+import NewPost from './components/NewPost.vue'
 import Feed from './Pages/Feed.vue'
 import BModal from 'bootstrap'
 
@@ -20,7 +25,15 @@ export default {
   title: 'YAPP',
   name: 'App',
   components: { 
-    NavigationBar, Splash, Feed, BModal
+    NavigationBar, Splash, Feed, BModal, NewPost
+  },
+  data () {
+    return {
+      CurrDialog : null,
+      components : {
+        'newPost' : NewPost
+      }
+    }
   },
   computed: {
     location: function() {
@@ -33,7 +46,22 @@ export default {
       return this.$store.getters.isMobile;
     }
   },
+  mounted() {
+    if (!navigator.cookieEnabled) {
+      this.cookies_required();
+    }
+    
+    this.$nextTick(() => {
+      window.addEventListener('resize', () => {
+        this.$store.commit("setIsMobile", window.innerWidth);
+      });
+    })
+  },
   methods: {
+    swapDialog: function(val) {
+      console.log("caught new swap dialog")
+      this.CurrDialog = this.components[val];
+    },
     cookies_required: function() {
       this.$bvModal.msgBoxConfirm("Yapp relies on giving you a cookie to identify you so you don't have to give up your personal information like other social media sites.", {
             title: 'Please Enable Cookies',
@@ -45,17 +73,6 @@ export default {
             centered: true
           })
     }
-  },
-  mounted() {
-    if (!navigator.cookieEnabled) {
-      this.cookies_required();
-    }
-    
-    this.$nextTick(() => {
-      window.addEventListener('resize', () => {
-        this.$store.commit("setIsMobile", window.innerWidth < 960);
-      });
-    })
   }
 }
 </script>
