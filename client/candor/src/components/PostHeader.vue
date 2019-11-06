@@ -4,8 +4,9 @@
       <div class="col font-weight-bold text-nowrap">
         <p>{{ userName }}</p>
       </div>
-      <div class="col text-nowrap text-lg-right">
-          <p style="align:right;">{{ parsedTime }}</p>
+      <div class="col"></div>
+      <div class="col text-nowrap">
+        <p>{{ parsedTime }}</p>
       </div>
     </div>
   </div>
@@ -42,8 +43,7 @@ export default {
 
 <style>
 .container {
-  width: 100%;
-  margin: 5px;
   color: grey;
+  margin: 5px;
 }
 </style>

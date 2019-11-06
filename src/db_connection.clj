@@ -21,7 +21,7 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; HUG SQL QUERIES ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(declare get-posts get-location-from-session)
+(declare get-posts get-post get-location-from-session create-post<!)
 
 (defn upgrade-version [newest-version]
   "update version table to reflect most recently run database scripts"
@@ -98,14 +98,22 @@
 (defn location-exists? [zip]
   (not-empty (query (str "SELECT 1 FROM Location WHERE LOC_ID = '" zip "';"))))
 
-(defn get-location-from-session [session]
+(defn get-zip-from-session [ses]
   "given a sessionid find the associated location id"
-  (-> (query (str "SELECT LOC_ID_PK "
+  (-> (query (str "SELECT LOC_ID "
                   "FROM SESSIONS, LOCATION "
                   "WHERE SES_ID = '"
-                  session "'"))
+                  ses "'"))
       first
-      :loc_id_pk))
+      :loc_id))
+
+(defn get-location-from-session [session]
+  "given a sessionid find the associated location id"
+  (-> (query (str "SELECT SES_LOC_FK "
+                  "FROM SESSIONS, LOCATION "
+                  "WHERE SES_ID = '" session "'"))
+      first
+      :ses_loc_fk))
 
 (defn create-location 
   "create a new location in db"
@@ -129,10 +137,20 @@
   ([] (get-location-alias "28607"))
   ([zip] (query (str "SELECT LOC_ALIAS FROM LOCATION WHERE LOC_ID = '" zip "';"))))
 
-(defn associate-session-and-zip [loc-data session-id]
+(defn associate-session-and-zip [zip session-id]
+  (let [zip-id (if (location-exists? zip)
+                 (:loc_id_pk (first (get-location-id zip)))
+                 nil)]
+    (if (and zip-id (location-exists? zip) (session-exists? session-id))
+      (jdbc/update! db-spec
+                    :sessions
+                    {:ses_loc_fk zip-id}
+                    ["ses_id=?" session-id]))))
+
+(defn associate-session-and-location-data [loc-data session-id]
   (let [zip (loc/get-location-value loc-data :zip)
         zip-id (if (location-exists? zip)
-                 (:loc_id_pk (get-location-id zip))
+                 (:loc_id_pk (first (get-location-id zip)))
                  nil)]
     (if (and (location-exists? zip) (session-exists? session-id))
       ;; update session table to reference location
@@ -141,7 +159,7 @@
                     {:ses_loc_fk zip-id}
                     ["ses_id=?" session-id])
       (do
-        ;; TODO: this assumes session exists, there might be an edge case where it does not
+        ;; TODO: assumes session exists, might be an edge case where it does not?
         (create-location loc-data)
         (associate-session-and-zip loc-data session-id)))))
 
@@ -155,7 +173,31 @@
           res)
       nil)))
 
+(defn get-post-by-id [post-id]
+  "wrapper for hugsql query"
+  (-> (get-post db-spec {:post_id post-id})
+      first
+      :json_agg
+      (.getValue)))
+
 (defn create-new-post [user content location-fk]
-  (jdbc/execute! db-spec 
-                 [(str "INSERT INTO POSTS (pst_usr_id_fk, pst_content, pst_loc_fk, pst_time)"
-                       "VALUES(?,?,?,now())") user content location-fk]))
+  "wrapper for hugsql query"
+  (-> (create-post<! db-spec {:user user :content content :location location-fk})
+      first
+      :pst_id_pk))
+
+(defn post-exists? [pid]
+  (not (.isEmpty (query (str "SELECT * FROM POSTS WHERE PST_ID_PK = '" pid "';")))))
+
+(defn delete-post [pid]
+  (jdbc/execute! db-spec
+                 [(str "DELETE FROM POSTS WHERE PST_ID_PK = '" pid "';")]))
+
+(defn get-user-id-from-post-id [pid]
+  (if (post-exists? pid)
+    (-> (query (str "SELECT PST_USR_ID_FK "
+                    "FROM POSTS "
+                    "WHERE PST_ID_PK = '" pid "';"))
+        first
+        :pst_usr_id_fk)
+    nil))

@@ -1,33 +1,15 @@
--- name: create-user
--- create an anonymous user
-INSERT INTO USERS(USR_Username, USR_Email, USR_CreatedOn)
-VALUES(null, null, NOW());
-
--- name: create-user!
--- create a new user object given {:username :email}
-DO $$
-BEGIN 
-
-IF EXISTS (SELECT 1 FROM Users WHERE USR_Username = :username) THEN
-    RAISE EXCEPTION 'User with that username already exists';
-END IF;
+-- :name create-user :<!
+-- :doc create a new user object given {:username :email}
 
 -- TODO: need to generate a password to email/text to users in order to reset
 -- INSERT INTO PASSWORDS(PWD_Hash, PWD_Reset, PWD_CreatedOn)
 -- VALUES(/*somefunction*/'a32id$d', 1, NOW());
-
-INSERT INTO USERS(USR_Username, USR_Email, USR_CreatedOn)
-VALUES(:username, :email, NOW());
-
-END$$;
-
--- name: image-type!
--- insert a new image type
-INSERT INTO IMAGE_ASSOC_TYPES(IAT_PK, IAT_Assoc) VALUES (1, 'profile');
+INSERT INTO USERS(USR_CreatedOn)
+VALUES(NOW()) RETURNING usr_id_pk;
 
 
--- name: update-password!
--- update a password hash given {:password :user-id &optional :update-old-passwords}
+-- :name update-password!
+-- :doc update a password hash given {:password :user-id &optional :update-old-passwords}
 DECLARE newhash varchar(64) = f_PBKDF2(:password);
 DECLARE oldhash varchar(64) = (SELECT PWD_Hash
 FROM Passwords
@@ -51,50 +33,15 @@ END IF;
 INSERT INTO Passwords(PWD_Hash, PWD_USR_FK, PWD_UpdatedOn)
 VALUES (newHash, :user_id, NOW());
 
--- name: get-posts
--- return posts for feed
--- TODO: select next posts between certain values
-SELECT * FROM POSTS;
+-- :name get-posts
+-- :result :json
+-- TODO: select next posts between certain values {:location int}
+SELECT json_agg(posts)
+FROM POSTS
+WHERE PST_LOC_FK = :location
+GROUP BY PST_TIME
+ORDER BY PST_TIME DESC;
 
--- name: create-post!
--- TODO: calls to NOW() need a replacement resource
-INSERT INTO POSTS(PST_USR_ID_FK, PST_Content, PST_Time, PST_Decentral)
-VALUES(:usr_id, :content, NOW(), :decentral);
-
--- name: delete-post!
--- delete a post when given {:post_key (string)}
+-- :name delete-post!
+-- :doc delete a post when given {:post_key String}
 DELETE FROM POSTS WHERE PST_ID_PK = :post_key
-
--- name: session-exists?
--- {:ses_id (string)} if session exists, return the SES_ID otherwise create a new session
-DO $$
-BEGIN
-
-IF EXISTS (SELECT 1 FROM Sessions WHERE SES_ID = :ses_id) THEN
-
-   RETURN :ses_id;
-
-ELSE
-   
-   RETURN NULL;
-
-END $$;
-
--- name: create-session
--- {:user_id (integer)} create a session and associate it with a user ID
-
-DO $$
-BEGIN
-
-IF EXISTS (SELECT 1 FROM USERS WHERE USR_ID_PK = :user_id) THEN
-
-   INSERT INTO Sessions(SES_USR_ID_FK, SES_ID, SES_CreatedOn)
-   VALUES (:user_id, MD5(random()::text), NOW());
-
-ELSE
-	
-   RAISE EXCEPTION 'NO USER WITH THAT ID EXISTS'
-
-END IF;
-
-END $$;

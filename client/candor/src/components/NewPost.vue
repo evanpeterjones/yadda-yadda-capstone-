@@ -29,15 +29,19 @@ export default {
         this.$emit('closeDialog');
       }, 
       send: function(data) {
-        if (!data) { console.log("data can't be null"); return; }
+        if (!data) { console.log("data can't be null"); return; }        
 
-        this.$http.post("/newPost", null, {
+        this.$http.get("/newPost", {
           params: {
-              content : (data) ? data : ""
+            content : (data) ? data : ""
           }
         }).then(response => {
+          /*
+            TODO: query needs to return the data for this row to commit
+          this.$store.commit('newPost', data.)
+          */
           console.log(response)
-          console.log('Yay, new post!!!');
+          this.$store.commit("newPost", response.data[0], response.data[0].pst_id_pk)
         }).catch(error => {
           console.error(error)
         });

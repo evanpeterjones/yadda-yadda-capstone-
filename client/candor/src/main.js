@@ -43,6 +43,12 @@ const store = new Vuex.Store({
     }, 
     setUserId(state, newUser) {
       state.userId = newUser;
+    }, 
+    deletePost(state, postID) {
+      delete state.posts.postID;
+    }, 
+    newPost(state, newPost, postId) {
+      state.posts[postId] = newPost;
     }
   }
 });
@@ -55,12 +61,15 @@ Vue.prototype.$http = ax;
 
 store.watch((store) => store.location, (newLocation, oldLocation) => {
   console.log("New Location: "+ newLocation)
-  // TODO: change this query ?
+  
   Vue.prototype.$http.get("/getUserFromSession").then((result) => { 
     console.log("new userid: "+result.data);
     store.commit("setUserId", result.data);
-   })
-  Vue.prototype.$http.get("/feed").then((result) => { store.commit("setPosts", result.data); })
+  });
+
+  Vue.prototype.$http.get("/feed").then((result) => {
+    store.commit("setPosts", result.data); 
+  });
 });
 
 new Vue({

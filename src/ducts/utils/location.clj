@@ -5,7 +5,12 @@
             [clj-http.client :as client]))
 
 (def gmap-url "https://maps.googleapis.com/maps/api/geocode/json?latlng=")
+(def gmap-address "https://maps.googleapis.com/maps/api/geocode/json?address=")
 (def gmap-end "&key=AIzaSyAxjvat9ISImf_NycNDUhFHqK9anG29rPs")
+
+(defn -make-zip-request [zip]
+  (let [url (str gmap-address zip gmap-end)]
+    (client/get url {:accept :json})))
 
 (defn -make-maps-request [lat long]
   (let [url (str gmap-url lat "," long gmap-end)]
@@ -30,6 +35,14 @@
              "short_name" "long_name"))))
 
 (defn get-location-data
+  ([zip]
+   (let [res (-make-zip-request zip)
+         js (json/read-str (:body res))]
+     (->
+      js
+      (get "results")
+      first
+      (get "address_components"))))
   ([lat long]
    (let [res (-make-maps-request lat long)
          js (json/read-str (:body res))]

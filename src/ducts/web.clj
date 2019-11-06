@@ -16,7 +16,7 @@
 
 (defroutes app
   (GET "/" request
-    (def request-obj request)
+    (def ro request)
     {:status 200
      :headers {"Content-Type" "text/html"}
      :cookies {"yapp-session" {:value (let [ses-id (cku/get-cookie-from-request request)]
@@ -25,6 +25,7 @@
                                           (dbc/create-session)))
                                :max-age (* 60 24 30 365)}}
      :body (views/web-app)})
+  
   (GET "/feed" request
     ;; this still needs pagination so we don't just ship out all of our posts (long term)
     {:status 200
@@ -34,38 +35,62 @@
                 (hash-map :location)
                 (dbc/get-posts dbc/db-spec)
                 dbu/construct-json)})
+  
   (GET "/bounce" request
     {:status 200
      :headers {"Content-Type" "application/json"}
      :body "adsf"})
+
   (GET "/getzip" [lat long :as req]
     "this route returns a zipcode when given lat and longitude"
     {:status 200
      :headers {"Content-Type" "application/json"}
-     :body (let [data (loc/get-location-data lat long)]
-             (dbc/associate-session-and-zip data (cku/get-cookie-from-request req))
-             (loc/get-location-value data :zip))})
+     :body (let [ses (cku/get-cookie-from-request req)]
+             (if ses
+               (str (dbc/get-zip-from-session ses))
+               (let [data (loc/get-location-data lat long)]
+                 (dbc/associate-session-and-location-data data ses)
+                 (loc/get-location-value data :zip))))})
+
   (GET "/getUserFromSession" request
        {:status 200
         :headers {"Content-Type" "application/json"}
         :body (str (->> (cku/get-cookie-from-request request)
                         dbc/get-user-from-session-id))})
-  (POST "/newPost" request
+
+  (GET "/newPost" [content :as request]
+       (def ro request)
+        {:status 200
+        :headers {"Content-Type" "application/json"}
+        :body (let [ses (cku/get-cookie-from-request request)
+                    user (dbc/get-user-from-session-id ses)
+                    location-fk (dbc/get-location-from-session ses)]
+                (if (not (-> content .trim .isEmpty))
+                  (-> (dbc/create-new-post user content location-fk)
+                      dbc/get-post-by-id)))})
+
+  (GET "/setUserLocation" [zip :as request]
+       (def ro request)
+        {:status 200
+         :headers {"Content-Type" "application/json"}
+         :body (let [ses (cku/get-cookie-from-request request)]
+                 (if (and ses (dbc/location-exists? zip))
+                   (if (dbc/associate-session-and-zip zip ses)
+                     zip
+                     nil)
+                   (let [loc-data (loc/get-location-data zip)]
+                     (dbc/associate-session-and-location-data loc-data ses)
+                     (loc/get-location-value loc-data :zip))))})
+
+  (POST "/deletePost" request
         (def ro request)
-        (let [ses (cku/get-cookie-from-request request)
-              user (dbc/get-user-from-session-id ses)
-              content (if (-> request
-                              :query-string)
-                        (-> request
-                            :query-string
-                            (.split "=")
-                            (get 1)
-                            (.replace "+" " "))
-                        "")
-              location-fk (dbc/get-location-from-session ses)]
-          ;;          (pprint (str "test: " ses "\n" user "\n" content "\n" location-fk))
-          (if (not (-> content .trim .isEmpty))
-            (dbc/create-new-post user content location-fk))))
+        (let [user-id (->> (cku/get-cookie-from-request request)
+                           dbc/get-user-from-session-id)
+              post-id (-> request :query-string (.split "=") (get 1))]
+          (if (= user-id (dbc/get-user-id-from-post-id post-id))
+            (do (dbc/delete-post post-id)
+                (str "deleted post: " post-id))
+            "post not deleted")))
 
   (route/resources "/")
   (route/not-found (views/not-found)))
