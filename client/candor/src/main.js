@@ -63,7 +63,7 @@ store.watch((store) => store.location, (newLocation, oldLocation) => {
   console.log("New Location: "+ newLocation)
   
   Vue.prototype.$http.get("/getUserFromSession").then((result) => { 
-    console.log("new userid: "+result.data);
+    console.log("new userid: " + result.data);
     store.commit("setUserId", result.data);
   });
 

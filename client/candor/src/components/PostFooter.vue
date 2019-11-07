@@ -1,7 +1,7 @@
 <template>
   <div class="container"> 
     <div class="row">
-      <div class="col float-left">
+      <div class="col-3 float-left">
         <b-button pill 
           variant="outline-secondary"
           @click="confirmDelete(id)"
@@ -9,10 +9,10 @@
           Delete
         </b-button>
       </div>
-      <div class="col-6">
+      <div class="col">
         <p v-if="myPost"></p>
       </div>
-      <div class="col">
+      <div class="col-3">
         <b-button pill
             @click="reply(id)">
             Reply

@@ -76,6 +76,13 @@
   (let [results (query (str "SELECT 1 FROM SESSIONS WHERE SES_ID = '" ses-id "';"))]
     (not-empty results)))
 
+(defn get-user-by-session [session]
+  (-> (query (str "SELECT SES_USR_ID_FK "
+                  "FROM SESSIONS "
+                  "WHERE ses_id = '" session "';"))
+      first
+      :ses_usr_id_fk))
+
 (defn get-session-id []
   (let [id (:md5 (first (query "SELECT MD5(RANDOM()::text);")))]
     (if (session-exists? id)
@@ -140,23 +147,27 @@
 (defn associate-session-and-zip [zip session-id]
   (let [zip-id (if (location-exists? zip)
                  (:loc_id_pk (first (get-location-id zip)))
-                 nil)]
+                 nil)
+        user-id (get-user-by-session session-id)]
     (if (and zip-id (location-exists? zip) (session-exists? session-id))
       (jdbc/update! db-spec
                     :sessions
-                    {:ses_loc_fk zip-id}
+                    {:ses_loc_fk zip-id
+                     :ses_usr_id_fk session-id}
                     ["ses_id=?" session-id]))))
 
 (defn associate-session-and-location-data [loc-data session-id]
   (let [zip (loc/get-location-value loc-data :zip)
         zip-id (if (location-exists? zip)
                  (:loc_id_pk (first (get-location-id zip)))
-                 nil)]
+                 nil)
+        user-id (get-user-by-session session-id)]
     (if (and (location-exists? zip) (session-exists? session-id))
       ;; update session table to reference location
       (jdbc/update! db-spec
                     :sessions
-                    {:ses_loc_fk zip-id}
+                    {:ses_loc_fk zip-id
+                     :ses_usr_id_fk session-id}
                     ["ses_id=?" session-id])
       (do
         ;; TODO: assumes session exists, might be an edge case where it does not?

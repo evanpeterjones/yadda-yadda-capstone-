@@ -100,7 +100,9 @@ export default {
 				}).catch(error => {
 					console.log(error);
 				});
-			}, err => { console.warn(`ERROR(${err.code}): ${err.message}`); }, options);
+			}, err => { 
+				console.warn(`ERROR(${err.code}): ${err.message}`); 
+			}, options);
 		},
 	}
 }
