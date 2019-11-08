@@ -13,7 +13,7 @@
                     <b-button pill @click="newPostDialog">New Yapp 📣</b-button>
                 </div>
                 <div class="col">
-                  <b-dropdown id="dropdown-1" class="m-md-2">
+                  <b-dropdown pill id="dropdown-1" class="m-md-2">
                     <template v-slot:button-content>
                         <h4>{{ location }}</h4>
                     </template>

@@ -1,8 +1,8 @@
 <template>
   <div>
     <b-modal 
+      hide-header
       prevent-defaults
-      title="New Yapp"
       @hidden="close"
       @ok="send(textInput)"
       ok>
@@ -11,6 +11,20 @@
         v-model="textInput"
         placeholder="What's happening?"
         rows="4"></b-form-textarea>
+      <template v-slot:modal-footer="{ ok, cancel, hide }">
+        <div v-if="validPost">
+          <b style="color:grey">{{ charsLeft }}</b>
+        </div>
+        <div v-else>
+          <b style="color:red">{{ charsLeft }}</b>
+        </div>
+        <b-button pill button-size='lg' @click="cancel()">
+          ❌
+        </b-button>
+        <b-button pill variant="primary" button-size='lg' @click="ok()">
+          📣
+        </b-button>        
+      </template>
     </b-modal>
   </div>
 </template>
@@ -23,6 +37,14 @@ export default {
         textInput : ""
       }
     },
+    computed: {
+      charsLeft: function() {
+        return (this.textInput.length) + "/140"
+      }, 
+      validPost: function() {
+        return this.textInput.length <= 140
+      }
+    },
     methods: {
       close : function() {
         console.log('clicked close');
@@ -30,16 +52,13 @@ export default {
       }, 
       send: function(data) {
         if (!data) { console.log("data can't be null"); return; }        
+        if (data.length > 140) { alert("post must be shorter than 140 characters") }
 
         this.$http.get("/newPost", {
           params: {
             content : (data) ? data : ""
           }
         }).then(response => {
-          /*
-            TODO: query needs to return the data for this row to commit
-          this.$store.commit('newPost', data.)
-          */
           console.log(response)
           this.$store.commit("newPost", response.data[0])
         }).catch(error => {

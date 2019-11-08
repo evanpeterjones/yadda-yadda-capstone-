@@ -6,7 +6,7 @@
           variant="outline-secondary"
           @click="confirmDelete(id)"
           v-if="myPost">
-          Delete
+          🗑️
         </b-button>
       </div>
       <div class="col">
@@ -15,7 +15,7 @@
       <div class="col-3">
         <b-button pill
             @click="reply(id)">
-            Reply
+            ↩️
         </b-button>
       </div>
     </div>

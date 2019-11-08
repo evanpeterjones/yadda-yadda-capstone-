@@ -1,5 +1,5 @@
 <template>
-  <card>
+  <card :id="id">
     <div>
       <post-header
         :userId="user"

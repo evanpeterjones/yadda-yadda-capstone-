@@ -1,9 +1,16 @@
 <template>
     <div>
-        <div v-if="mobile" class="card">
+        <div 
+            v-if="mobile" 
+            class="card" 
+            @click="viewlink">
             <slot></slot>
         </div>
-        <div v-else class="card card-desktop" style="margin:auto;width: 50%;">
+        <div 
+            v-else 
+            class="card card-desktop" 
+            @click="viewlink"
+            style="margin:auto;width: 50%;">
             <slot></slot>
         </div>
     </div>
@@ -12,9 +19,20 @@
 <script>
 export default {
     name: "Card",
+    props: {
+        id: {
+            type: String,
+            default: ""
+        }
+    },
     computed: {
         mobile : function() {
             return this.$store.getters.isMobile;
+        }
+    }, 
+    methods: {
+        viewlink: function () {
+            alert("Once implemented, you'd be viewing post "+this.id);
         }
     }
 }
