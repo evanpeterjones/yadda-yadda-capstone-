@@ -22,7 +22,7 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; HUG SQL QUERIES ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(declare get-user-by-session get-posts get-post get- create-post<!)
+(declare get-posts get-post create-post<!)
 
 (defn upgrade-version [newest-version]
   "update version table to reflect most recently run database scripts"
@@ -176,7 +176,7 @@
         zip-id (if (location-exists? zip)
                  (:loc_id_pk (first (get-location-id zip)))
                  nil)
-        user-id (get-user-by-session session-id)]
+        user-id (get-user-from-session-id session-id)]
     (if (location-exists? zip)
       (jdbc/update! db-spec
                     :sessions
