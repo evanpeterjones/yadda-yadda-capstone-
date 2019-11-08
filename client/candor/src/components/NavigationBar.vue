@@ -54,8 +54,13 @@ export default {
     },
     computed : {
         'location' : function() {
-            return this.$store.getters.location;
-        }, 
+            var k = this.$store.getters.location[0];
+            if (k) {
+                console.log(k);
+                return k['loc_alias'];
+            }
+            return ''
+        },
         'mobile' : function() {
             return this.$store.getters.isMobile;
         }

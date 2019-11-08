@@ -4,6 +4,7 @@
             [clojure.java.jdbc :as jdbc]
             [clojure.spec.alpha :as s]
             [ducts.utils.location :as loc]
+            [ducts.utils.database-util :as dbu]
             [clj-time.core :as t])
   (:import (java.sql Timestamp)))
 
@@ -115,8 +116,18 @@
       first
       :loc_id))
 
-(defn get-location-from-session [session]
-  "given a sessionid find the associated location id"
+(defn get-location-data-from-session [session]
+  "given a sessonID return all data"
+  (if session
+    (-> (query (str "SELECT json_agg(location) "
+                    "FROM SESSIONS, LOCATION "
+                    "WHERE SES_ID = '" session "'"))
+        first 
+        :json_agg
+        .getValue)))
+
+(defn get-location--session [session]
+  "given a sessionID find the associated location id"
   (if session 
     (-> (query (str "SELECT SES_LOC_FK "
                     "FROM SESSIONS, LOCATION "
@@ -148,11 +159,11 @@
   ([zip] (query (str "SELECT LOC_ALIAS FROM LOCATION WHERE LOC_ID = '" zip "';"))))
 
 (defn associate-session-and-zip [zip session-id]
+  (pprint (str zip " " session-id))
   (let [zip-id (if (location-exists? zip)
                  (:loc_id_pk (first (get-location-id zip)))
                  nil)
         user-id (session-user-exists? session-id)]
-    (pprint (str zip-id " " user-id))
     (if (and zip-id (location-exists? zip) (session-exists? session-id))
       (jdbc/update! db-spec
                     :sessions
@@ -167,11 +178,10 @@
                  nil)
         user-id (get-user-by-session session-id)]
     (if (location-exists? zip)
-      ;; update session table to reference location
       (jdbc/update! db-spec
                     :sessions
                     {:ses_loc_fk zip-id
-                     :ses_usr_id_fk session-id}
+                     :ses_usr_id_fk user-id}
                     ["ses_id=?" session-id])
       (do
         ;; TODO: assumes session exists, might be an edge case where it does not?
@@ -193,7 +203,7 @@
   (-> (get-post db-spec {:post_id post-id})
       first
       :json_agg
-      (.getValue)))
+      .getValue))
 
 (defn create-new-post [user content location-fk]
   "wrapper for hugsql query"

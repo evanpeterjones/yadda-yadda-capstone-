@@ -7,6 +7,9 @@
       :json_agg
       .getValue))
 
+(defn json-string-to-map [o-str]
+  (json/read-str o-str))
+
 (defn construct-json [result]
   "this is specific to cases when json_agg function is used on query"
   (json/write-str (map #(get % 0) 

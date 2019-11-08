@@ -30,8 +30,9 @@
     ;; this still needs pagination so we don't just ship out all of our posts (long term)
     {:status 200
      :headers {"Content-Type" "application/json"}
-     :body (->> (cku/get-cookie-from-request request)
-                (dbc/get-location-from-session)
+     :body (->> request
+                cku/get-cookie-from-request
+                dbc/get-location-from-session
                 (hash-map :location)
                 (dbc/get-posts dbc/db-spec)
                 dbu/construct-json)})
@@ -41,17 +42,36 @@
      :headers {"Content-Type" "application/json"}
      :body "adsf"})
 
+  (GET "/setUserLocation" [zip :as request]
+       (def ro request)
+        {:status 200
+         :headers {"Content-Type" "application/json"}
+         :body (let [ses (cku/get-cookie-from-request request)
+                     loc-data (dbc/get-location-data-from-session ses)]
+                 (pprint loc-data)
+                 (if (and ses (dbc/location-exists? zip))
+                   (if (dbc/associate-session-and-zip zip ses)
+                     (str loc-data)
+                     nil)
+                   (let [loc-data (loc/get-location-data zip)]
+                     (dbc/associate-session-and-location-data loc-data ses)
+                     (loc/get-location-value loc-data :zip))))})
+
   (GET "/getzip" [lat long :as req]
     "this route returns a zipcode when given lat and longitude"
     {:status 200
      :headers {"Content-Type" "application/json"}
      :body (let [ses (cku/get-cookie-from-request req)
-                 zip (dbc/get-zip-from-session ses)]
+                 loc-data (dbc/get-location-data-from-session ses)
+                 zip (-> loc-data
+                         dbu/json-string-to-map
+                         (get "zip"))]
              (if zip
-               (str zip)
+               (str loc-data)
                (let [data (loc/get-location-data lat long)]
                 (dbc/associate-session-and-location-data data ses)
-                 (loc/get-location-value data :zip))))})
+                 ;(loc/get-location-value data :zip)
+                (dbc/get-location-data-from-session ses))))})
 
   (GET "/getUserFromSession" request
        {:status 200
@@ -69,19 +89,6 @@
                 (if (not (-> content .trim .isEmpty))
                   (-> (dbc/create-new-post user content location-fk)
                       dbc/get-post-by-id)))})
-
-  (GET "/setUserLocation" [zip :as request]
-       (def ro request)
-        {:status 200
-         :headers {"Content-Type" "application/json"}
-         :body (let [ses (cku/get-cookie-from-request request)]
-                 (if (and ses (dbc/location-exists? zip))
-                   (if (dbc/associate-session-and-zip zip ses)
-                     zip
-                     nil)
-                   (let [loc-data (loc/get-location-data zip)]
-                     (dbc/associate-session-and-location-data loc-data ses)
-                     (loc/get-location-value loc-data :zip))))})
 
   (POST "/deletePost" request
         (def ro request)
