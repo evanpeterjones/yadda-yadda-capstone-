@@ -48,7 +48,6 @@
          :headers {"Content-Type" "application/json"}
          :body (let [ses (cku/get-cookie-from-request request)
                      loc-data (dbc/get-location-data-from-session ses)]
-                 (pprint loc-data)
                  (if (and ses (dbc/location-exists? zip))
                    (if (dbc/associate-session-and-zip zip ses)
                      (str loc-data)

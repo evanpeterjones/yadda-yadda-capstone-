@@ -126,7 +126,7 @@
         :json_agg
         .getValue)))
 
-(defn get-location--session [session]
+(defn get-location-from-session [session]
   "given a sessionID find the associated location id"
   (if session 
     (-> (query (str "SELECT SES_LOC_FK "

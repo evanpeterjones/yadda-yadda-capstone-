@@ -38,7 +38,6 @@
 </template>
     
 <script>
-//import { messages } from '../en-us.js'
 import NewPost from './NewPost'
 
 export default {
