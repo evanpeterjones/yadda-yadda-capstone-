@@ -59,7 +59,6 @@ export default {
   },
   methods: {
     swapDialog: function(val) {
-      console.log("caught new swap dialog")
       this.CurrDialog = this.components[val];
     },
     cookies_required: function() {

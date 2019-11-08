@@ -6,6 +6,7 @@
         :time="time" />
       <p> {{ content }} </p>
       <post-footer
+        :decentral="decentral"
         :user="user"
         :id="id"
         :edited="edited" />
@@ -45,8 +46,8 @@ export default {
         default: null
       },
       decentral: {
-        type: String,
-        default: null
+        type: Boolean,
+        default: false
       }
     }
 }

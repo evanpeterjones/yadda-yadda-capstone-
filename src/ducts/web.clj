@@ -25,7 +25,7 @@
                                           (dbc/create-session)))
                                :max-age (* 60 24 30 365)}}
      :body (views/web-app)})
-  
+
   (GET "/feed" request
     ;; this still needs pagination so we don't just ship out all of our posts (long term)
     {:status 200
@@ -35,7 +35,7 @@
                 (hash-map :location)
                 (dbc/get-posts dbc/db-spec)
                 dbu/construct-json)})
-  
+
   (GET "/bounce" request
     {:status 200
      :headers {"Content-Type" "application/json"}
@@ -45,11 +45,12 @@
     "this route returns a zipcode when given lat and longitude"
     {:status 200
      :headers {"Content-Type" "application/json"}
-     :body (let [ses (cku/get-cookie-from-request req)]
-             (if ses
-               (str (dbc/get-zip-from-session ses))
+     :body (let [ses (cku/get-cookie-from-request req)
+                 zip (dbc/get-zip-from-session ses)]
+             (if zip
+               (str zip)
                (let [data (loc/get-location-data lat long)]
-                 (dbc/associate-session-and-location-data data ses)
+                (dbc/associate-session-and-location-data data ses)
                  (loc/get-location-value data :zip))))})
 
   (GET "/getUserFromSession" request
@@ -89,8 +90,8 @@
               post-id (-> request :query-string (.split "=") (get 1))]
           (if (= user-id (dbc/get-user-id-from-post-id post-id))
             (do (dbc/delete-post post-id)
-                (str "deleted post: " post-id))
-            "post not deleted")))
+                (str post-id))
+            (str -1))))
 
   (route/resources "/")
   (route/not-found (views/not-found)))

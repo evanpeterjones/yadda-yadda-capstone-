@@ -13,7 +13,13 @@
                     <b-button pill @click="newPostDialog">New Yapp 📣</b-button>
                 </div>
                 <div class="col">
-                    <h4>{{ location }}</h4>
+                  <b-dropdown id="dropdown-1" class="m-md-2">
+                    <template v-slot:button-content>
+                        <h4>{{ location }}</h4>
+                    </template>
+                    <b-dropdown-item >Change Location</b-dropdown-item>
+                    <b-dropdown-item>My Account</b-dropdown-item>
+                  </b-dropdown>
                 </div>
             </div>
         </div>
@@ -55,43 +61,8 @@ export default {
         }
     },
     methods: {
-        newPost: function(data) {
-            if (!data) { console.log("data can't be null"); return; }
-
-            this.$http.post("/newPost", null, {
-                params: {
-                   content : (data) ? data : ""
-                }
-            }).then(response => {
-                console.log(response)
-                console.log('Yay, new post!!!');
-            }).catch(error => {
-                console.error(error)
-            });
-        },
         newPostDialog: function() {
             this.$emit('newPostDialog');
-/*
-            const h = this.$createElement
-
-            const message = h('div', { class: ['foobar'] }, [
-                h('input', { id: ['post-content']}),
-                h('p', { class: ['text-center'] }, [
-                    "I'll start allowing New Yapps soon, check back fam ;)"
-                ]),
-                h('p', { class: ['text-center'] }, [h('b-spinner')])
-            ])
-
-            this.$bvModal.msgBoxOk([message], {
-                buttonSize: 'sm',
-                centered: true, size: 'sm',
-                headerClass: 'p-2 border-bottom-0',
-                footerClass: 'p-2 border-top-0',
-            }).then(value => {
-                console.log("sending post");
-                //this.newPost("");
-            })
-            */
         }        
     }
 }

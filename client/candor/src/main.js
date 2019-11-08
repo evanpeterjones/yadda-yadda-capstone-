@@ -39,16 +39,28 @@ const store = new Vuex.Store({
       state.posts.push(newPosts)
     },
     setIsMobile(state, isMobileCheck) {
-      state.isMobile = isMobileCheck < 800;
+      state.isMobile = isMobileCheck < 800
     }, 
     setUserId(state, newUser) {
-      state.userId = newUser;
-    }, 
+      state.userId = newUser
+    },
     deletePost(state, postID) {
-      delete state.posts.postID;
+      var index;
+      for (var i = 0; i < state.posts[0].length; i++) {
+        console.log("type ob: "+typeof post.pst_id_pk)
+        console.log("type ret: "+typeof postID)
+        if (posts[0][i].pst_id_pk == postID) {
+          index = i //state.posts[0][i];
+        }
+      }
+      console.log("index: "+index)
+      delete state.posts[0][index]
+    },
+    newPost(state, newPost) {
+      state.posts[0].unshift(newPost)
     }, 
-    newPost(state, newPost, postId) {
-      state.posts[postId] = newPost;
+    loadPosts(state) {
+      
     }
   }
 });

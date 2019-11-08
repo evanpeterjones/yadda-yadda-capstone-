@@ -19,15 +19,15 @@ CREATE TABLE IF NOT EXISTS OLD_PASSWORDS (
 );
 
 CREATE TABLE IF NOT EXISTS PASSWORDS (
-      PWD_PK SERIAL PRIMARY KEY,
-      PWD_Hash VARCHAR(64), -- TODO: need to generate magic link email to set password
-      -- also need createUser to generate a PWD_Hash which we email to the user
-      PWD_USR_FK INTEGER REFERENCES USERS(USR_ID_PK) ON DELETE CASCADE,
-      PWD_UpdatedOn DATE,
-      PWD_CreatedOn DATE,
-      PWD_LastLogin DATE,
-      PWD_Locked boolean,
-      PWD_Reset boolean,
+  PWD_PK SERIAL PRIMARY KEY,
+  PWD_Hash VARCHAR(64), -- TODO: need to generate magic link email to set password
+  -- also need createUser to generate a PWD_Hash which we email to the user
+  PWD_USR_FK INTEGER REFERENCES USERS(USR_ID_PK) ON DELETE CASCADE,
+  PWD_UpdatedOn DATE,
+  PWD_CreatedOn DATE,
+  PWD_LastLogin DATE,
+  PWD_Locked boolean,
+  PWD_Reset boolean
 );
 
 -- Image Association Types 

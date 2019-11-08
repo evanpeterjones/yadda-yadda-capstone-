@@ -41,7 +41,7 @@ export default {
           this.$store.commit('newPost', data.)
           */
           console.log(response)
-          this.$store.commit("newPost", response.data[0], response.data[0].pst_id_pk)
+          this.$store.commit("newPost", response.data[0])
         }).catch(error => {
           console.error(error)
         });

@@ -31,12 +31,16 @@ export default {
           default: null
         },
         id: {
-            type: Number,
-            default: -1
+          type: Number,
+          default: -1
         }, 
         edited: {
-            type: String,
-            default: null
+          type: String,
+          default: null
+        },
+        decentral: {
+          type: Boolean,
+          default: false
         }
     },
     computed: {
@@ -53,25 +57,27 @@ export default {
             ])
         ]);
 
-        this.$bvModal.msgBoxOk([message], {
+        this.$bvModal.msgBoxConfirm([message], {
             buttonSize: 'sm',
             centered: true, size: 'sm',
             headerClass: 'p-2 border-bottom-0',
             footerClass: 'p-2 border-top-0',
         }).then(value => {
-            console.log(value);
-            //this.deletePost(post_id);
-        })
-      },
-      deletePost: function(post_id) {
-        this.$store.commit('deletePost', post_id);
+            if (value) {
+              this.deletePost(post_id)
+              console.log('deleted post')
+            }
+        });
         
+      },
+      deletePost: function(post_id) {       
         this.$http.post("/deletePost", null, {
           params : {
             "post-id" : post_id
           }
         }).then((response) => {
-          console.log(response);
+          console.log(response.data)
+          this.$store.commit('deletePost', response.data);
         }).catch((error) => {
           console.log(error);
         });

@@ -21,7 +21,7 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; HUG SQL QUERIES ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(declare get-posts get-post get-location-from-session create-post<!)
+(declare get-user-by-session get-posts get-post get- create-post<!)
 
 (defn upgrade-version [newest-version]
   "update version table to reflect most recently run database scripts"
@@ -76,7 +76,8 @@
   (let [results (query (str "SELECT 1 FROM SESSIONS WHERE SES_ID = '" ses-id "';"))]
     (not-empty results)))
 
-(defn get-user-by-session [session]
+(defn session-user-exists? [session]
+  "returns nil or returns the user id"
   (-> (query (str "SELECT SES_USR_ID_FK "
                   "FROM SESSIONS "
                   "WHERE ses_id = '" session "';"))
@@ -116,11 +117,13 @@
 
 (defn get-location-from-session [session]
   "given a sessionid find the associated location id"
-  (-> (query (str "SELECT SES_LOC_FK "
-                  "FROM SESSIONS, LOCATION "
-                  "WHERE SES_ID = '" session "'"))
-      first
-      :ses_loc_fk))
+  (if session 
+    (-> (query (str "SELECT SES_LOC_FK "
+                    "FROM SESSIONS, LOCATION "
+                    "WHERE SES_ID = '" session "'"))
+        first
+        :ses_loc_fk)
+    nil))
 
 (defn create-location 
   "create a new location in db"
@@ -148,12 +151,13 @@
   (let [zip-id (if (location-exists? zip)
                  (:loc_id_pk (first (get-location-id zip)))
                  nil)
-        user-id (get-user-by-session session-id)]
+        user-id (session-user-exists? session-id)]
+    (pprint (str zip-id " " user-id))
     (if (and zip-id (location-exists? zip) (session-exists? session-id))
       (jdbc/update! db-spec
                     :sessions
                     {:ses_loc_fk zip-id
-                     :ses_usr_id_fk session-id}
+                     :ses_usr_id_fk user-id}
                     ["ses_id=?" session-id]))))
 
 (defn associate-session-and-location-data [loc-data session-id]
@@ -162,7 +166,7 @@
                  (:loc_id_pk (first (get-location-id zip)))
                  nil)
         user-id (get-user-by-session session-id)]
-    (if (and (location-exists? zip) (session-exists? session-id))
+    (if (location-exists? zip)
       ;; update session table to reference location
       (jdbc/update! db-spec
                     :sessions
