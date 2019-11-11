@@ -6,7 +6,7 @@
           variant="outline-secondary"
           @click="confirmDelete(id)"
           v-if="myPost">
-          🗑️
+          <font-awesome-icon :icon="['fas', 'trash']"></font-awesome-icon>        
         </b-button>
       </div>
       <div class="col">
@@ -15,7 +15,7 @@
       <div class="col-3">
         <b-button pill
             @click="reply(id)">
-            ↩️
+            <font-awesome-icon :icon="['fas', 'reply']"></font-awesome-icon>
         </b-button>
       </div>
     </div>

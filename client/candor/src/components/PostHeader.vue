@@ -2,7 +2,10 @@
   <div class="container"> 
     <div class="row">
       <div class="col font-weight-bold text-nowrap">
-        <p>{{ userName }}</p>
+        <font-awesome-layers class="fa">
+          <font-awesome-icon :icon="['fa', 'atom']"></font-awesome-icon>
+          {{ userName }}
+        </font-awesome-layers>
       </div>
       <div class="col"></div>
       <div class="col text-nowrap">

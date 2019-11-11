@@ -4,7 +4,9 @@
       <post-header
         :userId="user"
         :time="time" />
-      <p> {{ content }} </p>
+      <div class="content">
+        <p> {{ content }} </p>
+      </div>
       <post-footer
         :decentral="decentral"
         :user="user"
@@ -57,5 +59,8 @@ export default {
 p {
   padding-left: 5%;
   text-align: left;
+}
+.content {
+  padding-right: 20px;
 }
 </style>

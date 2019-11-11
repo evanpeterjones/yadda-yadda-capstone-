@@ -19,10 +19,14 @@
           <b style="color:red">{{ charsLeft }}</b>
         </div>
         <b-button pill button-size='lg' @click="cancel()">
-          ❌
+          <font-awesome-layers class="fa">
+            <font-awesome-icon :icon="['fas', 'trash']"></font-awesome-icon>
+          </font-awesome-layers>
         </b-button>
         <b-button pill variant="primary" button-size='lg' @click="ok()">
-          📣
+          <font-awesome-layers class="fa">
+            <font-awesome-icon :icon="['fas', 'arrow-right']"></font-awesome-icon>
+          </font-awesome-layers>
         </b-button>        
       </template>
     </b-modal>

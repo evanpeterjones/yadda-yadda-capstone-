@@ -7,6 +7,13 @@ import VueCookies from 'vue-cookies'
 import Axios from 'axios'
 import titleMixins from '@/mixins/titleMixin.js'
 import routes from '@/components/routes/index.js'
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { faReply, faTrash, faPlus, faArrowRight, faAtom } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+
+library.add(faReply, faTrash, faPlus, faArrowRight, faAtom)
+
+Vue.component('font-awesome-icon', FontAwesomeIcon)
 
 // setup defaults and globals
 Vue.config.productionTip = false

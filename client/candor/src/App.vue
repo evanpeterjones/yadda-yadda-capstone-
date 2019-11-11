@@ -12,7 +12,7 @@
           pill
           class="button-class"
           @click="swapDialog('newPost')">
-            <b>+</b>
+            <font-awesome-icon :icon="['fas', 'plus']"></font-awesome-icon>
         </b-button>
       </div>
     </div>
@@ -113,7 +113,7 @@ html {
   height: 62px;
   width: 62px;
   border-radius: 62px;
-  box-shadow:2px 2px 5px #222222;
+  box-shadow: 0 0 5px #222222;
 }
 
 </style>
