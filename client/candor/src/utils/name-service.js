@@ -7,12 +7,16 @@ export let animals = [
     'Frog','Deer','Rat','Badger','Lizard','Mole','Hedgehog','Otter','Reindeer'
 ];
 
-export let colors = [
+export let colors = [    
     'Amaranth', 'Amber', 'Apricot', 'Aqua', 'Arctic', 'Auburn', 'Almond'
 ];
 
+export let adjectives = [
+    'Abloom', 'Abiding','Achy','Adequate','Aesthetical','Affordable','Ageless','Austere'
+];
+
 function getName(user_id) {
-    return colors[user_id % colors.length] + ' ' + animals[user_id % animals.length]
+    return adjectives[user_id % colors.length] + ' ' + animals[user_id % animals.length]
 };
 
 export default getName;

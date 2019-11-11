@@ -205,11 +205,13 @@
       :json_agg
       .getValue))
 
-(defn create-new-post [user content location-fk]
+(defn create-new-post
+  ([u c lf] (create-new-post u c lf nil))
+  ([user content location-fk parent]
   "wrapper for hugsql query"
-  (-> (create-post<! db-spec {:user user :content content :location location-fk})
+  (-> (create-post<! db-spec {:user user :content content :location location-fk :parent parent})
       first
-      :pst_id_pk))
+      :pst_id_pk)))
 
 (defn post-exists? [pid]
   (not (.isEmpty (query (str "SELECT * FROM POSTS WHERE PST_ID_PK = '" pid "';")))))

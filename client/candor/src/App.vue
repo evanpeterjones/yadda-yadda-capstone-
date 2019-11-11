@@ -7,6 +7,14 @@
     </div>
     <div v-else>
       <Feed />
+      <div class="right-corner-container">     
+        <b-button 
+          pill
+          class="button-class"
+          @click="swapDialog('newPost')">
+            <b>+</b>
+        </b-button>
+      </div>
     </div>
     <component 
       :is="CurrDialog"
@@ -96,4 +104,16 @@ html {
   margin-top: 60px;
   background-color: #222222;
 }
+.right-corner-container {     
+  position:fixed;     
+  right:20px;     
+  bottom:20px;   
+}
+.button-class {
+  height: 62px;
+  width: 62px;
+  border-radius: 62px;
+  box-shadow:2px 2px 5px #222222;
+}
+
 </style>

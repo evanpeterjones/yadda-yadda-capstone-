@@ -42,6 +42,19 @@ WHERE PST_LOC_FK = :location
 GROUP BY PST_TIME
 ORDER BY PST_TIME DESC;
 
+-- :name get-post
+-- :doc get data for post of a certain ID
+SELECT json_agg(posts)
+FROM POSTS
+WHERE PST_ID_PK = :post_id
+GROUP BY PST_TIME
+ORDER BY PST_TIME DESC;
+
+-- :name create-post<!
+-- :doc create a new post returning the id of the post
+INSERT INTO POSTS(pst_usr_id_fk, pst_content, pst_loc_fk, pst_time)
+VALUES(:user, :content, :location, now()) RETURNING PST_ID_PK;
+
 -- :name delete-post!
 -- :doc delete a post when given {:post_key String}
 DELETE FROM POSTS WHERE PST_ID_PK = :post_key

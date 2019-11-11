@@ -78,7 +78,7 @@
         :body (str (->> (cku/get-cookie-from-request request)
                         dbc/get-user-from-session-id))})
 
-  (GET "/newPost" [content :as request]
+  (GET "/newPost" [content parent :as request]
        (def ro request)
         {:status 200
         :headers {"Content-Type" "application/json"}
@@ -86,7 +86,7 @@
                     user (dbc/get-user-from-session-id ses)
                     location-fk (dbc/get-location-from-session ses)]
                 (if (not (-> content .trim .isEmpty))
-                  (-> (dbc/create-new-post user content location-fk)
+                  (-> (dbc/create-new-post user content location-fk parent)
                       dbc/get-post-by-id)))})
 
   (POST "/deletePost" request

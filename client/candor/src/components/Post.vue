@@ -54,11 +54,6 @@ export default {
 </script>
 
 <style>
-post {
-  color: white;
-  border-radius: 10px;
-}
-
 p {
   padding-left: 5%;
   text-align: left;

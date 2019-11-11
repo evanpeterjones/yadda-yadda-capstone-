@@ -8,7 +8,7 @@
         </div>
         <div 
             v-else 
-            class="card card-desktop" 
+            class="card card-desktop bg" 
             @click="viewlink"
             style="margin:auto;width: 50%;">
             <slot></slot>
@@ -21,8 +21,8 @@ export default {
     name: "Card",
     props: {
         id: {
-            type: String,
-            default: ""
+            type: Number,
+            default: null
         }
     },
     computed: {
@@ -40,7 +40,7 @@ export default {
 
 <style>
 .card-desktop {
-    padding: 20px;
+   padding: 20px;
 }
 
 .card {    

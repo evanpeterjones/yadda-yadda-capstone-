@@ -52,8 +52,8 @@ ORDER BY PST_TIME DESC;
 
 -- :name create-post<!
 -- :doc create a new post returning the id of the post
-INSERT INTO POSTS(pst_usr_id_fk, pst_content, pst_loc_fk, pst_time)
-VALUES(:user, :content, :location, now()) RETURNING PST_ID_PK;
+INSERT INTO POSTS(pst_usr_id_fk, pst_content, pst_loc_fk, pst_time, pst_parent_fk)
+VALUES(:user, :content, :location, now(), :parent) RETURNING PST_ID_PK;
 
 -- :name delete-post!
 -- :doc delete a post when given {:post_key String}

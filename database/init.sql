@@ -3,19 +3,19 @@
 */
 
 CREATE TABLE IF NOT EXISTS USERS (
-       USR_ID_PK SERIAL PRIMARY KEY,
-       USR_Username VARCHAR (50) UNIQUE, -- if these can be null then the client will have to generate user info
-       USR_Ses_FK VARCHAR(30) REFERENCES SESSIONS (SES_ID_PK)
-       USR_Email VARCHAR (100) UNIQUE NOT NULL,
-       USR_CreatedOn DATE NOT NULL,
-       USR_LastLogin DATE,
-       USR_Validated BOOLEAN,
+   USR_ID_PK SERIAL PRIMARY KEY,
+   USR_Username VARCHAR (50) UNIQUE, -- if these can be null then the client will have to generate user info
+   USR_Ses_FK VARCHAR(30) REFERENCES SESSIONS (SES_ID_PK)
+   USR_Email VARCHAR (100) UNIQUE NOT NULL,
+   USR_CreatedOn DATE NOT NULL,
+   USR_LastLogin DATE,
+   USR_Validated BOOLEAN,
 );
 
 CREATE TABLE IF NOT EXISTS OLD_PASSWORDS (
-      OPD_Hash VARCHAR(64),
-      OPD_USR_FK INTEGER REFERENCES USERS(USR_ID_PK) ON DELETE CASCADE,
-      PRIMARY KEY (OPD_Hash, OPD_USR_FK),
+  OPD_Hash VARCHAR(64),
+  OPD_USR_FK INTEGER REFERENCES USERS(USR_ID_PK) ON DELETE CASCADE,
+  PRIMARY KEY (OPD_Hash, OPD_USR_FK),
 );
 
 CREATE TABLE IF NOT EXISTS PASSWORDS (
@@ -46,15 +46,15 @@ BEGIN
 END $$;
 
 CREATE TABLE IF NOT EXISTS IMAGES (
-       IMG_ID_PK SERIAL,
-       -- secondary FK to link with a post? Images could be stored without post
-       IMG_Type_FK INT REFERENCES IMAGE_ASSOC_TYPES(IAT_PK),
-       IMG_Hash_PK CHAR(64),
-       IMG_File VARCHAR(200), -- FILE ON DISK
-       IMG_Thumbnail VARCHAR(200), -- ALSO ON DISK
-       IMG_Meta VARCHAR, -- IS Text type too much space in disk?
-       IMG_Source VARCHAR,
-       PRIMARY KEY (IMG_ID_PK)
+    IMG_ID_PK SERIAL,
+    -- secondary FK to link with a post? Images could be stored without post
+    IMG_Type_FK INT REFERENCES IMAGE_ASSOC_TYPES(IAT_PK),
+    IMG_Hash_PK CHAR(64),
+    IMG_File VARCHAR(200), -- FILE ON DISK
+    IMG_Thumbnail VARCHAR(200), -- ALSO ON DISK
+    IMG_Meta VARCHAR, -- IS Text type too much space in disk?
+    IMG_Source VARCHAR,
+    PRIMARY KEY (IMG_ID_PK)
 );
 
 CREATE TABLE IF NOT EXISTS POSTS (
