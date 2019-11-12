@@ -65,15 +65,12 @@ const store = new Vuex.Store({
     deletePost(state, postID) {
       var index;
       for (var i = 0; i < state.posts[0].length; i++) {
-        console.log("type ob: "+typeof post.pst_id_pk)
-        console.log("type ret: "+typeof postID)
-        if (posts[0][i].pst_id_pk == postID) {
-          index = i //state.posts[0][i];
+        if (state.posts[0][i].pst_id_pk == postID) {
+          index = i
         }
       }
-
+      
       //state.offset--;
-
       delete state.posts[0][index]
     },
     newPost(state, newPost) {

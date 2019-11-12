@@ -65,7 +65,6 @@ export default {
         }).then(value => {
             if (value) {
               this.deletePost(post_id)
-              console.log('deleted post')
             }
         });
         
@@ -73,10 +72,9 @@ export default {
       deletePost: function(post_id) {       
         this.$http.post("/deletePost", null, {
           params : {
-            "post-id" : post_id
+            "post" : post_id
           }
         }).then((response) => {
-          console.log(response.data)
           this.$store.commit('deletePost', response.data);
         }).catch((error) => {
           console.log(error);
