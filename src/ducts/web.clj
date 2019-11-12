@@ -30,12 +30,18 @@
     ;; this still needs pagination so we don't just ship out all of our posts (long term)
     {:status 200
      :headers {"Content-Type" "application/json"}
-     :body (->> request
-                cku/get-cookie-from-request
-                dbc/get-location-from-session
-                (hash-map :location)
-                (dbc/get-posts dbc/db-spec)
-                dbu/construct-json)})
+     :body (let [offset (-> request :query-string (.split "=") (get 1))
+                 loc_data (->> request
+                             cku/get-cookie-from-request
+                             dbc/get-location-data-from-session
+                             dbu/json-string-to-map
+                             first)]
+             (->
+              (dbc/get-posts dbc/db-spec
+                             {:location (get loc_data "loc_id_pk")
+                              :lim 5
+                              :offset (Integer/parseInt offset)})
+              dbu/construct-json))})
 
   (GET "/bounce" request
     {:status 200

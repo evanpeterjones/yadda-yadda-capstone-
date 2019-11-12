@@ -22,7 +22,7 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; HUG SQL QUERIES ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(declare get-posts get-post create-post<!)
+(declare get-posts-by-alias get-posts get-post create-post<!)
 
 (defn upgrade-version [newest-version]
   "update version table to reflect most recently run database scripts"
@@ -120,7 +120,9 @@
   "given a sessonID return all data"
   (if session
     (-> (query (str "SELECT json_agg(location) "
-                    "FROM SESSIONS, LOCATION "
+                    "FROM SESSIONS "
+                    "LEFT JOIN LOCATION "
+                    "ON loc_id_pk = ses_loc_fk "
                     "WHERE SES_ID = '" session "'"))
         first 
         :json_agg

@@ -33,14 +33,28 @@ END IF;
 INSERT INTO Passwords(PWD_Hash, PWD_USR_FK, PWD_UpdatedOn)
 VALUES (newHash, :user_id, NOW());
 
+-- :name get-posts-by-alias
+-- :result :json
+-- :doc {:alias varchar :state varchar}
+SELECT JSON_AGG(POSTS)
+FROM POSTS
+LEFT JOIN LOCATION
+ON PST_LOC_FK = LOC_ID_PK
+WHERE LOC_ALIAS = :alias
+AND LOC_STATE = :state
+GROUP BY PST_TIME
+ORDER BY PST_TIME DESC;
+
 -- :name get-posts
 -- :result :json
--- TODO: select next posts between certain values {:location int}
+-- :doc {:location int :lim int :offset int}
 SELECT json_agg(posts)
 FROM POSTS
 WHERE PST_LOC_FK = :location
 GROUP BY PST_TIME
-ORDER BY PST_TIME DESC;
+ORDER BY PST_TIME DESC
+LIMIT :lim
+OFFSET :offset;
 
 -- :name get-post
 -- :doc get data for post of a certain ID

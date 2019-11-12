@@ -2,10 +2,8 @@
   <div class="container"> 
     <div class="row">
       <div class="col font-weight-bold text-nowrap">
-        <font-awesome-layers class="fa">
-          <font-awesome-icon :icon="['fa', 'atom']"></font-awesome-icon>
-          {{ userName }}
-        </font-awesome-layers>
+        <font-awesome-icon :icon="['fa', 'atom']"></font-awesome-icon>
+        {{ userName }}
       </div>
       <div class="col"></div>
       <div class="col text-nowrap">

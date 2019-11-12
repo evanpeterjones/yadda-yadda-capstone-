@@ -10,12 +10,17 @@
                     <h1>{{ appname }}</h1>
                 </div>
                 <div class="col">
-                  <b-dropdown split pill id="dropdown-1" class="m-md-2">
+                  <b-dropdown 
+                    @click="updateLocationSort"
+                    split
+                    pill 
+                    id="dropdown-1" class="m-md-2">
                     <template v-slot:button-content>
                         <h4>{{ location }}</h4>
                     </template>
-                    <b-dropdown-item >Change Location</b-dropdown-item>
+                    <b-dropdown-item>Change Location</b-dropdown-item>
                     <b-dropdown-item>My Account</b-dropdown-item>
+                    <b-dropdown-item @click="showQR">Mobile Sync</b-dropdown-item>
                   </b-dropdown>
                 </div>
             </div>
@@ -44,21 +49,23 @@ export default {
     },
     computed : {
         'location' : function() {
-            var k = this.$store.getters.location[0];
-            if (k) {
-                console.log(k);
-                return k['loc_alias'];
-            }
-            return ''
+            var locData = this.$store.getters.locationName;
+            return locData;
         },
         'mobile' : function() {
             return this.$store.getters.isMobile;
         }
     },
     methods: {
+        updateLocationSort: function() {
+            this.$store.commit('nextLocationType');
+        },
         newPostDialog: function() {
             this.$emit('newPostDialog');
-        }        
+        },
+        showQR: function() {
+            this.$emit('newQRCode');
+        }
     }
 }
 </script>

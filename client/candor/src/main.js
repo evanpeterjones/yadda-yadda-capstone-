@@ -28,22 +28,33 @@ VueCookies.set('hover-time','1s')
 const store = new Vuex.Store({
   state: {
     location: '',
+    locationType: 'loc_alias',
     posts: [],
+    offset: 0,
     isMobile: window.innerWidth < 500, 
     userId : null
   },
   getters: {
     location: state => state.location,
+    locationName: state => state.location[state.locationType],
     posts: state => state.posts,
     isMobile: state => state.isMobile,
-    userId: state => state.userId
+    userId: state => state.userId, 
+    locationType: state => state.locationType,
+    offset: state => state.offset
   },
   mutations: {
     setLocation(state, loc) {
-      state.location = loc;
+      delete loc.loc_id_pk
+      state.location = loc
     },
     setPosts(state, newPosts) {
       state.posts.push(newPosts)
+    },
+    addPosts(state, newPosts) {
+      for (var i = 0; i < newPosts.length; i++) {
+        state.posts[0].push(newPosts[i]);
+      }
     },
     setIsMobile(state, isMobileCheck) {
       state.isMobile = isMobileCheck < 800
@@ -60,14 +71,22 @@ const store = new Vuex.Store({
           index = i //state.posts[0][i];
         }
       }
-      console.log("index: "+index)
+
+      //state.offset--;
+
       delete state.posts[0][index]
     },
     newPost(state, newPost) {
       state.posts[0].unshift(newPost)
-    }, 
-    loadPosts(state) {
-      
+      state.offset++;
+    },
+    nextLocationType(state) {
+      let keys = Object.keys(state.location);
+      let ind = keys.indexOf(state.locationType);
+      state.locationType = keys[(ind+1)%3];
+    },
+    updateOffset(state) {
+      state.offset += 5;
     }
   }
 });
@@ -79,14 +98,18 @@ const ax = Axios.create({
 Vue.prototype.$http = ax;
 
 store.watch((store) => store.location, (newLocation, oldLocation) => {
-  console.log("New Location: "+ newLocation)
+  console.log(newLocation)
   
   Vue.prototype.$http.get("/getUserFromSession").then((result) => { 
-    console.log("new userid: " + result.data);
+    console.log("UserID: " + result.data);
     store.commit("setUserId", result.data);
   });
 
-  Vue.prototype.$http.get("/feed").then((result) => {
+  Vue.prototype.$http.get("/feed", {
+    params: {
+      offset: 0
+    }
+  }).then((result) => {
     store.commit("setPosts", result.data); 
   });
 });

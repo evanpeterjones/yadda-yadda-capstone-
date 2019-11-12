@@ -96,7 +96,7 @@ export default {
 					}
 				})
 				.then(response => {
-					this.$store.commit('setLocation', response.data)
+					this.$store.commit('setLocation', response.data[0])
 				}).catch(error => {
 					console.log(error);
 				});

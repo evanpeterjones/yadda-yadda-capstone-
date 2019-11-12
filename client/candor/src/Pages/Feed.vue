@@ -32,6 +32,23 @@ export default {
         }
       }
     },
+    methods: {
+      onScroll () {
+        let bottomOfWindow = window.innerHeight+document.documentElement.scrollTop == document.documentElement.scrollHeight
+
+        if (bottomOfWindow) {
+          this.$http.get("/feed", {
+            params: {
+              offset: this.$store.getters.offset+5
+            }
+          }).then((result) => {
+            this.$store.commit("addPosts", result.data);
+            this.$store.commit('updateOffset');
+            console.log(result.data);
+          });
+        }
+      }
+    },
     computed: {
       posts : function() {
         return (this.$store.getters.posts[0]);
@@ -39,6 +56,12 @@ export default {
       mobile : function () {
         return this.$store.getters.isMobile;
       }
+    },
+    created () {
+      window.addEventListener('scroll', this.onScroll);
+    },
+    destroyed () {
+      window.removeEventListener('scroll', this.onScroll);
     }
 }
 </script>

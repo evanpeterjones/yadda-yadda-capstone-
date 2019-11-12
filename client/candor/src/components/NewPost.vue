@@ -55,7 +55,7 @@ export default {
         this.$emit('closeDialog');
       }, 
       send: function(data) {
-        if (!data) { console.log("data can't be null"); return; }        
+        if (!data) { alert("can't make an empty post"); return; }        
         if (data.length > 140) { alert("post must be shorter than 140 characters") }
 
         this.$http.get("/newPost", {

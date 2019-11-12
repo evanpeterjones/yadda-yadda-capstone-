@@ -1,10 +1,13 @@
 <template>
   <div id="app">
     <NavigationBar 
-      @newPostDialog="swapDialog('newPost')"/>
+      @newPostDialog="swapDialog('newPost')"
+      @newQRCode="swapDialog('QRCode')"/>
+      
     <div v-if="!location">
       <Splash />
     </div>
+    
     <div v-else>
       <Feed />
       <div class="right-corner-container">     
@@ -24,8 +27,9 @@
 
 <script>
 import NavigationBar from './components/NavigationBar.vue'
-import Splash from './Pages/Splash.vue'
 import NewPost from './components/NewPost.vue'
+import QRCode from './components/QRCode.vue'
+import Splash from './Pages/Splash.vue'
 import Feed from './Pages/Feed.vue'
 import BModal from 'bootstrap'
 
@@ -33,13 +37,14 @@ export default {
   title: 'YAPP',
   name: 'App',
   components: { 
-    NavigationBar, Splash, Feed, BModal, NewPost
+    NavigationBar, Splash, Feed, BModal, NewPost, QRCode
   },
   data () {
     return {
       CurrDialog : null,
       components : {
-        'newPost' : NewPost
+        'newPost' : NewPost,
+        'QRCode' : QRCode
       }
     }
   },
