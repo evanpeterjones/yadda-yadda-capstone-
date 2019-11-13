@@ -26,7 +26,8 @@
          get-posts-by-alias
          get-posts
          get-post
-         create-post<!)
+         create-post<!
+         create-reply-post<!)
 
 (defn upgrade-version [newest-version]
   "update version table to reflect most recently run database scripts"

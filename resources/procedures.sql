@@ -71,6 +71,15 @@ ORDER BY PST_TIME ASC;
 INSERT INTO POSTS(pst_usr_id_fk, pst_content, pst_loc_fk, pst_time, pst_parent_fk)
 VALUES(:user, :content, :location, now(), :parent) RETURNING PST_ID_PK;
 
+-- :name create-reply-post<!
+-- :doc create a new reply post returning the id of the post
+UPDATE POSTS
+SET pst_hascomments = true
+WHERE pst_id_pk = :parent;
+
+INSERT INTO POSTS(pst_usr_id_fk, pst_content, pst_loc_fk, pst_time, pst_parent_fk)
+VALUES(:user, :content, :location, now(), :parent) RETURNING PST_ID_PK;
+
 -- :name delete-post!
 -- :doc delete a post when given {:post_key String}
 DELETE FROM POSTS WHERE PST_ID_PK = :post_key

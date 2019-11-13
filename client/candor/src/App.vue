@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <NavigationBar 
+      @newReplyDialog="swapDialog('replyPost', data)"
       @newPostDialog="swapDialog('newPost')"
       @newQRCode="swapDialog('QRCode')"/>
       
@@ -43,6 +44,7 @@ export default {
     return {
       CurrDialog : null,
       components : {
+        'replyPost' : NewPost,
         'newPost' : NewPost,
         'QRCode' : QRCode
       }
@@ -71,8 +73,12 @@ export default {
     })
   },
   methods: {
-    swapDialog: function(val) {
-      this.CurrDialog = this.components[val];
+    swapDialog: function(comp) {
+      this.CurrDialog = this.components[comp];
+    },
+    swapDialog: function(comp, props) {
+      console.log(props);
+      this.CurrDialog = this.components[comp];
     },
     cookies_required: function() {
       this.$bvModal.msgBoxConfirm("Yapp relies on giving you a cookie to identify you so you don't have to give up your personal information like other social media sites.", {

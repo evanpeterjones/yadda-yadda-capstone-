@@ -102,6 +102,23 @@
                   (-> (dbc/create-new-post user content location-fk parent)
                       dbc/get-post-by-id)))})
 
+  (GET "/newReplyPost" [content parent :as request]
+       (def ro request)
+        {:status 200
+        :headers {"Content-Type" "application/json"}
+        :body (let [ses (cku/get-cookie-from-request request)
+                    user (dbc/get-user-from-session-id ses)
+                    location-fk (dbc/get-location-from-session ses)]
+                (if (not (-> content .trim .isEmpty))
+                  (-> (dbc/create-reply-post<! dbc/db-spec
+                                               {:user user
+                                                :content content
+                                                :location location-fk
+                                                :parent parent})
+                      first
+                      :pst_id_pk
+                      dbc/get-post-by-id)))})
+
   (POST "/deletePost" request
         (def ro request)
         (let [user-id (->> (cku/get-cookie-from-request request)

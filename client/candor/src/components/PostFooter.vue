@@ -92,7 +92,7 @@ export default {
         });
       },
       reply: function(post_id) {
-        this.$emit("newPost", "reply")
+        this.$emit("newReplyDialog", post_id)
       }, 
       comments: function(post_id) {
         this.$http.get('/postComments', {

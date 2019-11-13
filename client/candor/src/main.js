@@ -57,15 +57,7 @@ const store = new Vuex.Store({
       }
     },
     addNewCommentsFeed(state, feed) {
-      let newfeed = feed[0].pst_id_pk
-      
-      for (var i = 1; i < state.posts.length; i++) {
-        if (state.posts[i][0].pst_id_pk == newfeed) {
-          delete state.posts[i]
-          return
-        }
-      }
-      state.posts.splice(1,0,feed);
+      state.posts[1] = feed;
     },
     setIsMobile(state, isMobileCheck) {
       state.isMobile = isMobileCheck < 800
