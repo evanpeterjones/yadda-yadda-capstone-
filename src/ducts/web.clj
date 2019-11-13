@@ -43,6 +43,13 @@
                               :offset (Integer/parseInt offset)})
               dbu/construct-json))})
 
+  (GET "/postComments" [post]
+    {:status 200
+     :headers {"Content-Type" "application/json"}
+     :body (-> (dbc/get-post-and-comments dbc/db-spec
+                                          {:pst_id (Integer/parseInt post)})
+               dbu/construct-json)})
+
   (GET "/bounce" request
     {:status 200
      :headers {"Content-Type" "application/json"}

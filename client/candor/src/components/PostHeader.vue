@@ -2,7 +2,8 @@
   <div class="container"> 
     <div class="row">
       <div class="col font-weight-bold text-nowrap">
-        <font-awesome-icon :icon="['fa', 'atom']"></font-awesome-icon>
+        <font-awesome-icon v-if="replyTo" :icon="['fa', 'reply']"></font-awesome-icon>
+        <font-awesome-icon v-else :icon="['fa', 'atom']"></font-awesome-icon>
         {{ userName }}
       </div>
       <div class="col"></div>
@@ -21,7 +22,8 @@ export default {
   name: 'PostHeader',
   props: {
     userId: { type: Number, default: -1 },
-    time: { type: String, default: '' }
+    time: { type: String, default: '' },
+    replyTo: { type:Number, default: null }
   }, 
   computed: {
     'userName': function() {

@@ -22,7 +22,11 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; HUG SQL QUERIES ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(declare get-posts-by-alias get-posts get-post create-post<!)
+(declare get-post-and-comments
+         get-posts-by-alias
+         get-posts
+         get-post
+         create-post<!)
 
 (defn upgrade-version [newest-version]
   "update version table to reflect most recently run database scripts"

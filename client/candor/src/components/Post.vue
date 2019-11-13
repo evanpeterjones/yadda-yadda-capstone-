@@ -1,13 +1,15 @@
 <template>
-  <card :id="id">
+  <card>
     <div>
       <post-header
+        :replyTo="parent"
         :userId="user"
         :time="time" />
       <div class="content">
         <p> {{ content }} </p>
       </div>
       <post-footer
+        :hasComments="hasComments"
         :decentral="decentral"
         :user="user"
         :id="id"
@@ -50,6 +52,14 @@ export default {
       decentral: {
         type: Boolean,
         default: false
+      }, 
+      parent: {
+        type: Number, 
+        default: null
+      },
+      hasComments: {
+        type: Boolean,
+        default: null
       }
     }
 }

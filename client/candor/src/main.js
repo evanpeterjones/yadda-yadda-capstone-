@@ -8,10 +8,10 @@ import Axios from 'axios'
 import titleMixins from '@/mixins/titleMixin.js'
 import routes from '@/components/routes/index.js'
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faReply, faTrash, faPlus, faArrowRight, faAtom } from '@fortawesome/free-solid-svg-icons'
+import { faReply, faTrash, faPlus, faArrowRight, faAtom, faComment } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
-library.add(faReply, faTrash, faPlus, faArrowRight, faAtom)
+library.add(faReply, faTrash, faPlus, faArrowRight, faAtom, faComment)
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 
@@ -55,6 +55,17 @@ const store = new Vuex.Store({
       for (var i = 0; i < newPosts.length; i++) {
         state.posts[0].push(newPosts[i]);
       }
+    },
+    addNewCommentsFeed(state, feed) {
+      let newfeed = feed[0].pst_id_pk
+      
+      for (var i = 1; i < state.posts.length; i++) {
+        if (state.posts[i][0].pst_id_pk == newfeed) {
+          delete state.posts[i]
+          return
+        }
+      }
+      state.posts.splice(1,0,feed);
     },
     setIsMobile(state, isMobileCheck) {
       state.isMobile = isMobileCheck < 800

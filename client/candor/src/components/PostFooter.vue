@@ -3,6 +3,7 @@
     <div class="row">
       <div class="col-3 float-left">
         <b-button pill 
+          v-b-tooltip.hover title="Delete"
           variant="outline-secondary"
           @click="confirmDelete(id)"
           v-if="myPost">
@@ -10,10 +11,16 @@
         </b-button>
       </div>
       <div class="col">
-        <p v-if="myPost"></p>
+        <b-button pill
+            v-if="hasComments"
+            v-b-tooltip.hover title="View Comments"
+            @click="comments(id)">
+            <font-awesome-icon :icon="['fas', 'comment']"></font-awesome-icon>
+        </b-button>
       </div>
       <div class="col-3">
         <b-button pill
+            v-b-tooltip.hover title="Reply"
             @click="reply(id)">
             <font-awesome-icon :icon="['fas', 'reply']"></font-awesome-icon>
         </b-button>
@@ -29,6 +36,10 @@ export default {
         user: {
           type: Number,
           default: null
+        },
+        hasComments: {
+          type: Boolean,
+          default: false
         },
         id: {
           type: Number,
@@ -81,19 +92,20 @@ export default {
         });
       },
       reply: function(post_id) {
-          const h = this.$createElement
-
-          const message = h('div', { class: ['foobar'] }, [
-              h('p', { class: ['text-center'] }, [
-                  "Replies too ya ungrateful ass"
-              ]),
-              h('p', { class: ['text-center'] }, [h('b-spinner')])
-          ])
-
-          this.$bvModal.msgBoxOk([message], {
-              buttonSize: 'sm',
-              centered: true, size: 'sm',
-          })
+        this.$emit("newPost", "reply")
+      }, 
+      comments: function(post_id) {
+        this.$http.get('/postComments', {
+          params: {
+            post: post_id
+          }
+        }).then(response => {
+          console.log(response)
+          this.$store.commit('addNewCommentsFeed', response.data)
+        }).catch(error => {
+          console.log("yeet")
+          console.error(error);
+        })
       }
     }
 }

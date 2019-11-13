@@ -1,16 +1,22 @@
 <template>
-  <div class="feed-container">
+  <div class="feed-container container-fluid">
     <card v-if="!posts">
       <h5>No Yapps yet! You can be the first!^^^</h5>
     </card>
-    <div v-for="(post, index) in posts" :key="index">
-      <post 
-        :id="post['pst_id_pk']"
-        :user="post['pst_usr_id_fk']"
-        :time="post['pst_time']"
-        :edited="post['pst_edittime']"
-        :content="post['pst_content']"
-        :decentral="post['pst_decentral']" />
+    <div class="row scrolling-wrapper">
+      <div v-for="(feed, ind) in posts" :key="ind" class="col scrolling-vert">
+        <div v-for="(post, index) in feed" :key="index">
+          <post 
+            :hasComments="post['pst_hascomments']"
+            :parent="post['pst_parent_fk']"
+            :id="post['pst_id_pk']"
+            :user="post['pst_usr_id_fk']"
+            :time="post['pst_time']"
+            :edited="post['pst_edittime']"
+            :content="post['pst_content']"
+            :decentral="post['pst_decentral']" />
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -51,7 +57,7 @@ export default {
     },
     computed: {
       posts : function() {
-        return (this.$store.getters.posts[0]);
+        return (this.$store.getters.posts);
       },
       mobile : function () {
         return this.$store.getters.isMobile;
@@ -69,5 +75,17 @@ export default {
 <style scoped>
 .feed-container{
   height: 20px;
+}
+.scrolling-vert {
+  border: none;
+  padding: 5px;
+  width: 200px;
+  height: 800px;
+  overflow: scroll;
+  overflow-x: hidden; 
+  overflow-x: auto;
+}
+.scrolling-wrapper {
+  overflow: scroll;
 }
 </style>

@@ -59,8 +59,8 @@ export default {
         if (data.length > 140) { alert("post must be shorter than 140 characters") }
 
         this.$http.get("/newPost", {
-          params: {
-            content : (data) ? data : ""
+          params: { 
+            content : (data) ? data : "", 
           }
         }).then(response => {
           console.log(response)

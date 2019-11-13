@@ -51,18 +51,20 @@ ORDER BY PST_TIME DESC;
 SELECT json_agg(posts)
 FROM POSTS
 WHERE PST_LOC_FK = :location
+AND PST_PARENT_FK IS NULL
 GROUP BY PST_TIME
 ORDER BY PST_TIME DESC
 LIMIT :lim
 OFFSET :offset;
 
--- :name get-post
+-- :name get-post-and-comments
 -- :doc get data for post of a certain ID
 SELECT json_agg(posts)
 FROM POSTS
-WHERE PST_ID_PK = :post_id
-GROUP BY PST_TIME
-ORDER BY PST_TIME DESC;
+WHERE PST_ID_PK = :pst_id
+OR PST_PARENT_FK = :pst_id
+GROUP BY PST_TIME, PST_ID_PK
+ORDER BY PST_TIME ASC;
 
 -- :name create-post<!
 -- :doc create a new post returning the id of the post
