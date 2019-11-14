@@ -9,7 +9,7 @@
       <b-form-textarea
         id="New Post"
         v-model="textInput"
-        :placeholder='test'
+        placeholder="What's happening?"
         rows="4"></b-form-textarea>
       <template v-slot:modal-footer="{ ok, cancel, hide }">
         <div v-if="validPost">
@@ -36,9 +36,6 @@
 <script>
 export default {
     name: "NewPost",
-    props: {
-      test : { type: String, default: 'asdfasdf'}
-    },
     data() {
       return {
         textInput : ""

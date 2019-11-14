@@ -30,14 +30,6 @@ export default {
     components: {
       Post, Card
     },
-    data () {
-      return {
-        feedClass : {
-          'margin' : 'auto',
-          'width' : '50%'
-        }
-      }
-    },
     methods: {
       onScroll () {
         let bottomOfWindow = window.innerHeight+document.documentElement.scrollTop == document.documentElement.scrollHeight

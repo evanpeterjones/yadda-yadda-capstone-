@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <NavigationBar 
-      @newReplyDialog="swapDialog('replyPost', data)"
+      @newReplyDialog="swapDialog('replyPost')"
       @newPostDialog="swapDialog('newPost')"
       @newQRCode="swapDialog('QRCode')"/>
       
@@ -74,10 +74,6 @@ export default {
   },
   methods: {
     swapDialog: function(comp) {
-      this.CurrDialog = this.components[comp];
-    },
-    swapDialog: function(comp, props) {
-      console.log(props);
       this.CurrDialog = this.components[comp];
     },
     cookies_required: function() {

@@ -19,7 +19,7 @@
                         <h4>{{ location }}</h4>
                     </template>
                     <b-dropdown-item>Change Location</b-dropdown-item>
-                    <b-dropdown-item>My Account</b-dropdown-item>
+                    <b-dropdown-item>Feed</b-dropdown-item>
                     <b-dropdown-item @click="showQR">Mobile Sync</b-dropdown-item>
                   </b-dropdown>
                 </div>

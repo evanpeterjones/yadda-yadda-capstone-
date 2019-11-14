@@ -1,11 +1,12 @@
 import Vue from 'vue'
 import App from './App.vue'
 import Vuex from "vuex"
+import VueRouter from 'vue-router';
+import VueCookies from 'vue-cookies'
 import BootstrapVue from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.min.css'
-import VueCookies from 'vue-cookies'
 import Axios from 'axios'
-import titleMixins from '@/mixins/titleMixin.js'
+//import titleMixins from '@/mixins/titleMixin.js'
 import routes from '@/components/routes/index.js'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faReply, faTrash, faPlus, faArrowRight, faAtom, faComment } from '@fortawesome/free-solid-svg-icons'
@@ -19,6 +20,7 @@ Vue.component('font-awesome-icon', FontAwesomeIcon)
 Vue.config.productionTip = false
 Vue.use(BootstrapVue)
 Vue.use(VueCookies)
+Vue.use(VueRouter)
 Vue.use(Vuex)
 
 VueCookies.config('7d')
@@ -114,7 +116,10 @@ store.watch((store) => store.location, (newLocation, oldLocation) => {
   });
 });
 
+const router = new VueRouter({ routes })
+
 new Vue({
   store,
+  router,
   render: h => h(App),
 }).$mount('#app')
