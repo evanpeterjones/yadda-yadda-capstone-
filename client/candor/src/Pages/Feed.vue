@@ -4,8 +4,8 @@
       <h5>No Yapps yet! You can be the first!^^^</h5>
     </card>
     <div class="row scrolling-wrapper">
-      <div v-for="(feed, ind) in posts" :key="ind" class="col scrolling-vert">
-        <div v-for="(post, index) in feed" :key="index">
+      <div v-for="feed in posts" :key="feed[0].pst_id_pk" class="col scrolling-vert">
+        <div v-for="post in feed" :key="post.pst_id_pk">
           <post 
             :hasComments="post['pst_hascomments']"
             :parent="post['pst_parent_fk']"
@@ -71,8 +71,7 @@ export default {
 .scrolling-vert {
   border: none;
   padding: 5px;
-  width: 200px;
-  height: 800px;
+  width: 250px;
   overflow: scroll;
   overflow-x: hidden; 
   overflow-x: auto;

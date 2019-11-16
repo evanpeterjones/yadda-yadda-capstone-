@@ -51,7 +51,6 @@ export default {
     },
     methods: {
       close : function() {
-        console.log('clicked close');
         this.$emit('closeDialog');
       }, 
       send: function(data) {
@@ -61,6 +60,7 @@ export default {
         this.$http.get("/newPost", {
           params: { 
             content : (data) ? data : "", 
+            parent : this.$store.getters.replyTo
           }
         }).then(response => {
           console.log(response)
@@ -71,7 +71,7 @@ export default {
       }
     },
     mounted() {
-        this.$children[0].show();
+      this.$children[0].show();
     }
 }
 </script>

@@ -45,6 +45,14 @@ AND LOC_STATE = :state
 GROUP BY PST_TIME
 ORDER BY PST_TIME DESC;
 
+-- :name get-post
+-- :result :json
+-- :doc get post by id
+SELECT json_agg(posts)
+FROM POSTS
+WHERE pst_id_pk = :post_id
+
+
 -- :name get-posts
 -- :result :json
 -- :doc {:location int :lim int :offset int}

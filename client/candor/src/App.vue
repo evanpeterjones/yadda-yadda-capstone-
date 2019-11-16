@@ -1,25 +1,16 @@
 <template>
   <div id="app">
-    <NavigationBar 
-      @newReplyDialog="swapDialog('replyPost')"
-      @newPostDialog="swapDialog('newPost')"
+    <NavigationBar
       @newQRCode="swapDialog('QRCode')"/>
       
     <div v-if="!location">
       <Splash />
     </div>
-    
     <div v-else>
-      <Feed />
-      <div class="right-corner-container">     
-        <b-button 
-          pill
-          class="button-class"
-          @click="swapDialog('newPost')">
-            <font-awesome-icon :icon="['fas', 'plus']"></font-awesome-icon>
-        </b-button>
-      </div>
+      <Home
+        @newPostDialog="swapDialog('newPost')"/>
     </div>
+
     <component 
       :is="CurrDialog"
       @closeDialog="swapDialog(null)"></component>
@@ -31,14 +22,14 @@ import NavigationBar from './components/NavigationBar.vue'
 import NewPost from './components/NewPost.vue'
 import QRCode from './components/QRCode.vue'
 import Splash from './Pages/Splash.vue'
-import Feed from './Pages/Feed.vue'
+import Home from './Pages/Home.vue'
 import BModal from 'bootstrap'
 
 export default {
   title: 'YAPP',
   name: 'App',
   components: { 
-    NavigationBar, Splash, Feed, BModal, NewPost, QRCode
+    NavigationBar, Splash, BModal, NewPost, QRCode, Home
   },
   data () {
     return {
@@ -61,10 +52,26 @@ export default {
       return this.$store.getters.isMobile;
     }
   },
+  events: {
+    'newReplyDialog' : function(parent_fk) {
+      console.log('caught that shit');
+      this.$store.commit('setReplyTo', post_id)
+      this.swapDialog('newPost', post_id)
+    }
+  },
   mounted() {
     if (!navigator.cookieEnabled) {
       this.cookies_required();
     }
+
+    this.$eventBus.$on('newReplyPost', post_id => {
+      
+    });
+
+    this.$el.addEventListener("newReplyPost", (post_id) => {
+      this.$store.commit('setReplyTo', post_id);
+      this.swapDialog('newPost', post_id)
+    });
     
     this.$nextTick(() => {
       window.addEventListener('resize', () => {
@@ -73,7 +80,8 @@ export default {
     })
   },
   methods: {
-    swapDialog: function(comp) {
+    swapDialog: function(comp, replyTo) {
+      this.$store.commit('setReplyTo', replyTo)
       this.CurrDialog = this.components[comp];
     },
     cookies_required: function() {

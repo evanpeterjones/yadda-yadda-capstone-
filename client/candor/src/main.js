@@ -11,10 +11,14 @@ import routes from '@/components/routes/index.js'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faReply, faTrash, faPlus, faArrowRight, faAtom, faComment } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { FontAwesomeLayers } from '@fortawesome/vue-fontawesome'
+
+
 
 library.add(faReply, faTrash, faPlus, faArrowRight, faAtom, faComment)
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)
+Vue.component('font-awesome-layers', FontAwesomeLayers)
 
 // setup defaults and globals
 Vue.config.productionTip = false
@@ -34,7 +38,8 @@ const store = new Vuex.Store({
     posts: [],
     offset: 0,
     isMobile: window.innerWidth < 500, 
-    userId : null
+    userId : null,
+    replyTo : null
   },
   getters: {
     location: state => state.location,
@@ -43,7 +48,8 @@ const store = new Vuex.Store({
     isMobile: state => state.isMobile,
     userId: state => state.userId, 
     locationType: state => state.locationType,
-    offset: state => state.offset
+    offset: state => state.offset, 
+    replyTo: state => state.replyTo
   },
   mutations: {
     setLocation(state, loc) {
@@ -78,6 +84,9 @@ const store = new Vuex.Store({
       //state.offset--;
       delete state.posts[0][index]
     },
+    setReplyTo(state, reply) {
+      state.replyTo = reply;
+    },
     newPost(state, newPost) {
       state.posts[0].unshift(newPost)
       state.offset++;
@@ -89,7 +98,7 @@ const store = new Vuex.Store({
     },
     updateOffset(state) {
       state.offset += 5;
-    }
+    },
   }
 });
 
@@ -98,6 +107,8 @@ const ax = Axios.create({
 });
 
 Vue.prototype.$http = ax;
+
+Vue.prototype.$eventBus = new Vue(); // Global event bus
 
 store.watch((store) => store.location, (newLocation, oldLocation) => {
   console.log(newLocation)
