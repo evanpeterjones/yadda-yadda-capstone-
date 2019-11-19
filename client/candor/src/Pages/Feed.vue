@@ -72,6 +72,7 @@ export default {
   border: none;
   padding: 5px;
   width: 250px;
+  height:700px;
   overflow: scroll;
   overflow-x: hidden; 
   overflow-x: auto;
