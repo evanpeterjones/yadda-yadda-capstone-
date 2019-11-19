@@ -61,11 +61,24 @@ const store = new Vuex.Store({
     },
     addPosts(state, newPosts) {
       for (var i = 0; i < newPosts.length; i++) {
-        state.posts[0].push(newPosts[i]);
+        state.posts[0].splice(state.posts[0].length, 0, newPosts[i])
       }
     },
     addNewCommentsFeed(state, feed) {
-      state.posts[1] = feed;
+      if (state.posts[1]){
+        // this is so obnoxious I hate Vue
+        for (var i = 0; i < Math.max(feed.length, state.posts[1].length); i++) {
+          if (feed[i] && state.posts[1][i]){ 
+            state.posts[1].splice(i, 1, feed[i])
+          } else if(feed[i]) {
+            state.posts[1].splice(i, 0, feed[i])
+          } else if (state.posts[1][i]) {
+            state.posts[1].splice(state.posts[1].length-1, 1)
+          }
+        }
+      } else {
+        state.posts.splice(1,0, feed)
+      }
     },
     setIsMobile(state, isMobileCheck) {
       state.isMobile = isMobileCheck < 800
@@ -81,8 +94,8 @@ const store = new Vuex.Store({
         }
       }
       
-      //state.offset--;
-      delete state.posts[0][index]
+      state.posts[0].splice(index, 1)
+      state.offset-=1
     },
     setReplyTo(state, reply) {
       state.replyTo = reply;

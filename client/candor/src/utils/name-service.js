@@ -1,5 +1,5 @@
 
-let an = [
+export let animals = [
     'Giraffe','Woodpecker','Camel','Starfish','Koala','Alligator','Owl',
     'Tiger','Bear','Blue whale','Coyote','Chimpanzee','Raccoon','Lion',
     'Arctic wolf','Crocodile','Dolphin','Elephant','Squirrel','Snake',
@@ -7,13 +7,10 @@ let an = [
     'Frog','Deer','Rat','Badger','Lizard','Mole','Hedgehog','Otter','Reindeer'
 ];
 
-let ad = [
+export let adjectives = [
     'Abloom', 'Abiding','Achy','Adequate','Aesthetical','Affordable','Ageless','Austere',
     'Amaranth', 'Amber', 'Apricot', 'Aqua', 'Arctic', 'Auburn', 'Almond'
 ];
-
-export let animals = an
-export let adjectives = ad
 
 export let comb = {/* user_id : generated name */}
 
@@ -23,7 +20,7 @@ function getName(user_id, offsetAd=0, offsetAn=0) {
         return comb.user_id
     }
 
-    let adj = adjectives[(user_id + offsetAd) % colors.length]
+    let adj = adjectives[(user_id + offsetAd) % adjectives.length]
     let ani = animals[(user_id + offsetAn) % animals.length]
     let nam = adj + ' ' + ani;
 

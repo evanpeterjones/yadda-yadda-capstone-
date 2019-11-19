@@ -4,7 +4,7 @@
       <h5>No Yapps yet! You can be the first!^^^</h5>
     </card>
     <div class="row scrolling-wrapper">
-      <div v-for="feed in posts" :key="feed[0].pst_id_pk" class="col scrolling-vert">
+      <div v-on:scroll="onScroll" id="feeder" v-for="feed in posts" :key="feed[0].pst_id_pk" class="col scrolling-vert">
         <div v-for="post in feed" :key="post.pst_id_pk">
           <post 
             :hasComments="post['pst_hascomments']"
@@ -32,8 +32,10 @@ export default {
     },
     methods: {
       onScroll () {
-        let bottomOfWindow = window.innerHeight+document.documentElement.scrollTop == document.documentElement.scrollHeight
-
+        let feeder = document.getElementById('feeder')
+        let bottomOfWindow = feeder.scrollTop + feeder.offsetHeight === feeder.scrollHeight
+        console.log(feeder.scrollTop + feeder.offsetHeight+" = "+feeder.scrollHeight)
+        
         if (bottomOfWindow) {
           this.$http.get("/feed", {
             params: {
@@ -54,12 +56,6 @@ export default {
       mobile : function () {
         return this.$store.getters.isMobile;
       }
-    },
-    created () {
-      window.addEventListener('scroll', this.onScroll);
-    },
-    destroyed () {
-      window.removeEventListener('scroll', this.onScroll);
     }
 }
 </script>
@@ -72,7 +68,7 @@ export default {
   border: none;
   padding: 5px;
   width: 250px;
-  height:700px;
+  height: 85vh;
   overflow: scroll;
   overflow-x: hidden; 
   overflow-x: auto;
