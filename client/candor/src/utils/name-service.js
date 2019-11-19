@@ -27,11 +27,11 @@ function getName(user_id, offsetAd=0, offsetAn=0) {
     let ani = animals[(user_id + offsetAn) % animals.length]
     let nam = adj + ' ' + ani;
 
-    if (comb.includes(nam)) {
-        if (offsetAd % colors.length == user_id) {
+    if (Object.values(comb).includes(nam)) {
+        if (offsetAd % colors.length === user_id) {
             return getName(user_id, offsetAd, offsetAn+1)
         }
-        else if (offsetAn % animals.length == user_id) {
+        else if (offsetAn % animals.length === user_id) {
             return getName(user_id,offsetAd + 1, offsetAn)
         } 
         else {
