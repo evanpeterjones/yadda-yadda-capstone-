@@ -33,6 +33,19 @@ END IF;
 INSERT INTO Passwords(PWD_Hash, PWD_USR_FK, PWD_UpdatedOn)
 VALUES (newHash, :user_id, NOW());
 
+-- :name get-new-posts
+-- :result :json
+SELECT JSON_AGG(POSTS)
+FROM POSTS
+LEFT JOIN LOCATION
+ON PST_LOC_FK = LOC_ID_PK
+WHERE LOC_ID = :zip
+AND PST_TIME > cast(:time as timestamptz)
+AND PST_PARENT_FK IS NULL
+GROUP BY PST_TIME
+ORDER BY PST_TIME DESC;
+
+
 -- :name get-posts-by-alias
 -- :result :json
 -- :doc {:alias varchar :state varchar}

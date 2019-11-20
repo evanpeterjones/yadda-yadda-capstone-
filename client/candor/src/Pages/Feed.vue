@@ -34,7 +34,6 @@ export default {
       onScroll () {
         let feeder = document.getElementById('feeder')
         let bottomOfWindow = feeder.scrollTop + feeder.offsetHeight === feeder.scrollHeight
-        console.log(feeder.scrollTop + feeder.offsetHeight+" = "+feeder.scrollHeight)
         
         if (bottomOfWindow) {
           this.$http.get("/feed", {
