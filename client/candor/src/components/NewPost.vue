@@ -12,6 +12,7 @@
         placeholder="What's happening?"
         rows="4"></b-form-textarea>
       <template v-slot:modal-footer="{ ok, cancel, hide }">
+        <input type="file" id="filechooser">
         <div v-if="validPost">
           <b style="color:grey">{{ charsLeft }}</b>
         </div>

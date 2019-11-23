@@ -49,7 +49,7 @@ CREATE TABLE IF NOT EXISTS IMAGES (
     IMG_ID_PK SERIAL,
     -- secondary FK to link with a post? Images could be stored without post
     IMG_Type_FK INT REFERENCES IMAGE_ASSOC_TYPES(IAT_PK),
-    IMG_Hash_PK CHAR(64),
+    IMG_Hash_PK CHAR(64), -- probably don't need this
     IMG_File VARCHAR(200), -- FILE ON DISK
     IMG_Thumbnail VARCHAR(200), -- ALSO ON DISK
     IMG_Meta VARCHAR, -- IS Text type too much space in disk?

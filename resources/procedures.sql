@@ -104,3 +104,9 @@ VALUES(:user, :content, :location, now(), :parent) RETURNING PST_ID_PK;
 -- :name delete-post!
 -- :doc delete a post when given {:post_key String}
 DELETE FROM POSTS WHERE PST_ID_PK = :post_key
+
+-- :name get-link
+-- :doc given a short link, return the full link
+SELECT json_agg(url_long)
+FROM url
+WHERE URL_ID = :short;

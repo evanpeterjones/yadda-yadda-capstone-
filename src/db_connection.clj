@@ -26,6 +26,7 @@
          get-posts-by-alias
          get-posts
          get-post
+         get-link
          create-post<!
          create-reply-post<!)
 
@@ -46,6 +47,15 @@
 (hugsql/def-db-fns "procedures.sql")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; MISCELLANEOUS ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defn long-link [short-link]
+  (let [url (get-link db-spec {:short short-link})]
+    (if url
+      (-> url
+          first
+          :json_agg
+          .getValue)
+      nil)))
 
 (defn query [q]
   "A function for testing sql queries"
