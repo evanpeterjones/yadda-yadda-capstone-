@@ -14,15 +14,18 @@ chrome.runtime.onInstalled.addListener(function() {
 
       if (res.coords) {
         params = {
-          'lat' : res.coords.latitude, 
+          'lat' : res.coords.latitude,
           'long' : res.coords.longitude
         };
       }
 
       console.log(JSON.stringify(params));
 
-      request.open("POST", "http ://localhost:5000/getzip", true);
-      request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+      request.addEventListener("load", function (response) {
+        console.log(response.data)
+      });
+      request.open("GET", "http://localhost:5000/getzip", true);
+//      request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
       request.send(JSON.stringify(params));
 
       console.log("finished posting");

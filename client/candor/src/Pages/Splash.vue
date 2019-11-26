@@ -9,7 +9,7 @@
         placeholder="zip code"
         on-submit="return false;"
         @submit="formSubmit(zip)"
-        @keyup="checkKey"
+        @keyup.enter="formSubmit(this.zip)"
       />
       <br>
       <b-button
@@ -51,12 +51,6 @@ export default {
 		this.getLocation();		
     },
     methods: {
-		
-		checkKey: function(event) {
-			if (event.key == "Enter") {
-				formSubmit(this.zip);
-			} 
-		},
 		
 		formSubmit: function(zipcode) {
 			if (zipcode) {

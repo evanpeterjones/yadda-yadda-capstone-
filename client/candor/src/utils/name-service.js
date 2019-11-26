@@ -1,3 +1,7 @@
+/*
+ * name-service utility to assign a unique username to a user-id
+ */
+
 
 export let animals = [
     'Giraffe','Woodpecker','Camel','Starfish','Koala','Alligator','Owl',

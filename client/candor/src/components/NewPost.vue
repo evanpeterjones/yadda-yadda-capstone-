@@ -66,8 +66,8 @@ export default {
         }).then(response => {
           console.log(response)
           this.$store.commit("newPost", response.data[0])
-        }).catch(error => {
-          console.error(error)
+        }).catch(err => {
+          console.error(err)
         });
       }
     },

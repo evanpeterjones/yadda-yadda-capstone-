@@ -13,7 +13,7 @@
 
     <component 
       :is="CurrDialog"
-      @closeDialog="swapDialog(null)"></component>
+      @closeDialog="swapDialog(null, null)"></component>
   </div>
 </template>
 
@@ -50,13 +50,9 @@ export default {
     }, 
     mobile: function() {
       return this.$store.getters.isMobile;
-    }
-  },
-  events: {
-    'newReplyDialog' : function(parent_fk) {
-      console.log('caught that shit');
-      this.$store.commit('setReplyTo', post_id)
-      this.swapDialog('newPost', post_id)
+    }, 
+    replyPost: function() {
+      
     }
   },
   mounted() {
@@ -64,14 +60,11 @@ export default {
       this.cookies_required();
     }
 
-    this.$eventBus.$on('newReplyPost', post_id => {
-      
-    });
-
-    this.$el.addEventListener("newReplyPost", (post_id) => {
-      this.$store.commit('setReplyTo', post_id);
-      this.swapDialog('newPost', post_id)
-    });
+    this.$store.watch((state) => state.replyTo, (old, newVal) => {
+      if (this.$store.getters.replyTo) {
+        this.swapDialog('newPost', this.$store.getters.replyTo)
+      }
+    })
     
     this.$nextTick(() => {
       window.addEventListener('resize', () => {

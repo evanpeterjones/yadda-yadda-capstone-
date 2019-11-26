@@ -101,6 +101,13 @@ const store = new Vuex.Store({
       state.replyTo = reply;
     },
     newPost(state, newPost) {
+      if (newPost.pst_parent_fk) {
+        for (var i = 0; i < state.posts[0].length; i++) {
+          if (newPost[0].pst_parent_fk == state.posts[0][i].pst_id_pk) {
+            state.posts[0][i] = Object.assign()
+          }
+        }
+      }
       state.posts[0].unshift(newPost)
       state.offset++;
     },
@@ -121,7 +128,14 @@ const ax = Axios.create({
 
 Vue.prototype.$http = ax;
 
-Vue.prototype.$eventBus = new Vue(); // Global event bus
+const EventBus = new Vue();
+Object.defineProperties(Vue.prototype, {
+  $bus: {
+    get() {
+        return EventBus;
+    },
+  },
+});
 
 store.watch((store) => store.location, (newLocation, oldLocation) => {
   console.log(newLocation)

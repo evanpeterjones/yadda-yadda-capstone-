@@ -104,7 +104,7 @@
                     user (dbc/get-user-from-session-id ses)
                     location-fk (dbc/get-location-from-session ses)]
                 (if (not (-> content .trim .isEmpty))
-                  (-> (dbc/create-new-post user content location-fk parent)
+                  (-> (dbc/create-new-post user content location-fk (Integer. parent))
                       dbc/get-post-by-id)))})
 
   (GET "/newReplyPost" [content parent :as request]
@@ -161,7 +161,7 @@
       (wrap-cors :access-control-allow-origin [#".*"] :access-control-allow-methods [:post])))
 
 (defn -main [& [port]]
-  ;;  (dbc/checkup)
+  (dbc/checkup)
   (let [port (Integer. (or (System/getenv "PORT") port 5000))]
     (jetty/run-jetty (handler/site #'app) {:port port :join? false})))
 

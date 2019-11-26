@@ -89,7 +89,7 @@ PERFORM F_DBVERSION(6);
 
 END $$
 
--- :name 7 :!
+
 
 DO $$
 BEGIN

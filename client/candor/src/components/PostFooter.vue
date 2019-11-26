@@ -30,6 +30,8 @@
 </template>
 
 <script>
+import { EventBus } from '../utils/event-bus.js'
+
 export default {
     name: "PostFooter", 
     props: {
@@ -60,6 +62,9 @@ export default {
       }
     },
     methods: {
+      reply: function(post_id) {
+        this.$store.commit('setReplyTo', post_id)
+      }, 
       confirmDelete: function (post_id) {
         const h = this.$createElement;
         const message = h('div', { class: ['foobar'] }, [ 
@@ -91,9 +96,6 @@ export default {
           console.log(error);
         });
       },
-      reply: function(post_id) {
-        this.$emit("newReplyDialog", post_id)
-      }, 
       comments: function(post_id) {
         this.$http.get('/postComments', {
           params: {

@@ -41,7 +41,7 @@
       ;; "apply the database upgrades where the current version is <
       (->> (keys upgrade-fns)
            (filter #(< current-version (-> % name Integer.)))
-           (apply #((-> % upgrade-fns :fn) db-spec))))
+           (map #((-> % upgrade-fns :fn) db-spec))))
     (upgrade-version newest-version)))
 
 (hugsql/def-db-fns "procedures.sql")
@@ -225,10 +225,13 @@
 (defn create-new-post
   ([u c lf] (create-new-post u c lf nil))
   ([user content location-fk parent]
-  "wrapper for hugsql query"
-  (-> (create-post<! db-spec {:user user :content content :location location-fk :parent parent})
-      first
-      :pst_id_pk)))
+   "wrapper for hugsql query"
+   (if parent
+     (jdbc/execute! db-spec
+                    [(str "UPDATE POSTS SET pst_hascomments = true WHERE PST_ID_PK = '" parent "';")]))
+   (-> (create-post<! db-spec {:user user :content content :location location-fk :parent parent})
+       first
+       :pst_id_pk)))
 
 (defn post-exists? [pid]
   (not (.isEmpty (query (str "SELECT * FROM POSTS WHERE PST_ID_PK = '" pid "';")))))
