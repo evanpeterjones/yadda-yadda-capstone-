@@ -93,7 +93,7 @@ const store = new Vuex.Store({
           index = i
         }
       }
-      
+
       state.posts[0].splice(index, 1)
       state.offset-=1
     },
@@ -103,8 +103,8 @@ const store = new Vuex.Store({
     newPost(state, newPost) {
       if (newPost.pst_parent_fk) {
         for (var i = 0; i < state.posts[0].length; i++) {
-          if (newPost[0].pst_parent_fk == state.posts[0][i].pst_id_pk) {
-            state.posts[0][i] = Object.assign()
+          if (newPost.pst_parent_fk == state.posts[0][i].pst_id_pk) {
+            state.posts[0][i] = Object.assign({}, state.posts[0][i], {'pst_hascomments' : true})
           }
         }
       }
