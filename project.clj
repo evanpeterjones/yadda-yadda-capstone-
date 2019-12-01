@@ -5,9 +5,12 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.10.0"]
                  [org.clojure/data.json "0.2.6"]
+                 [net.polyc0l0r/bote "0.1.0"]
                  [com.google.api-client/google-api-client "1.30.4"]
                  [clj-http "3.10.0"]
                  [compojure "1.4.0"]
+                 ;;                 [simple-email "1.0.7"]
+                 [com.draines/postal "2.0.3"]
                  [com.layerware/hugsql "0.5.1"]
                  [org.clojure/data.json "0.2.6"]
                  [ring/ring-defaults "0.3.2"]
