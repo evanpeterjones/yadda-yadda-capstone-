@@ -9,13 +9,11 @@ import Axios from 'axios'
 //import titleMixins from '@/mixins/titleMixin.js'
 import routes from '@/components/routes/index.js'
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faReply, faTrash, faPlus, faArrowRight, faAtom, faComment } from '@fortawesome/free-solid-svg-icons'
+import { faReply, faTrash, faPlus, faArrowRight, faAtom, faComment, faTimes } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { FontAwesomeLayers } from '@fortawesome/vue-fontawesome'
 
-
-
-library.add(faReply, faTrash, faPlus, faArrowRight, faAtom, faComment)
+library.add(faReply, faTrash, faPlus, faArrowRight, faAtom, faComment, faTimes)
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 Vue.component('font-awesome-layers', FontAwesomeLayers)
@@ -52,6 +50,9 @@ const store = new Vuex.Store({
     replyTo: state => state.replyTo
   },
   mutations: {
+    removeReplies(state) {
+      state.posts.splice(1,1);
+    },
     setLocation(state, loc) {
       delete loc.loc_id_pk
       state.location = loc
@@ -65,8 +66,9 @@ const store = new Vuex.Store({
       }
     },
     addNewCommentsFeed(state, feed) {
-      if (state.posts[1]){
+      if (state.posts[1]){       
         // this is so obnoxious I hate Vue
+        /*
         for (var i = 0; i < Math.max(feed.length, state.posts[1].length); i++) {
           if (feed[i] && state.posts[1][i]){ 
             state.posts[1].splice(i, 1, feed[i])
@@ -75,7 +77,11 @@ const store = new Vuex.Store({
           } else if (state.posts[1][i]) {
             state.posts[1].splice(state.posts[1].length-1, 1)
           }
-        }
+        }*/
+
+        // es6 to save the day!
+        state.posts = [ state.posts[0], feed ]
+ 
       } else {
         state.posts.splice(1,0, feed)
       }

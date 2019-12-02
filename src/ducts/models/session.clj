@@ -9,4 +9,5 @@
    :ses-id (s/and string? #(< (count %) 64))
    :ses-user-id-fk :user/usr-id-pk
    })
-  
+
+

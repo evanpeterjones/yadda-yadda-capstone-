@@ -24,6 +24,7 @@
 
 (declare get-post-and-comments
          get-posts-by-alias
+         get-my-posts
          get-posts
          get-post
          get-link
@@ -87,6 +88,9 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; SESSION QUERIES ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; Queries ;;
+
+(defn session-sync [session]
+  )
 
 (defn session-exists? [ses-id]
   (let [results (query (str "SELECT 1 FROM SESSIONS WHERE SES_ID = '" ses-id "';"))]

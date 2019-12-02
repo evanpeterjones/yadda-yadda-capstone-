@@ -86,12 +86,13 @@ export default {
         
       },
       deletePost: function(post_id) {       
-        this.$http.post("/deletePost", null, {
+        this.$http.get("/deletePost", {
           params : {
             "post" : post_id
           }
         }).then((response) => {
           this.$store.commit('deletePost', response.data);
+          console.log(response)
         }).catch((error) => {
           console.log(error);
         });

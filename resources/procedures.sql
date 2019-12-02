@@ -66,6 +66,16 @@ FROM POSTS
 WHERE pst_id_pk = :post_id
 
 
+-- :name get-my-posts
+-- :result :json
+-- :doc {:me int}
+SELECT json_agg(posts)
+FROM POSTS
+WHERE pst_usr_id_fk = :me
+GROUP BY PST_TIME
+ORDER BY PST_TIME DESC;
+
+
 -- :name get-posts
 -- :result :json
 -- :doc {:location int :lim int :offset int}

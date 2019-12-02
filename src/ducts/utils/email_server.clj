@@ -9,7 +9,7 @@
                                      :enable-tls? true
                                      :require-tls? true))
 
-;(.start smtp-server)
+;;(.start smtp-server)
 
 (defn yapp-send-email [message]
   (send-message {:host "localhost"
@@ -21,15 +21,12 @@
 
 ;(yapp-send-email "hello world!")
 
-
 (def mail-host "smtp.gmail.com")
 (def mail-port 587)
 (def mail-user "evan.peter.jones@gmail.com")
 (def mail-pass "Avogadro6.02")
 (def mail-from "evanpeterjones@gmail.com")
 (def mail-ssl true)
-
-
 
 (comment
   (def dropsonde-server

@@ -31,7 +31,6 @@
         :body (views/web-app)})
 
   (GET "/feed" request
-       ;; this still needs pagination so we don't just ship out all of our posts (long term)
        {:status 200
         :headers {"Content-Type" "application/json"}
         :body (let [offset (-> request :query-string (.split "=") (get 1))
@@ -46,6 +45,16 @@
                                  :lim 5
                                  :offset (Integer/parseInt offset)})
                  dbu/construct-json))})
+
+  (GET "/myPosts" request
+       (def ro request)
+       {:status 200
+        :headers {"Content-Type" "application/json"}
+        :body (let [user-id (->> request
+                                 cku/get-cookie-from-request
+                                 dbc/get-user-from-session-id)]
+                (dbu/construct-json
+                 (dbc/get-my-posts dbc/db-spec {:me user-id})))})
 
   (GET "/postComments" [post]
        {:status 200
@@ -104,7 +113,7 @@
                     user (dbc/get-user-from-session-id ses)
                     location-fk (dbc/get-location-from-session ses)]
                 (if (not (-> content .trim .isEmpty))
-                  (-> (dbc/create-new-post user content location-fk (Integer. parent))
+                  (-> (dbc/create-new-post user content location-fk (if parent (Integer. parent) nil))
                       dbc/get-post-by-id)))})
 
   (GET "/newReplyPost" [content parent :as request]
@@ -124,26 +133,36 @@
                       :pst_id_pk
                       dbc/get-post-by-id)))})
 
-  (GET "/*" request
+  (GET "/deletePost" request
        (def ro request)
-       {:status 307
+       {:status 200
         :headers {"Content-Type" "application/json"}
-        :body (let [short (:* (:route-params request))]
-                (try 
-                  (dbc/long-link short)
-                  (catch Exception ex "Link does not exist or has expired")))})
+        :body (let [user-id (->> (cku/get-cookie-from-request request)
+                                 dbc/get-user-from-session-id)
+                    post-id (-> request :query-string (.split "=") (get 1))]
+                (if (= user-id (dbc/get-user-id-from-post-id post-id))
+                  (do (dbc/delete-post post-id)
+                      (str post-id))
+                  (str -1)))})
 
-  (GET "/getQRCode" request "")
+  (GET "/sessionSync" [cookie]
+    {:status 200
+     :headers {"Content-Type" "application/json"}
+     :cookies {"yapp-session" {:value (if (dbc/session-exists? cookie)
+                                        cookie
+                                        (dbc/create-session))
+                               :max-age (* 60 24 30 365)}}
+     :body cookie})
 
-  (POST "/deletePost" request
-        (def ro request)
-        (let [user-id (->> (cku/get-cookie-from-request request)
-                           dbc/get-user-from-session-id)
-              post-id (-> request :query-string (.split "=") (get 1))]
-          (if (= user-id (dbc/get-user-id-from-post-id post-id))
-            (do (dbc/delete-post post-id)
-                (str post-id))
-            (str -1))))
+  (comment
+    (GET "/*" request
+         (def ro request)
+         {:status 307
+          :headers {"Content-Type" "application/json"}
+          :body (let [short (:* (:route-params request))]
+                  (try 
+                    (dbc/long-link short)
+                    (catch Exception ex "Link does not exist or has expired")))}))
 
   (POST "/share" [lat long link content :as request]
         (def ro request)
@@ -164,6 +183,3 @@
   (dbc/checkup)
   (let [port (Integer. (or (System/getenv "PORT") port 5000))]
     (jetty/run-jetty (handler/site #'app) {:port port :join? false})))
-
-
-

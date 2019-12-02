@@ -1,6 +1,8 @@
 <template>
   <div id="app">
     <NavigationBar
+      @myPosts="swapDialog('myPosts')"
+      @myAccount="swapDialog('myAccount')"
       @newQRCode="swapDialog('QRCode')"/>
       
     <div v-if="!location">
@@ -20,6 +22,8 @@
 <script>
 import NavigationBar from './components/NavigationBar.vue'
 import NewPost from './components/NewPost.vue'
+import myPosts from './components/myPosts.vue'
+import myAccount from './components/myAccount.vue'
 import QRCode from './components/QRCode.vue'
 import Splash from './Pages/Splash.vue'
 import Home from './Pages/Home.vue'
@@ -29,7 +33,7 @@ export default {
   title: 'YAPP',
   name: 'App',
   components: { 
-    NavigationBar, Splash, BModal, NewPost, QRCode, Home
+    NavigationBar, Splash, BModal, NewPost, QRCode, Home, myPosts, myAccount
   },
   data () {
     return {
@@ -37,7 +41,9 @@ export default {
       components : {
         'replyPost' : NewPost,
         'newPost' : NewPost,
-        'QRCode' : QRCode
+        'QRCode' : QRCode, 
+        'myPosts' : myPosts, 
+        'myAccount' : myAccount
       }
     }
   },

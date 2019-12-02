@@ -18,6 +18,8 @@
                     <template v-slot:button-content>
                         <h4>{{ location }}</h4>
                     </template>
+                    <b-dropdown-item @click="myPosts">My Posts</b-dropdown-item>
+                    <b-dropdown-item @click="myAccount">My Account</b-dropdown-item>
                     <b-dropdown-item>Change Location</b-dropdown-item>
                     <b-dropdown-item>Feed</b-dropdown-item>
                     <b-dropdown-item @click="showQR">Mobile Sync</b-dropdown-item>
@@ -57,6 +59,12 @@ export default {
         }
     },
     methods: {
+        myAccount: function() {
+            this.$emit('myAccount');
+        },
+        myPosts: function() {
+            this.$emit('myPosts');
+        },
         updateLocationSort: function() {
             this.$store.commit('nextLocationType');
         },
