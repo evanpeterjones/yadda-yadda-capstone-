@@ -7,6 +7,11 @@
 INSERT INTO USERS(USR_CreatedOn)
 VALUES(NOW()) RETURNING usr_id_pk;
 
+-- :name get-user-information
+-- :doc get all user information {:id int}
+SELECT json_agg(users)
+FROM USERS
+WHERE USR_ID_PK = :id;
 
 -- :name update-password!
 -- :doc update a password hash given {:password :user-id &optional :update-old-passwords}
