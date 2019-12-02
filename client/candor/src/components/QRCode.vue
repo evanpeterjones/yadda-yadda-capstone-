@@ -1,13 +1,17 @@
 <template>
-    <div>
-        <b-modal 
-            size='sm'
-            hide-header
-            hide-footer
-            @hidden="hide">
-            <qrcode :value="url" :options="{width: 250}"></qrcode>
-        </b-modal>
-    </div>
+  <div>
+    <b-modal 
+      size="sm"
+      hide-header
+      hide-footer
+      @hidden="hide"
+    >
+      <qrcode
+        :value="url"
+        :options="{width: 250}"
+      />
+    </b-modal>
+  </div>
 </template>
 
 <script>

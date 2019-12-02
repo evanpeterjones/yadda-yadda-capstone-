@@ -1,17 +1,19 @@
 <template>
-    <div>
-        <div 
-            v-if="mobile" 
-            class="card">
-            <slot></slot>
-        </div>
-        <div 
-            v-else
-            class="card card-desktop bg"
-            style="margin:auto;width: 350px">
-            <slot></slot>
-        </div>
+  <div>
+    <div 
+      v-if="mobile" 
+      class="card"
+    >
+      <slot />
     </div>
+    <div 
+      v-else
+      class="card card-desktop bg"
+      style="margin:auto;width: 350px"
+    >
+      <slot />
+    </div>
+  </div>
 </template>
 
 <script>

@@ -24,6 +24,7 @@
 
 (declare get-post-and-comments
          get-posts-by-alias
+         get-user-information
          get-my-posts
          get-posts
          get-post

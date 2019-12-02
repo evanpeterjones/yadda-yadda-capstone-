@@ -7,6 +7,9 @@
       :json_agg
       .getValue))
 
+(defn map-string [strng]
+  (json/write-str strng))
+
 (defn json-string-to-map [o-str]
   (json/read-str o-str))
 

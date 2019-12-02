@@ -1,48 +1,56 @@
 <template>
   <div>
-    <div v-if="!location" class="login">
-        <h1>{{ appname[0] }}<span class="logo">{{ appname1 }}</span></h1>
+    <div
+      v-if="!location"
+      class="login"
+    >
+      <h1>{{ appname[0] }}<span class="logo">{{ appname1 }}</span></h1>
     </div>
-    <div class="header" v-else>
-        <div v-if="!mobile">
-            <div class="row">
-                <div class="col">
-                    <h1>{{ appname }}</h1>
-                </div>
-                <div class="col">
-                  <b-dropdown 
-                    @click="updateLocationSort"
-                    split
-                    pill 
-                    id="dropdown-1" class="m-md-2">
-                    <template v-slot:button-content>
-                        <h4>{{ location }}</h4>
-                    </template>
-                    <b-dropdown-item @click="myPosts">My Posts</b-dropdown-item>
-                    <b-dropdown-item @click="myAccount">My Account</b-dropdown-item>
-                    <b-dropdown-item>Change Location</b-dropdown-item>
-                    <b-dropdown-item>Feed</b-dropdown-item>
-                    <b-dropdown-item @click="showQR">Mobile Sync</b-dropdown-item>
-                  </b-dropdown>
-                </div>
-            </div>
-        </div>
-        <div v-else>
+    <div
+      v-else
+      class="header"
+    >
+      <div v-if="!mobile">
+        <div class="row">
+          <div class="col">
             <h1>{{ appname }}</h1>
+          </div>
+          <div class="col">
+            <b-dropdown 
+              id="dropdown-1"
+              split
+              pill 
+              class="m-md-2"
+              @click="updateLocationSort"
+            >
+              <template v-slot:button-content>
+                <h4>{{ location }}</h4>
+              </template>
+              <b-dropdown-item @click="myPosts">
+                My Posts
+              </b-dropdown-item>
+              <b-dropdown-item @click="myAccount">
+                My Account
+              </b-dropdown-item>
+              <b-dropdown-item>Change Location</b-dropdown-item>
+              <b-dropdown-item @click="showQR">
+                Mobile Sync
+              </b-dropdown-item>
+            </b-dropdown>
+          </div>
         </div>
+      </div>
+      <div v-else>
+        <h1>{{ appname }}</h1>
+      </div>
     </div>
-    <br/>
+    <br>
   </div>
 </template>
     
 <script>
-import NewPost from './NewPost'
-
 export default {
     name: "NavigationBar",
-    components: {
-        NewPost
-    },
     data() {
         return {
             appname : 'YAPP', //'yadda yadda' //²

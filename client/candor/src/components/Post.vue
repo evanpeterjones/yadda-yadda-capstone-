@@ -2,18 +2,20 @@
   <card>
     <div>
       <post-header
-        :replyTo="parent"
-        :userId="user"
-        :time="time" />
+        :reply-to="parent"
+        :user-id="user"
+        :time="time"
+      />
       <div class="content">
         <p> {{ content }} </p>
       </div>
       <post-footer
-        :hasComments="hasComments"
+        :id="id"
+        :has-comments="hasComments"
         :decentral="decentral"
         :user="user"
-        :id="id"
-        :edited="edited" />
+        :edited="edited"
+      />
     </div>
   </card>
 </template>

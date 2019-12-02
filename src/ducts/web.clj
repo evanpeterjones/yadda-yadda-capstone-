@@ -30,11 +30,11 @@
                                   :max-age (* 60 24 30 365)}}
         :body (views/web-app)})
 
-  (GET "/feed" request
+  (GET "/feed" [offset :as request]
+       (def ro request)
        {:status 200
         :headers {"Content-Type" "application/json"}
-        :body (let [offset (-> request :query-string (.split "=") (get 1))
-                    loc_data (->> request
+        :body (let [loc_data (->> request
                                   cku/get-cookie-from-request
                                   dbc/get-location-data-from-session
                                   dbu/json-string-to-map
@@ -67,6 +67,21 @@
        {:status 200
         :headers {"Content-Type" "application/json"}
         :body "adsf"})
+
+  (GET "/userInformation" request
+       (def ro request)
+       {:status 200
+        :headers {"Content-Type" "application/json"}
+        :body (let [user-id (->> request
+                                 cku/get-cookie-from-request
+                                 dbc/get-user-from-session-id)]
+                (if user-id
+                  (->
+                   (dbc/get-user-information dbc/db-spec {:id (Integer. user-id)})
+                   first
+                   :json_agg
+                   .getValue)
+                  ""))})
 
   (GET "/setUserLocation" [zip :as request]
        (def ro request)

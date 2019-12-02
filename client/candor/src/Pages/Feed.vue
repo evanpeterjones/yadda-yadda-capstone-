@@ -4,17 +4,27 @@
       <h5>No Yapps yet! You can be the first!^^^</h5>
     </card>
     <div class="row scrolling-wrapper">
-      <div v-on:scroll="onScroll" id="feeder" v-for="feed in posts" :key="feed[0].pst_id_pk" class="col scrolling-vert">
-        <div v-for="post in feed" :key="post.pst_id_pk">
+      <div
+        v-for="feed in posts"
+        id="feeder"
+        :key="feed[0].pst_id_pk"
+        class="col scrolling-vert"
+        @scroll="onScroll"
+      >
+        <div
+          v-for="post in feed"
+          :key="post.pst_id_pk"
+        >
           <post 
-            :hasComments="post['pst_hascomments']"
-            :parent="post['pst_parent_fk']"
             :id="post['pst_id_pk']"
+            :has-comments="post['pst_hascomments']"
+            :parent="post['pst_parent_fk']"
             :user="post['pst_usr_id_fk']"
             :time="post['pst_time']"
             :edited="post['pst_edittime']"
             :content="post['pst_content']"
-            :decentral="post['pst_decentral']" />
+            :decentral="post['pst_decentral']"
+          />
         </div>
       </div>
     </div>
@@ -29,6 +39,14 @@ export default {
     name: 'Feed',
     components: {
       Post, Card
+    },
+    computed: {
+      posts : function() {
+        return (this.$store.getters.posts);
+      },
+      mobile : function () {
+        return this.$store.getters.isMobile;
+      }
     },
     methods: {
       onScroll () {
@@ -46,14 +64,6 @@ export default {
             console.log(result.data);
           });
         }
-      }
-    },
-    computed: {
-      posts : function() {
-        return (this.$store.getters.posts);
-      },
-      mobile : function () {
-        return this.$store.getters.isMobile;
       }
     }
 }

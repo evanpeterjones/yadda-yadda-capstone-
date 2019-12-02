@@ -3,30 +3,44 @@
     <b-modal 
       hide-header
       prevent-defaults
+      ok
       @hidden="close"
       @ok="send(textInput)"
-      ok>
+    >
       <b-form-textarea
         id="New Post"
         v-model="textInput"
         placeholder="What's happening?"
-        rows="4"></b-form-textarea>
+        rows="4"
+      />
       <template v-slot:modal-footer="{ ok, cancel, hide }">
-        <input type="file" id="filechooser">
+        <input
+          id="filechooser"
+          type="file"
+        >
         <div v-if="validPost">
           <b style="color:grey">{{ charsLeft }}</b>
         </div>
         <div v-else>
           <b style="color:red">{{ charsLeft }}</b>
         </div>
-        <b-button pill button-size='lg' @click="cancel()">
+        <b-button
+          pill
+          button-size="lg"
+          @click="cancel()"
+        >
           <font-awesome-layers class="fa">
-            <font-awesome-icon :icon="['fas', 'trash']"></font-awesome-icon>
+            <font-awesome-icon :icon="['fas', 'trash']" />
           </font-awesome-layers>
         </b-button>
-        <b-button pill variant="primary" button-size='lg' @click="ok()">
+        <b-button
+          pill
+          variant="primary"
+          button-size="lg"
+          @click="ok()"
+        >
           <font-awesome-layers class="fa">
-            <font-awesome-icon :icon="['fas', 'arrow-right']"></font-awesome-icon>
+            <font-awesome-icon :icon="['fas', 'arrow-right']" />
           </font-awesome-layers>
         </b-button>        
       </template>
@@ -50,6 +64,9 @@ export default {
         return this.textInput.length <= 140
       }
     },
+    mounted() {
+      this.$children[0].show();
+    },
     methods: {
       close : function() {
         this.$emit('closeDialog');
@@ -70,9 +87,6 @@ export default {
           console.error(err)
         });
       }
-    },
-    mounted() {
-      this.$children[0].show();
     }
 }
 </script>

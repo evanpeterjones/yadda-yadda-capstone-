@@ -2,27 +2,36 @@
   <div class="container"> 
     <div class="row">
       <div class="col-3 float-left">
-        <b-button pill 
-          v-b-tooltip.hover title="Delete"
+        <b-button
+          v-if="myPost" 
+          v-b-tooltip.hover
+          pill
+          title="Delete"
           variant="outline-secondary"
           @click="confirmDelete(id)"
-          v-if="myPost">
-          <font-awesome-icon :icon="['fas', 'trash']"></font-awesome-icon>        
+        >
+          <font-awesome-icon :icon="['fas', 'trash']" />        
         </b-button>
       </div>
       <div class="col">
-        <b-button pill
-            v-if="hasComments"
-            v-b-tooltip.hover title="View Comments"
-            @click="comments(id)">
-            <font-awesome-icon :icon="['fas', 'comment']"></font-awesome-icon>
+        <b-button
+          v-if="hasComments"
+          v-b-tooltip.hover
+          pill
+          title="View Comments"
+          @click="comments(id)"
+        >
+          <font-awesome-icon :icon="['fas', 'comment']" />
         </b-button>
       </div>
       <div class="col-3">
-        <b-button pill
-            v-b-tooltip.hover title="Reply"
-            @click="reply(id)">
-            <font-awesome-icon :icon="['fas', 'reply']"></font-awesome-icon>
+        <b-button
+          v-b-tooltip.hover
+          pill
+          title="Reply"
+          @click="reply(id)"
+        >
+          <font-awesome-icon :icon="['fas', 'reply']" />
         </b-button>
       </div>
     </div>

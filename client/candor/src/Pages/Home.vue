@@ -1,26 +1,31 @@
 <template>
-<div>
+  <div>
     <Feed />
     <div class="right-corner-container">     
-    <b-button pill
-    v-if="showingReplies"
-    variant="light"
-    class="button-class"
-    v-b-tooltip.hover title="Close"
-    @click="close(id)">
-    <font-awesome-icon :icon="['fas', 'times']"></font-awesome-icon>
-    </b-button>
-    <br/>
-    <br/>
-    <b-button 
+      <b-button
+        v-if="showingReplies"
+        v-b-tooltip.hover
+        pill
+        variant="light"
+        class="button-class"
+        title="Close"
+        @click="close(id)"
+      >
+        <font-awesome-icon :icon="['fas', 'times']" />
+      </b-button>
+      <br>
+      <br>
+      <b-button 
+        v-b-tooltip.hover
         pill
         class="button-class"
-        v-b-tooltip.hover title="New Post"
-        @click="createNewPost">
-        <font-awesome-icon :icon="['fas', 'plus']"></font-awesome-icon>
-    </b-button>
+        title="New Post"
+        @click="createNewPost"
+      >
+        <font-awesome-icon :icon="['fas', 'plus']" />
+      </b-button>
     </div>
-</div>
+  </div>
 </template>
 
 <script>

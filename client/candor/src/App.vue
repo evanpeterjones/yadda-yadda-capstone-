@@ -58,7 +58,7 @@ export default {
       return this.$store.getters.isMobile;
     }, 
     replyPost: function() {
-      
+      return ""
     }
   },
   mounted() {
