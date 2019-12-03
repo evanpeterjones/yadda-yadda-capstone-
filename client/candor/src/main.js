@@ -120,7 +120,7 @@ const store = new Vuex.Store({
       }
 
       // if the comments we're viewing are what we're replying to, then add 
-      if (state.posts[1][0].pst_id_pk == newPost.pst_parent_fk) {
+      if (state.posts[1] && state.posts[1][0].pst_id_pk == newPost.pst_parent_fk) {
         state.posts[1].splice(1,0,newPost)
       } else {
         state.posts[0].unshift(newPost)
