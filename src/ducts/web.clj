@@ -12,6 +12,7 @@
             [ducts.views :as views]
             [ducts.utils.cookies :as cku]
             [ducts.utils.location :as loc]
+            [ducts.utils.email-server :as es]
             [ducts.utils.database-util :as dbu]
             [db-connection :as dbc])
   (:gen-class))
@@ -66,7 +67,12 @@
   (GET "/updateAccountInfo" [id username email] 
        {:status 200
         :headers {"Content-Type" "application/json"}
-        :body (dbc/update-user-info id username email)})
+        :body (do 
+                (->> id
+                     dbc/create-email-key
+                     views/verify-email
+                     (es/yapp-send-email email))
+                (dbc/update-user-info id username email))})
 
   (GET "/userInformation" request
        (def ro request)
@@ -165,6 +171,16 @@
                   (do (dbc/delete-post post-id)
                       (str post-id))
                   (str -1)))})
+
+  (GET "/verifyEmail" [key]
+       {:status 200
+        :headers {"Content-Type" "application/json"}
+        :body (let [user-id (dbc/verify-email key)]
+                (if user-id
+                  (do
+                    (dbc/update-account-verified key user-id)
+                    (views/email-verified))
+                  (views/not-found)))})
 
   (GET "/share" [lat long link content :as request]
        (def ro request)

@@ -1,25 +1,15 @@
 (ns ducts.utils.email-server
-  (:require [bote.core :refer [create-smtp-server]]
-            [postal.core :refer [send-message]]))
+  (:require [sendgrid.core :as sg]))
 
-(def received (atom nil))
+(def api-token (or (System/getenv "SENDGRID_API_KEY") "Bearer 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"))
 
-(def smtp-server (create-smtp-server #(reset! received %)
-                                     :port 2526
-                                     :enable-tls? true
-                                     :require-tls? true))
-
-;;(.start smtp-server)
-
-(defn yapp-send-email [message]
-  (send-message {:host "localhost"
-                 :port 2526}
-                {:from "foo@bar.com"
-                 :to "evanpeterjones@gmail.com"
-                 :subject "IMPORTANT!!!1!"
-                 :body message}))
-
-;(yapp-send-email "hello world!")
+(defn yapp-send-email [email message]
+  (sg/send-email {:api-token api-token
+                  :from "yapp@internetizens.net"
+                  :to email
+                  :subject "YAPP Verify Your Email"
+                  :content {:type "text/html"
+                            :value message}}))
 
 (def mail-host "smtp.gmail.com")
 (def mail-port 587)

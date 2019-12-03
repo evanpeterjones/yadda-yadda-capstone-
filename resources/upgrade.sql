@@ -89,6 +89,29 @@ PERFORM F_DBVERSION(6);
 
 END $$
 
+-- :name 7 :!
+
+DO $$
+BEGIN 
+
+ALTER TABLE USERS ADD COLUMN email_verified boolean default false;
+
+CREATE TABLE email_verification(ev_usr_fk integer REFERENCES USERS(usr_id_pk), ev_key varchar(20) unique);
+
+PERFORM F_DBVERSION(7);
+
+END $$;
+
+
+
+
+
+
+
+
+
+
+
 
 CREATE TABLE IF NOT EXISTS IMAGE_FILE_TYPES (
        IFT_PK SERIAL PRIMARY KEY,

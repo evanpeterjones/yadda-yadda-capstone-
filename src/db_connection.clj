@@ -29,6 +29,7 @@
          get-posts
          get-post
          get-link
+         query
          create-post<!
          create-reply-post<!)
 
@@ -49,6 +50,22 @@
 (hugsql/def-db-fns "procedures.sql")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; MISCELLANEOUS ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defn update-account-verified [key user-id]
+  (jdbc/update! db-spec
+                :users
+                {:email_verified true}
+                ["usr_id_pk=?" (Integer. user-id)]))
+
+(defn create-email-key [id]
+  (let [key (:substring (first (query "SELECT SUBSTRING(MD5(RANDOM()::text), 0, 21);")))]
+    (jdbc/execute! db-spec
+                   [(str "INSERT INTO email_verification(ev_usr_fk, ev_key) "
+                         "VALUES (" (Integer. id) ",'" key "'); ")])
+    key))
+
+(defn verify-email [key]
+  (query "Select 1 from email_verification where ev_key = '" key "';"))
 
 (defn long-link [short-link]
   (let [url (get-link db-spec {:short short-link})]

@@ -78,6 +78,26 @@ export default {
                 usr_createdon: time.formatTime(data.usr_createdon)
             };
         },
+        emailSent: function (email) {
+            const h = this.$createElement;
+            const message = h('div', { class: ['foobar'] }, [ 
+                h('p', { class: ['text-center'] }, [
+                    "A verification link has been sent to "+email
+                ])
+            ]);
+
+            this.$bvModal.msgBoxConfirm([message], {
+                buttonSize: 'sm',
+                centered: true, size: 'sm',
+                headerClass: 'p-2 border-bottom-0',
+                footerClass: 'p-2 border-top-0',
+            }).then(value => {
+                if (value) {
+                    this.hide();
+                }
+            });
+            
+        },
         updateAccountInfo: function(evt) {
             evt.preventDefault();
             this.$http.get('updateAccountInfo', {
@@ -88,6 +108,7 @@ export default {
                 }
             }).then(result => {
                 this.setResult(result.data[0]);
+                
                 this.hide();
             }).catch(err => {
                 this.errorUpdating = true;    
