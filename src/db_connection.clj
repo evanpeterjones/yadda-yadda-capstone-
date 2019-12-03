@@ -25,6 +25,7 @@
 (declare get-post-and-comments
          get-posts-by-alias
          get-user-information
+         get-new-posts
          get-my-posts
          get-posts
          get-post

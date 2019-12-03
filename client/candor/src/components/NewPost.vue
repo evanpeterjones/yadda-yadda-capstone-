@@ -14,10 +14,6 @@
         rows="4"
       />
       <template v-slot:modal-footer="{ ok, cancel, hide }">
-        <input
-          id="filechooser"
-          type="file"
-        >
         <div v-if="validPost">
           <b style="color:grey">{{ charsLeft }}</b>
         </div>

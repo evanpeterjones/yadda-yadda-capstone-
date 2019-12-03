@@ -9,6 +9,7 @@
           <post 
             :hasComments="post['pst_hascomments']"
             :parent="post['pst_parent_fk']"
+            :uname="post['usr_username']"
             :id="post['pst_id_pk']"
             :user="post['pst_usr_id_fk']"
             :time="post['pst_time']"

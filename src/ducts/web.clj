@@ -67,12 +67,7 @@
   (GET "/updateAccountInfo" [id username email] 
        {:status 200
         :headers {"Content-Type" "application/json"}
-        :body (do 
-                (->> id
-                     dbc/create-email-key
-                     views/verify-email
-                     (es/yapp-send-email email))
-                (dbc/update-user-info id username email))})
+        :body (dbc/update-user-info id username email)})
 
   (GET "/userInformation" request
        (def ro request)
@@ -116,10 +111,8 @@
         :body (let [ses (cku/get-cookie-from-request req)
                     loc-data (dbc/get-location-data-from-session ses)
                     zip (-> (if loc-data
-                              loc-data 
-                              "{ \"zip\" : null}")
-                            dbu/json-string-to-map
-                            (get "zip"))]
+                              (get loc-data "loc_alias")
+                              nil))]
                 (if zip
                   (str loc-data)
                   (let [ses (dbc/create-session)

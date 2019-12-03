@@ -28,6 +28,7 @@ import time from '../utils/time-service.js'
 export default {
   name: 'PostHeader',
   props: {
+    uname: { type : String, default: null },
     userId: { type: Number, default: -1 },
     time: { type: String, default: '' },
     replyTo: { type:Number, default: null }

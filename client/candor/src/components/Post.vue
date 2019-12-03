@@ -5,6 +5,7 @@
         @closeDialog="close"
         :reply-to="parent"
         :user-id="user"
+        :uname="uname"
         :time="time"
       />
       <div class="content">
@@ -34,6 +35,10 @@ export default {
     props: {
       id: {
         type: Number,
+        default: null
+      },
+      uname: {
+        type: String,
         default: null
       },
       user: {

@@ -18,7 +18,11 @@ export let adjectives = [
 
 export let comb = {/* user_id : generated name */}
 
-function getName(user_id, offsetAd=0, offsetAn=0) {
+function getName(user_id, uname=null, offsetAd=0, offsetAn=0) {
+
+    if (uname) {
+        comb[user_id] = uname;
+    }
     
     if (comb.user_id) {
         return comb.user_id
