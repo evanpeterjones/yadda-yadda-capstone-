@@ -40,10 +40,8 @@ VALUES (newHash, :user_id, NOW());
 
 -- :name get-new-posts
 -- :result :json
-SELECT JSON_AGG(POSTS.*, USERS.usr_username)
+SELECT JSON_AGG(POSTS)
 FROM POSTS
-LEFT JOIN USERS
-ON USR_ID_PK = pst_usr_id_fk
 LEFT JOIN LOCATION
 ON PST_LOC_FK = LOC_ID_PK
 WHERE LOC_ID = :zip
@@ -51,6 +49,7 @@ AND PST_TIME > cast(:time as timestamptz)
 AND PST_PARENT_FK IS NULL
 GROUP BY PST_TIME
 ORDER BY PST_TIME DESC;
+
 
 -- :name get-posts-by-alias
 -- :result :json
@@ -75,9 +74,8 @@ WHERE pst_id_pk = :post_id
 -- :name get-my-posts
 -- :result :json
 -- :doc {:me int}
-SELECT json_agg(posts.*, users.usr_username)
+SELECT json_agg(posts)
 FROM POSTS
-LEFT JOIN users
 WHERE pst_usr_id_fk = :me
 GROUP BY PST_TIME
 ORDER BY PST_TIME DESC;
