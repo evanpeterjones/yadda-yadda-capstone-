@@ -1,6 +1,6 @@
 ;;; lip.el --- a social media client for Emacs.
 
-;; Copyright (C) 2015-2018  Free Software Foundation, Inc.
+;; Copyright (C) 2019-..  PluvioSoftware, Inc.
 
 ;; Author: Evan Jones <evanpeterjones@gmail.com>
 ;; Maintainer: &
@@ -25,19 +25,9 @@
     t))
 
 (require 'package)
-;; if any packages not installed, install
 
 (defun make-request (endpoint)
   (with-current-buffer (url-retrieve-synchronously endpoint)
     (progn 
       (print (buffer-string))
       (kill-buffer))))
-
-(request "localhost:5000/feed"
-         :type "GET"
-         :success (cl-function  (lambda (x) (print x)))
-         :error (cl-function (lambda (x) (print x)))
-         :status-code '((400 . (lambda (&rest _) (message "Got 400.")))
-                        (404 . (lambda (&rest _) (message "Got 404.")))
-                        (418 . (lambda (&rest _) (message "Got 418.")))))
-

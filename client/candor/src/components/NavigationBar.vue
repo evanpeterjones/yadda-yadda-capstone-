@@ -32,7 +32,9 @@
               <b-dropdown-item @click="myAccount">
                 My Account
               </b-dropdown-item>
-              <b-dropdown-item>Change Location</b-dropdown-item>
+              <b-dropdown-item @click="showQR">
+                Change Location
+              </b-dropdown-item>
               <b-dropdown-item @click="showQR">
                 Mobile Sync
               </b-dropdown-item>

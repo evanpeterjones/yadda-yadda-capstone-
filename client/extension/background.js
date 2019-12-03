@@ -9,13 +9,14 @@ chrome.runtime.onInstalled.addListener(function() {
     chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, function(tabs) {
 
       let request = new XMLHttpRequest();
-
       let params = null;
 
       if (res.coords) {
         params = {
           'lat' : res.coords.latitude,
-          'long' : res.coords.longitude
+          'long' : res.coords.longitude,
+          'link' : 'http://google.com',
+          'content' : 'test post'
         };
       }
 
@@ -24,14 +25,14 @@ chrome.runtime.onInstalled.addListener(function() {
       request.addEventListener("load", function (response) {
         console.log(response.data)
       });
-      request.open("GET", "http://localhost:5000/getzip", true);
+
+      request.open("GET", "http://localhost:5000/newPost", true);
 //      request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
       request.send(JSON.stringify(params));
 
       console.log("finished posting");
 
     });
-
   });
 
   chrome.declarativeContent.onPageChanged.removeRules(undefined, function() {

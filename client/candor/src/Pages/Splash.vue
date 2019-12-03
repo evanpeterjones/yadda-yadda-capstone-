@@ -58,7 +58,8 @@ export default {
 			if (zipcode) {
 				this.$http.get("/setUserLocation", {
 					params: {
-						zip: zipcode
+						zip: zipcode, 
+						ses: this.$cookies.get('yapp-session')
 					}
 				}).then((response) => {
 					console.log(response);

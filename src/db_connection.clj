@@ -78,6 +78,13 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; USER QUERIES ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(defn update-user-info [user-id username email]
+  (jdbc/update! db-spec
+                :users
+                {:usr_username username
+                 :usr_email email}
+                ["usr_id_pk=?" (Integer. user-id)]))
+
 (defn get-user-from-session-id [session-id]
   (-> (query (str "select USR_ID_PK "
                   "FROM SESSIONS, USERS "
@@ -220,6 +227,11 @@
           res)
       nil)))
 
+(defn rm-parent-comment [id]
+  "idk why I ever set this up like this, should've been a fk instead or something"
+  (jdbc/execute! db-spec
+                 [(str "UPDATE POSTS SET pst_hascomments = false WHERE PST_ID_PK = '" id "';")]))
+
 (defn get-post-by-id [post-id]
   "wrapper for hugsql query"
   (-> (get-post db-spec {:post_id post-id})
@@ -243,7 +255,8 @@
 
 (defn delete-post [pid]
   (jdbc/execute! db-spec
-                 [(str "DELETE FROM POSTS WHERE PST_ID_PK = '" pid "';")]))
+                 [(str "DELETE FROM POSTS WHERE PST_PARENT_FK = '" pid "' "
+                       "AND PST_ID_PK = '" pid "';")]))
 
 (defn get-user-id-from-post-id [pid]
   (if (post-exists? pid)

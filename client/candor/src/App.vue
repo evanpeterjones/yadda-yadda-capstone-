@@ -3,19 +3,22 @@
     <NavigationBar
       @myPosts="swapDialog('myPosts')"
       @myAccount="swapDialog('myAccount')"
-      @newQRCode="swapDialog('QRCode')"/>
+      @newQRCode="swapDialog('QRCode')"
+    />
       
     <div v-if="!location">
       <Splash />
     </div>
     <div v-else>
       <Home
-        @newPostDialog="swapDialog('newPost')"/>
+        @newPostDialog="swapDialog('newPost')" 
+      />
     </div>
 
     <component 
       :is="CurrDialog"
-      @closeDialog="swapDialog(null, null)"></component>
+      @closeDialog="swapDialog(null, null)"
+    />
   </div>
 </template>
 

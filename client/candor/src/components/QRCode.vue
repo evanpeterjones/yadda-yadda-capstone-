@@ -36,11 +36,9 @@ export default {
             }
         }).then(result => {
             this.url += result.data
-            console.log('url: '+this.url)
         }).catch(error => {
             console.log(error)
         });
-        console.log(this.url)
     },
     methods: {
         hide: function() {

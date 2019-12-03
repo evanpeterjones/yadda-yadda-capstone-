@@ -4,26 +4,17 @@
       <h5>No Yapps yet! You can be the first!^^^</h5>
     </card>
     <div class="row scrolling-wrapper">
-      <div
-        v-for="feed in posts"
-        id="feeder"
-        :key="feed[0].pst_id_pk"
-        class="col scrolling-vert"
-        @scroll="onScroll"
-      >
-        <div
-          v-for="post in feed"
-          :key="post.pst_id_pk"
-        >
+      <div v-on:scroll="onScroll" id="feeder" v-for="feed in posts" :key="feed[0].pst_id_pk" class="col scrolling-vert">
+        <div v-for="post in feed" :key="post.pst_id_pk">
           <post 
-            :id="post['pst_id_pk']"
-            :has-comments="post['pst_hascomments']"
+            :hasComments="post['pst_hascomments']"
             :parent="post['pst_parent_fk']"
+            :id="post['pst_id_pk']"
             :user="post['pst_usr_id_fk']"
             :time="post['pst_time']"
             :edited="post['pst_edittime']"
             :content="post['pst_content']"
-            :decentral="post['pst_decentral']"
+            :decentral="post['pst_decentral']" 
           />
         </div>
       </div>
@@ -56,12 +47,16 @@ export default {
         if (bottomOfWindow) {
           this.$http.get("/feed", {
             params: {
-              offset: this.$store.getters.offset+5
+              offset: this.$store.getters.offset+5, 
+              cookie: this.$cookies.get('yapp-session'), 
+              loc_id: this.$store.getters.loc_id
             }
           }).then((result) => {
+            console.log(result.data);
             this.$store.commit("addPosts", result.data);
             this.$store.commit('updateOffset');
-            console.log(result.data);
+          }).catch(error => {
+            console.log(error);
           });
         }
       }

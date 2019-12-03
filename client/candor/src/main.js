@@ -33,6 +33,7 @@ const store = new Vuex.Store({
   state: {
     location: '',
     locationType: 'loc_alias',
+    loc_id: 0,
     posts: [],
     offset: 0,
     isMobile: window.innerWidth < 500, 
@@ -41,6 +42,7 @@ const store = new Vuex.Store({
   },
   getters: {
     location: state => state.location,
+    loc_id: state => state.loc_id,
     locationName: state => state.location[state.locationType],
     posts: state => state.posts,
     isMobile: state => state.isMobile,
@@ -54,6 +56,7 @@ const store = new Vuex.Store({
       state.posts.splice(1,1);
     },
     setLocation(state, loc) {
+      state.loc_id = loc.loc_id_pk
       delete loc.loc_id_pk
       state.location = loc
     },
@@ -61,30 +64,10 @@ const store = new Vuex.Store({
       state.posts.push(newPosts)
     },
     addPosts(state, newPosts) {
-      for (var i = 0; i < newPosts.length; i++) {
-        state.posts[0].splice(state.posts[0].length, 0, newPosts[i])
-      }
+      state.posts[0] = [newPosts, ...state.posts[0]]
     },
     addNewCommentsFeed(state, feed) {
-      if (state.posts[1]){       
-        // this is so obnoxious I hate Vue
-        /*
-        for (var i = 0; i < Math.max(feed.length, state.posts[1].length); i++) {
-          if (feed[i] && state.posts[1][i]){ 
-            state.posts[1].splice(i, 1, feed[i])
-          } else if(feed[i]) {
-            state.posts[1].splice(i, 0, feed[i])
-          } else if (state.posts[1][i]) {
-            state.posts[1].splice(state.posts[1].length-1, 1)
-          }
-        }*/
-
-        // es6 to save the day!
-        state.posts = [ state.posts[0], feed ]
- 
-      } else {
-        state.posts.splice(1,0, feed)
-      }
+      state.posts = [ state.posts[0], feed ]
     },
     setIsMobile(state, isMobileCheck) {
       state.isMobile = isMobileCheck < 800
@@ -93,28 +76,55 @@ const store = new Vuex.Store({
       state.userId = newUser
     },
     deletePost(state, postID) {
-      var index;
+      let index = null;
+
       for (var i = 0; i < state.posts[0].length; i++) {
         if (state.posts[0][i].pst_id_pk == postID) {
+          state.posts[0].splice(i, 1)
           index = i
         }
       }
+      if (state.posts.length > 1) {
+        for (var i = 0; i < state.posts[1].length; i++) {
+          if (state.posts[1][i].pst_id_pk == postID) {
+            state.posts[1].splice(i, 1)
+            index = i
+          }
+        }
+      }
 
-      state.posts[0].splice(index, 1)
-      state.offset-=1
+      if (index) {
+        state.offset-=1
+      }
     },
     setReplyTo(state, reply) {
       state.replyTo = reply;
     },
     newPost(state, newPost) {
+      let which = -1;
       if (newPost.pst_parent_fk) {
         for (var i = 0; i < state.posts[0].length; i++) {
           if (newPost.pst_parent_fk == state.posts[0][i].pst_id_pk) {
+            which = i
             state.posts[0][i] = Object.assign({}, state.posts[0][i], {'pst_hascomments' : true})
           }
         }
+        if (state.posts.length > 1) {
+          for (var i = 0; i < state.posts[1].length; i++) {
+            if (newPost.pst_parent_fk == state.posts[1][i].pst_id_pk) {
+              which = i
+              state.posts[0][i] = Object.assign({}, state.posts[0][i], {'pst_hascomments' : true})
+            }
+          }
+        }
       }
-      state.posts[0].unshift(newPost)
+
+      // if the comments we're viewing are what we're replying to, then add 
+      if (state.posts[1][0].pst_id_pk == newPost.pst_parent_fk) {
+        state.posts[1].splice(1,0,newPost)
+      } else {
+        state.posts[0].unshift(newPost)
+      }
       state.offset++;
     },
     nextLocationType(state) {
@@ -138,25 +148,50 @@ const EventBus = new Vue();
 Object.defineProperties(Vue.prototype, {
   $bus: {
     get() {
-        return EventBus;
+      return EventBus;
     },
   },
 });
 
+if (Vue.prototype.$cookies.get('yapp-session')) {
+  Vue.prototype.$http.get("/getUserFromSession").then((result) => { 
+    console.log("UserID: " + result.data);
+    store.commit("setUserId", result.data);
+  });
+
+  Vue.prototype.$http.get('/getLocationFromSession', {
+    params: {
+      ses: Vue.prototype.$cookies.get('yapp-session')
+    }
+  }).then(result => {
+    store.commit('setLocation', result.data)
+  }).catch(error => {
+    console.log(error)
+  });
+}
+
 store.watch((store) => store.location, (newLocation, oldLocation) => {
   console.log(newLocation)
   
-  Vue.prototype.$http.get("/getUserFromSession").then((result) => { 
+  Vue.prototype.$http.get("/getUserFromSession", {
+    params : {
+      cookie: Vue.prototype.$cookies.get('yapp-session')
+    }
+  }).then((result) => { 
     console.log("UserID: " + result.data);
     store.commit("setUserId", result.data);
   });
 
   Vue.prototype.$http.get("/feed", {
     params: {
-      offset: 0
+      offset: 0,
+      loc_id: store.getters.loc_id,
+      cookie: Vue.prototype.$cookies.get('yapp-session')      
     }
   }).then((result) => {
     store.commit("setPosts", result.data); 
+  }).catch(error => {
+    console.log(error);
   });
 });
 

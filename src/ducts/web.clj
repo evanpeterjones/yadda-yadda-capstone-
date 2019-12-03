@@ -27,24 +27,19 @@
                                            (if (dbc/session-exists? ses-id)
                                              ses-id
                                              (dbc/create-session)))
+                                  :same-site :lax
                                   :max-age (* 60 24 30 365)}}
         :body (views/web-app)})
 
-  (GET "/feed" [offset :as request]
+  (GET "/feed" [offset cookie loc_id :as request]
        (def ro request)
        {:status 200
         :headers {"Content-Type" "application/json"}
-        :body (let [loc_data (->> request
-                                  cku/get-cookie-from-request
-                                  dbc/get-location-data-from-session
-                                  dbu/json-string-to-map
-                                  first)]
-                (->
-                 (dbc/get-posts dbc/db-spec
-                                {:location (get loc_data "loc_id_pk")
-                                 :lim 5
-                                 :offset (Integer/parseInt offset)})
-                 dbu/construct-json))})
+        :body (dbu/construct-json
+               (dbc/get-posts dbc/db-spec
+                              {:location (Integer. loc_id)
+                               :lim 5
+                               :offset (Integer/parseInt offset)}))})
 
   (GET "/myPosts" request
        (def ro request)
@@ -60,13 +55,18 @@
        {:status 200
         :headers {"Content-Type" "application/json"}
         :body (-> (dbc/get-post-and-comments dbc/db-spec
-                                             {:pst_id (Integer/parseInt post)})
+                                             {:pst_id (Integer. post)})
                   dbu/construct-json)})
 
   (GET "/bounce" request
        {:status 200
         :headers {"Content-Type" "application/json"}
         :body "adsf"})
+
+  (GET "/updateAccountInfo" [id username email] 
+       {:status 200
+        :headers {"Content-Type" "application/json"}
+        :body (dbc/update-user-info id username email)})
 
   (GET "/userInformation" request
        (def ro request)
@@ -83,12 +83,17 @@
                    .getValue)
                   ""))})
 
-  (GET "/setUserLocation" [zip :as request]
+  (GET "/getLocationFromSession" [ses :as request]
        (def ro request)
        {:status 200
         :headers {"Content-Type" "application/json"}
-        :body (let [ses (cku/get-cookie-from-request request)
-                    loc-data (dbc/get-location-data-from-session ses)]
+        :body (dbc/get-location-data-from-session ses)})
+
+  (GET "/setUserLocation" [zip ses :as request]
+       (def ro request)
+       {:status 200
+        :headers {"Content-Type" "application/json"}
+        :body (let [loc-data (dbc/get-location-data-from-session ses)]
                 (if (and ses (dbc/location-exists? zip))
                   (if (dbc/associate-session-and-zip zip ses)
                     (str loc-data)
@@ -104,21 +109,22 @@
         :headers {"Content-Type" "application/json"}
         :body (let [ses (cku/get-cookie-from-request req)
                     loc-data (dbc/get-location-data-from-session ses)
-                    zip (-> loc-data
+                    zip (-> (if loc-data
+                              loc-data 
+                              "{ \"zip\" : null}")
                             dbu/json-string-to-map
                             (get "zip"))]
                 (if zip
                   (str loc-data)
-                  (let [data (loc/get-location-data lat long)]
+                  (let [ses (dbc/create-session)
+                        data (loc/get-location-data lat long)]
                     (dbc/associate-session-and-location-data data ses)
-                                        ;(loc/get-location-value data :zip)
                     (dbc/get-location-data-from-session ses))))})
 
-  (GET "/getUserFromSession" request
+  (GET "/getUserFromSession" [cookie :as request]
        {:status 200
         :headers {"Content-Type" "application/json"}
-        :body (str (->> (cku/get-cookie-from-request request)
-                        dbc/get-user-from-session-id))})
+        :body (str (dbc/get-user-from-session-id cookie))})
 
   (GET "/newPost" [content parent :as request]
        (def ro request)
@@ -160,14 +166,26 @@
                       (str post-id))
                   (str -1)))})
 
+  (GET "/share" [lat long link content :as request]
+       (def ro request)
+       {:status 200
+        :headers {"Content-Type" "application/json"}
+        :body (let [cookie (cku/get-cookie-from-request request)
+                                        ;                    location-data (loc/get-location-data lat long)
+                    location-fk (dbc/get-location-from-session cookie)
+                    user (dbc/get-user-from-session-id cookie)]
+                (if (not (-> content .trim .isEmpty))
+                  (-> (dbc/create-new-post user (str content " " link) location-fk nil)
+                      dbc/get-post-by-id)))})
+
   (GET "/sessionSync" [cookie]
-    {:status 200
-     :headers {"Content-Type" "application/json"}
-     :cookies {"yapp-session" {:value (if (dbc/session-exists? cookie)
-                                        cookie
-                                        (dbc/create-session))
-                               :max-age (* 60 24 30 365)}}
-     :body cookie})
+       {:status 200
+        :headers {"Content-Type" "application/json"}
+        :cookies {"yapp-session" {:value (if (dbc/session-exists? cookie)
+                                           cookie
+                                           (dbc/create-session))
+                                  :max-age (* 60 24 30 365)}}
+        :body cookie})
 
   (comment
     (GET "/*" request
@@ -178,11 +196,6 @@
                   (try 
                     (dbc/long-link short)
                     (catch Exception ex "Link does not exist or has expired")))}))
-
-  (POST "/share" [lat long link content :as request]
-        (def ro request)
-        (let [location-data (loc/get-location-data lat long)]
-          (print location-data)))
 
   (route/resources "/")
   (route/not-found (views/not-found)))
