@@ -196,12 +196,12 @@
 
   (GET "/sessionSync" [cookie]
        {:status 200
-        :headers {"Content-Type" "application/json"}
+        :headers {"Content-Type" "text/html"}
         :cookies {"yapp-session" {:value (if (dbc/session-exists? cookie)
                                            cookie
                                            (dbc/create-session))
                                   :max-age (* 60 24 30 365)}}
-        :body (views/web-app)})
+        :body "Logged In successfully"})
 
   (comment
     (GET "/*" request
