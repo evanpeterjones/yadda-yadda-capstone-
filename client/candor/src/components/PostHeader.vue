@@ -61,6 +61,8 @@ export default {
           console.log("yeet")
           console.error(error);
         })
+
+        this.$emit('closeDialog')
     }
   }
 }

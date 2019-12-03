@@ -64,10 +64,13 @@ const store = new Vuex.Store({
       state.posts.push(newPosts)
     },
     addPosts(state, newPosts) {
-      state.posts[0] = [newPosts, ...state.posts[0]]
+      for (var i = 0; i < newPosts.length; i++) {
+        state.posts[0].splice(state.posts[0].length, 0, newPosts[i])	
+      }
     },
     addNewCommentsFeed(state, feed) {
-      state.posts = [ state.posts[0], feed ]
+      let parent = feed.shift()
+      state.posts = [ state.posts[0], [parent, ...feed.reverse()] ]
     },
     setIsMobile(state, isMobileCheck) {
       state.isMobile = isMobileCheck < 800
@@ -109,7 +112,7 @@ const store = new Vuex.Store({
             state.posts[0][i] = Object.assign({}, state.posts[0][i], {'pst_hascomments' : true})
           }
         }
-        if (state.posts.length > 1) {
+        if (state.posts[1]) {
           for (var i = 0; i < state.posts[1].length; i++) {
             if (newPost.pst_parent_fk == state.posts[1][i].pst_id_pk) {
               which = i

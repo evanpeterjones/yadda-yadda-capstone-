@@ -14,7 +14,7 @@
         v-else
         :key="post.pst_id_pk"
       >
-        <post
+        <post @closeDialog="hide"
           :id="post['pst_id_pk']"
           :has-comments="post['pst_hascomments']"
           :parent="post['pst_parent_fk']"

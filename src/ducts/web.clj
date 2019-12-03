@@ -185,7 +185,7 @@
                                            cookie
                                            (dbc/create-session))
                                   :max-age (* 60 24 30 365)}}
-        :body cookie})
+        :body (views/web-app)})
 
   (comment
     (GET "/*" request

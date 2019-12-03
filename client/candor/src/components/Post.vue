@@ -2,6 +2,7 @@
   <card>
     <div>
       <post-header
+        @closeDialog="close"
         :reply-to="parent"
         :user-id="user"
         :time="time"
@@ -62,6 +63,11 @@ export default {
       hasComments: {
         type: Boolean,
         default: null
+      }
+    },
+    methods: {
+      close: function() {
+        this.$emit('closeDialog')
       }
     }
 }
