@@ -88,6 +88,7 @@ CREATE TABLE IF NOT EXISTS SESSIONS (
 );
 
 CREATE TABLE IF NOT EXISTS VERSION ( CURR Integer );
+INSERT INTO VERSION (CURR) VALUES(0);
 
 /* Always create my god-mode account on init ;) */
 -- CALL sp_CreateUser('evan', 'Avogadro6.02', 'evanpeterjones@gmail.com');
