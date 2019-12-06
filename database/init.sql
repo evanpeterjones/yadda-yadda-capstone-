@@ -87,5 +87,7 @@ CREATE TABLE IF NOT EXISTS SESSIONS (
        PRIMARY KEY (SES_ID_PK)
 );
 
+CREATE TABLE IF NOT EXISTS VERSION ( CURR Integer );
+
 /* Always create my god-mode account on init ;) */
 -- CALL sp_CreateUser('evan', 'Avogadro6.02', 'evanpeterjones@gmail.com');
