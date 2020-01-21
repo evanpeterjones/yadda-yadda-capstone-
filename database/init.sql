@@ -2,20 +2,21 @@
 *  script to initialize database tables
 */
 
+CREATE TABLE Version (curr int);
+
 CREATE TABLE IF NOT EXISTS USERS (
    USR_ID_PK SERIAL PRIMARY KEY,
    USR_Username VARCHAR (50) UNIQUE, -- if these can be null then the client will have to generate user info
-   USR_Ses_FK VARCHAR(30) REFERENCES SESSIONS (SES_ID_PK)
    USR_Email VARCHAR (100) UNIQUE NOT NULL,
    USR_CreatedOn DATE NOT NULL,
    USR_LastLogin DATE,
-   USR_Validated BOOLEAN,
+   USR_Validated BOOLEAN
 );
 
 CREATE TABLE IF NOT EXISTS OLD_PASSWORDS (
   OPD_Hash VARCHAR(64),
   OPD_USR_FK INTEGER REFERENCES USERS(USR_ID_PK) ON DELETE CASCADE,
-  PRIMARY KEY (OPD_Hash, OPD_USR_FK),
+  PRIMARY KEY (OPD_Hash, OPD_USR_FK)
 );
 
 CREATE TABLE IF NOT EXISTS PASSWORDS (

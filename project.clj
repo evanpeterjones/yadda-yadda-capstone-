@@ -19,17 +19,16 @@
                  [ring/ring-core "1.6.3"]
                  [ring/ring-jetty-adapter "1.6.3"]
                  [clojure.jdbc/clojure.jdbc-c3p0 "0.3.1"]
-;                 [metosin/compojure-api "2.0.0-alpha30"]
                  [metosin/compojure-api "1.1.12"]
                  [environ "1.0.0"]
                  [org.clojure/java.jdbc "0.3.5"]
-                 [org.postgresql/postgresql "42.2.4"];;"9.4-1201-jdbc4"]
+                 [org.postgresql/postgresql "42.2.4"]
                  [hiccup "1.0.5"]
-                 ;[yesql "0.5.3"]
-                 ]
+                 [com.mkyong.hashing/java-project "1.0"]]
   :min-lein-version "2.0.0"
   :source-paths ["src"]
   :resource-paths ["resources"]
+
   :plugins [[environ/environ.lein "0.3.1"]
             [lein-ring "0.12.5"]]
   :ring {:handler ducts.web/application

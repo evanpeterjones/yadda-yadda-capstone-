@@ -1,0 +1,8 @@
+CREATE TABLE IF NOT EXISTS USERS (
+   USR_ID_PK SERIAL PRIMARY KEY,
+   USR_Username VARCHAR (50) UNIQUE, -- if these can be null then the client will have to generate user info
+   USR_Email VARCHAR (100) UNIQUE NOT NULL,
+   USR_CreatedOn DATE NOT NULL,
+   USR_LastLogin DATE,
+   USR_Validated BOOLEAN
+);

@@ -12,12 +12,12 @@
 
 (def db-spec (or (System/getenv "DATABASE_URL")
                  {:dbtype "postgresql"
-                  :dbname "evanpeterjones"
+                  :dbname "evan"
                   :subprotocol "postgresql"
-                  :subname "//localhost:5432/evanpeterjones"
+                  :subname "//localhost:5432/evan"
                   :host "localhost"
                   :port "5432"
-                  :user "evanpeterjones"
+                  :user "evan"
                   :password "Avogadro6.02"}))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; HUG SQL QUERIES ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
