@@ -206,6 +206,12 @@
                     (dbc/long-link short)
                     (catch Exception ex "Link does not exist or has expired")))}))
 
+  (GET "/rageclick" [url :as request]
+       (def ro request)
+       {:status 200
+        :headers {"Content-Type" "application/json"}
+        :body (dbc/))
+
   (route/resources "/")
   (route/not-found (views/not-found)))
 
