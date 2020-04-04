@@ -68,24 +68,27 @@
 (defn verify-email [key]
   (query "Select 1 from email_verification where ev_key = '" key "';"))
 
+(defmacro get-results [&{:keys [query keyword]
+                         :or   {query '({:empty nil})
+                                keyword :empty}}]
+  `(-> ~query
+       first
+       ~keyword))
+
 (defn long-link [short-link]
   (let [url (get-link db-spec {:short short-link})]
     (if url
-      (-> url
-          first
-          :json_agg
-          .getValue)
+      (get-results url :json_agg)
       nil)))
 
 (defn query [q]
   "A function for testing sql queries"
   (jdbc/query db-spec [q]))
 
-(defn get-db-version 
+(defn get-db-version
   []
-  (-> (query "SELECT CURR FROM VERSION;")
-      first
-      :curr))
+  (get-results :query (query "SELECT CURR FROM VERSION;")
+               :keyword :curr))
 
 (defn checkup []
   "check if db needs to be upgraded and perform upgrade"

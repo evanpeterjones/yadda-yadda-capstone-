@@ -7,7 +7,8 @@
     />
       
     <div v-if="!location">
-      <Splash />
+      <Splash 
+        @newPostDialog="swapDialog('newPost')"/>
     </div>
     <div v-else>
       <Home

@@ -10,13 +10,13 @@
         :state="valid"
         placeholder="zip code"
         on-submit="return false;"
-        @submit="formSubmit(zip)"
+        @submit="flight(zip)"
         @keyup.enter="formSubmit(zip)"
-      />
+		/>
       <br>
       <b-button
         pill
-        @click="formSubmit(zip)"
+        @click="flight()"
       >
         Search
       </b-button>
@@ -53,6 +53,11 @@ export default {
 		this.getLocation();		
     },
     methods: {
+
+		flight: function() {
+			console.log("asdf")
+			this.$emit("newPostDialog")
+		},
 		
 		formSubmit: function(zipcode) {
 			if (zipcode) {

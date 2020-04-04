@@ -42,7 +42,12 @@ const store = new Vuex.Store({
   },
   getters: {
     location: state => state.location,
-    loc_id: state => state.loc_id,
+    loc_id: state => {
+      if (state.loc_id) { 
+        return state.loc_id;
+      }
+      return 0;
+    },
     locationName: state => state.location[state.locationType],
     posts: state => state.posts,
     isMobile: state => state.isMobile,
@@ -189,7 +194,7 @@ store.watch((store) => store.location, (newLocation, oldLocation) => {
     params: {
       offset: 0,
       loc_id: store.getters.loc_id,
-      cookie: Vue.prototype.$cookies.get('yapp-session')      
+      cookie: Vue.prototype.$cookies.get('yapp-session')
     }
   }).then((result) => {
     store.commit("setPosts", result.data); 

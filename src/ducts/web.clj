@@ -8,20 +8,23 @@
             [ring.middleware.defaults :refer [wrap-defaults site-defaults]]
             [ring.middleware.json :refer [wrap-json-response wrap-json-body]]
             [ring.middleware.cors :refer [wrap-cors]]
+            [ring.mock.request :as mock]
             [ring.util.response :as r]
             [ducts.views :as views]
             [ducts.utils.cookies :as cku]
             [ducts.utils.location :as loc]
             [ducts.utils.email-server :as es]
             [ducts.utils.database-util :as dbu]
+            [ducts.utils.article-parser :as ap]
             [db-connection :as dbc])
   (:gen-class))
 
-(declare ro)
+;; global request object to analyze requests
+(def ro (atom '{}))
 
 (defroutes app-routes
   (GET "/" request
-       (def ro request)
+       (swap! ro conj {:/ request})
        {:status 200
         :headers {"Content-Type" "text/html"}
         :cookies {"yapp-session" {:value (let [ses-id (cku/get-cookie-from-request request)]
@@ -33,17 +36,17 @@
         :body (views/web-app)})
 
   (GET "/feed" [offset cookie loc_id :as request]
-       (def ro request)
+       (swap! ro conj {:feed request})
        {:status 200
         :headers {"Content-Type" "application/json"}
         :body (dbu/construct-json
                (dbc/get-posts dbc/db-spec
-                              {:location (Integer. loc_id)
+                              {:location loc_id
                                :lim 5
                                :offset (Integer/parseInt offset)}))})
 
   (GET "/myPosts" request
-       (def ro request)
+       (swap! ro conj {:my-posts request})
        {:status 200
         :headers {"Content-Type" "application/json"}
         :body (let [user-id (->> request
@@ -70,7 +73,7 @@
         :body (dbc/update-user-info id username email)})
 
   (GET "/userInformation" request
-       (def ro request)
+       (swap! ro conj {:user-information request})
        {:status 200
         :headers {"Content-Type" "application/json"}
         :body (let [user-id (->> request
@@ -85,13 +88,13 @@
                   ""))})
 
   (GET "/getLocationFromSession" [ses :as request]
-       (def ro request)
+       (swap! ro conj {:get-location-from-session request})
        {:status 200
         :headers {"Content-Type" "application/json"}
         :body (dbc/get-location-data-from-session ses)})
 
   (GET "/setUserLocation" [zip ses :as request]
-       (def ro request)
+       (swap! ro conj {:set-user-location request})
        {:status 200
         :headers {"Content-Type" "application/json"}
         :body (let [loc-data (dbc/get-location-data-from-session ses)]
@@ -105,7 +108,7 @@
 
   (GET "/getzip" [lat long :as req]
        "this route returns a zipcode when given lat and longitude"
-       (def ro req)
+       (swap! ro conj {:get-zip req})
        {:status 200
         :headers {"Content-Type" "application/json"}
         :body (let [ses (cku/get-cookie-from-request req)
@@ -121,12 +124,13 @@
                     (dbc/get-location-data-from-session ses))))})
 
   (GET "/getUserFromSession" [cookie :as request]
+       (swap! ro conj {:get-user-from-session request})
        {:status 200
         :headers {"Content-Type" "application/json"}
         :body (str (dbc/get-user-from-session-id cookie))})
 
   (GET "/newPost" [content parent :as request]
-       (def ro request)
+       (swap! ro conj {:new-post request})
        {:status 200
         :headers {"Content-Type" "application/json"}
         :body (let [ses (cku/get-cookie-from-request request)
@@ -137,7 +141,7 @@
                       dbc/get-post-by-id)))})
 
   (GET "/newReplyPost" [content parent :as request]
-       (def ro request)
+       (swap! ro conj {:new-reply-post request})
        {:status 200
         :headers {"Content-Type" "application/json"}
         :body (let [ses (cku/get-cookie-from-request request)
@@ -154,7 +158,7 @@
                       dbc/get-post-by-id)))})
 
   (GET "/deletePost" request
-       (def ro request)
+       (swap! ro conj {:delete-post request})
        {:status 200
         :headers {"Content-Type" "application/json"}
         :body (let [user-id (->> (cku/get-cookie-from-request request)
@@ -165,18 +169,18 @@
                       (str post-id))
                   (str -1)))})
 
-  (GET "/verifyEmail" [key]
+  (GET "/verifyEmail" [e-key]
        {:status 200
         :headers {"Content-Type" "application/json"}
-        :body (let [user-id (dbc/verify-email key)]
+        :body (let [user-id (dbc/verify-email e-key)]
                 (if user-id
                   (do
-                    (dbc/update-account-verified key user-id)
+                    (dbc/update-account-verified e-key user-id)
                     (views/email-verified))
                   (views/not-found)))})
 
   (GET "/share" [lat long link content :as request]
-       (def ro request)
+       (swap! ro conj {:share request})
        {:status 200
         :headers {"Content-Type" "application/json"}
         :body (let [cookie (cku/get-cookie-from-request request)
@@ -187,7 +191,14 @@
                   (-> (dbc/create-new-post user (str content " " link) location-fk nil)
                       dbc/get-post-by-id)))})
 
-  (GET "/sessionSync" [cookie]
+  (GET "/rageclick" [url :as request]
+       (swap! ro conj {:rage-click request})
+       {:status 200
+        :headers {"Content-Type" "application/json"}
+        :body (ap/pull-and-parse url)})
+
+  (GET "/sessionSync" [cookie :as request]
+       (swap! ro conj {:session-sync request})
        {:status 200
         :headers {"Content-Type" "text/html"}
         :cookies {"yapp-session" {:value (if (dbc/session-exists? cookie)
@@ -198,19 +209,13 @@
 
   (comment
     (GET "/*" request
-         (def ro request)
+         (swap! ro conj request)
          {:status 307
           :headers {"Content-Type" "application/json"}
           :body (let [short (:* (:route-params request))]
                   (try 
                     (dbc/long-link short)
                     (catch Exception ex "Link does not exist or has expired")))}))
-
-  (GET "/rageclick" [url :as request]
-       (def ro request)
-       {:status 200
-        :headers {"Content-Type" "application/json"}
-        :body (dbc/))
 
   (route/resources "/")
   (route/not-found (views/not-found)))

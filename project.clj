@@ -13,6 +13,7 @@
                  [com.draines/postal "2.0.3"]
                  [com.layerware/hugsql "0.5.1"]
                  [org.clojure/data.json "0.2.6"]
+                 [ring/ring-mock "0.4.0"]
                  [ring/ring-defaults "0.3.2"]
                  [ring/ring-json "0.5.0"]
                  [ring-cors "0.1.13"]
@@ -24,7 +25,9 @@
                  [org.clojure/java.jdbc "0.3.5"]
                  [org.postgresql/postgresql "42.2.4"]
                  [hiccup "1.0.5"]
-                 [com.mkyong.hashing/java-project "1.0"]]
+                 [com.mkyong.hashing/java-project "1.0"]
+                 [com.pluvius/readie "0.0.0"]
+                 [twttr "3.2.2"]]
   :min-lein-version "2.0.0"
   :source-paths ["src"]
   :resource-paths ["resources"]

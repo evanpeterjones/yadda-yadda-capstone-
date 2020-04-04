@@ -4,7 +4,7 @@
       <h5>No Yapps yet! You can be the first!^^^</h5>
     </card>
     <div class="row scrolling-wrapper">
-      <div v-on:scroll="onScroll" id="feeder" v-for="feed in posts" :key="feed[0].pst_id_pk" class="col scrolling-vert">
+      <div v-on:scroll="onScroll" id="feeder" v-for="feed in posts" :key="feed[0][0].pst_id_pk" class="col scrolling-vert">
         <div v-for="post in feed" :key="post.pst_id_pk">
           <post 
             :hasComments="post['pst_hascomments']"

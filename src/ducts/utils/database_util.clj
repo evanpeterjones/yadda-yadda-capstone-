@@ -4,8 +4,7 @@
 (defn get-json-row [obj]
   "json_agg function in psql is applied to separate rows -_-"
   (-> obj
-      :json_agg
-      .getValue))
+      :json_agg))
 
 (defn map-string [strng]
   (json/write-str strng))

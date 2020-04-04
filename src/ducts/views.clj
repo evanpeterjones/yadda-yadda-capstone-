@@ -1,7 +1,16 @@
-(ns ducts.views)
+(ns ducts.views
+  (:use [hiccup.core]
+        [hiccup.page]
+        [hiccup.form]))
 
 (defn web-app []
   (slurp "resources/index.html"))
+
+(defmacro generate-html-page [])
+
+(comment
+(defn game []
+  (html [])))
 
 (defn not-found []
   {:status 404
