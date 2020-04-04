@@ -10,7 +10,12 @@ export default {
             content : ""
         }
     }, 
-
+    methods: {
+        onType(text) {
+            // generate html for this
+            return "";
+        }
+    }
 }
 </script>
 

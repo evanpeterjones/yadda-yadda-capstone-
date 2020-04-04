@@ -1,9 +1,11 @@
 <template>
   <div class="feed-container container-fluid">
-    <card v-if="!posts">
+    <card v-if="!posts || !feed">
+      <br>
       <h5>No Yapps yet! You can be the first!^^^</h5>
+      <br>
     </card>
-    <div class="row scrolling-wrapper">
+    <div v-else class="row scrolling-wrapper">
       <div v-on:scroll="onScroll" id="feeder" v-for="feed in posts" :key="feed[0][0].pst_id_pk" class="col scrolling-vert">
         <div v-for="post in feed" :key="post.pst_id_pk">
           <post 

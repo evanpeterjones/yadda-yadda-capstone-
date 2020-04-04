@@ -61,6 +61,7 @@ const store = new Vuex.Store({
       state.posts.splice(1,1);
     },
     setLocation(state, loc) {
+      console.log("Location: "+ loc.loc_id)
       state.loc_id = loc.loc_id_pk
       delete loc.loc_id_pk
       state.location = loc
@@ -165,6 +166,9 @@ if (Vue.prototype.$cookies.get('yapp-session')) {
   Vue.prototype.$http.get("/getUserFromSession").then((result) => { 
     console.log("UserID: " + result.data);
     store.commit("setUserId", result.data);
+  }).catch(error => {
+    console.log("yikes");
+    console.error(error)
   });
 
   Vue.prototype.$http.get('/getLocationFromSession', {
@@ -197,7 +201,15 @@ store.watch((store) => store.location, (newLocation, oldLocation) => {
       cookie: Vue.prototype.$cookies.get('yapp-session')
     }
   }).then((result) => {
-    store.commit("setPosts", result.data); 
+    if (result.data.length != 0) {
+      console.log("post data: ")
+      console.log(result.data)
+      store.commit("setPosts", result.data); 
+    } else { 
+      console.error("error")
+      console.error(result)
+      store.commit("setPosts", [{pst_id_pk : "asdf"},{}]); 
+    }
   }).catch(error => {
     console.log(error);
   });
