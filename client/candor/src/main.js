@@ -61,10 +61,14 @@ const store = new Vuex.Store({
       state.posts.splice(1,1);
     },
     setLocation(state, loc) {
-      console.log("Location: "+ loc.loc_id)
-      state.loc_id = loc.loc_id_pk
-      delete loc.loc_id_pk
-      state.location = loc
+      if (loc.loc_id){
+        console.log("Location: "+ loc.loc_id)
+        state.loc_id = loc.loc_id_pk
+        delete loc.loc_id_pk
+        state.location = loc
+      } else {
+        console.error("No location data provided")
+      }
     },
     setPosts(state, newPosts) {
       state.posts.push(newPosts)
@@ -197,21 +201,19 @@ store.watch((store) => store.location, (newLocation, oldLocation) => {
   Vue.prototype.$http.get("/feed", {
     params: {
       offset: 0,
-      loc_id: store.getters.loc_id,
+      loc_id: store.getters.loc_id_pk,
       cookie: Vue.prototype.$cookies.get('yapp-session')
     }
-  }).then((result) => {
+  }).then(result => {
     if (result.data.length != 0) {
       console.log("post data: ")
       console.log(result.data)
       store.commit("setPosts", result.data); 
     } else { 
-      console.error("error")
       console.error(result)
-      store.commit("setPosts", [{pst_id_pk : "asdf"},{}]); 
     }
   }).catch(error => {
-    console.log(error);
+    console.error(error);
   });
 });
 

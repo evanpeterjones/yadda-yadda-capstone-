@@ -39,11 +39,7 @@
        (swap! ro conj {:feed request})
        {:status 200
         :headers {"Content-Type" "application/json"}
-        :body (dbu/construct-json
-               (dbc/get-posts dbc/db-spec
-                              {:location loc_id
-                               :lim 5
-                               :offset (Integer/parseInt offset)}))})
+        :body (dbc/get-post loc_id 5 offset)})
 
   (GET "/myPosts" request
        (swap! ro conj {:my-posts request})

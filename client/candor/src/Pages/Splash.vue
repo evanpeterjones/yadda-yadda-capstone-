@@ -16,7 +16,7 @@
       <br>
       <b-button
         pill
-        @click="flight()"
+        @click="formSubmit(zip)"
       >
         Search
       </b-button>
@@ -41,12 +41,12 @@ export default {
     data() {
 		return {
 			zip: null,
-			valid: null
+			valid: false
 		}
     },
     watch: {
 		'zip': function () {
-			this.valid = (this.zip.length == 5 && /(^\d{5}$)|(^\d{5}-\d{4}$)/.test(this.zip)) ? true : null;
+			this.valid = (this.zip.length == 5 || /(^\d{5}$)|(^\d{5}-\d{4}$)/.test(this.zip))
 		}
     },
     mounted() {
@@ -90,18 +90,23 @@ export default {
 			navigator.geolocation.getCurrentPosition(pos => {
 				var crd = pos.coords;
 
-				this.$http.get('/getzip', {
-					withCredentials: true,
-					params: {
-						lat : crd.latitude, 
-						long: crd.longitude
-					}
-				})
-				.then(response => {
-					this.$store.commit('setLocation', response.data[0])
-				}).catch(error => {
-					console.log(error);
-				});
+				if (crd) {
+
+					this.$http.get('/getzip', {
+						withCredentials: true,
+						params: {
+							lat : crd.latitude, 
+							long: crd.longitude
+						}
+					})
+					.then(response => {
+						this.$store.commit('setLocation', response.data[0])
+					}).catch(error => {
+						console.log(error);
+					});
+				} else {
+					console.error("No location found")
+				}
 			}, err => { 
 				console.warn(`ERROR(${err.code}): ${err.message}`); 
 			}, options);
