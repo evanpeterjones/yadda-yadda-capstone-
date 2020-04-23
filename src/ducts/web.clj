@@ -102,7 +102,7 @@
                     (dbc/associate-session-and-location-data loc-data ses)
                     (loc/get-location-value loc-data :zip))))})
 
-  (GET "/getzip" [lat long :as req]
+  (GET "/getzip" [lat lon :as req]
        "this route returns a zipcode when given lat and longitude"
        (swap! ro conj {:get-zip req})
        {:status 200
@@ -115,7 +115,7 @@
                 (if zip
                   (str loc-data)
                   (let [ses (dbc/create-session)
-                        data (loc/get-location-data lat long)]
+                        data (loc/get-location-data lat lon)]
                     (dbc/associate-session-and-location-data data ses)
                     (dbc/get-location-data-from-session ses))))})
 

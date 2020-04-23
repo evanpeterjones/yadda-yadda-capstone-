@@ -26,7 +26,7 @@
                  [org.postgresql/postgresql "42.2.4"]
                  [hiccup "1.0.5"]
                  [com.mkyong.hashing/java-project "1.0"]
-                 [com.pluvius/readie "0.0.0"]
+;                 [com.pluvius/readie "0.0.0"]
                  [twttr "3.2.2"]]
   :min-lein-version "2.0.0"
   :source-paths ["src"]

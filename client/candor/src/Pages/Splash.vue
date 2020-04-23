@@ -90,6 +90,9 @@ export default {
 			navigator.geolocation.getCurrentPosition(pos => {
 				var crd = pos.coords;
 
+	
+				console.log(crd.latitude)
+				console.log(crd.longitude)
 				if (crd) {
 
 					this.$http.get('/getzip', {

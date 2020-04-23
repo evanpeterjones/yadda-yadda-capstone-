@@ -7,7 +7,7 @@ public class App {
     public App(String init) {
         this.internalValue = init;
     }
-
+    
     public static void main(String[] args) {
         if (args.length < 1) {
             System.err.println("Please provide an input!");

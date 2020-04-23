@@ -41,7 +41,6 @@
                     This email is already registered
                 </b-alert>
 
-
                 <b-form-group
                     label="Account Created"
                     label-for="input-1">
@@ -52,6 +51,9 @@
                         type="date"></b-form-input>
                 </b-form-group>
             </b-form>
+
+            <!-- need a logout button here -->
+
         </b-modal>
     </div>    
 </template>

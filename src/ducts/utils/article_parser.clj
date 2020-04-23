@@ -1,7 +1,7 @@
 (ns ducts.utils.article-parser
   (:require [clojure.data.json :as json]
             [clj-http.client :as client])
-  (:use [readie.core])
+;  (:use [readie.core])
   (:gen-class))
 
 (defn parse-page [page-data]
