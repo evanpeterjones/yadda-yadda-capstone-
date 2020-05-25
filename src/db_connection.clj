@@ -1,6 +1,7 @@
 (ns db-connection
   (:use [clojure.pprint])
   (:require [hugsql.core :as hugsql]
+            [clojure.edn :as edn]
             [clojure.java.jdbc :as jdbc]
             [clojure.spec.alpha :as s]
             [ducts.utils.location :as loc]
@@ -11,6 +12,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; GENERAL SETUP ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (def db-spec (or (System/getenv "DATABASE_URL")
+                 (edn/read-string (try (slurp "resource/db.edn") (catch java.io.FileNotFoundException)))
                  {:dbtype "postgresql"
                   :dbname "evanpeterjones"
                   :subprotocol "postgresql"
@@ -18,7 +20,7 @@
                   :host "localhost"
                   :port "5432"
                   :user "evanpeterjones"
-                  :password "Avogadro6.02"}))
+                  :password ""}))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; HUG SQL QUERIES ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

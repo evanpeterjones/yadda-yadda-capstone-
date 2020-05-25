@@ -8,8 +8,6 @@
                               slurp
                               (str/split #"\n"))))
 
-
-
 (defn vec-remove
   "remove elem in coll"
   [pos coll]
@@ -18,9 +16,8 @@
 (defn get-all-words
   ([^String word] (get-all-words (conj (into [] word) \space) 0))
   ([^clojure.lang.PersistentVector word-vector ^Integer index]
-   (if (and word-vector
-            (< index (count word-vector)))
+   (if (and word-vector (< 0 (count word-vector)))
      (for [char word-vector]
        (get-all-words (vec-remove index word-vector)
-                      (inc index)))
-     word-vector)))
+                      (inc index)))) word-vector))
+

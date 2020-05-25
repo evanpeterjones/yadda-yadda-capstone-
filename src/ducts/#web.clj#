@@ -39,11 +39,7 @@
        (swap! ro conj {:feed request})
        {:status 200
         :headers {"Content-Type" "application/json"}
-        :body (dbu/construct-json
-               (dbc/get-posts dbc/db-spec
-                              {:location loc_id
-                               :lim 5
-                               :offset (Integer/parseInt offset)}))})
+        :body (dbc/get-post loc_id 5 offset)})
 
   (GET "/myPosts" request
        (swap! ro conj {:my-posts request})
@@ -106,7 +102,7 @@
                     (dbc/associate-session-and-location-data loc-data ses)
                     (loc/get-location-value loc-data :zip))))})
 
-  (GET "/getzip" [lat long :as req]
+  (GET "/getzip" [lat lon :as req]
        "this route returns a zipcode when given lat and longitude"
        (swap! ro conj {:get-zip req})
        {:status 200
@@ -119,7 +115,7 @@
                 (if zip
                   (str loc-data)
                   (let [ses (dbc/create-session)
-                        data (loc/get-location-data lat long)]
+                        data (loc/get-location-data lat lon)]
                     (dbc/associate-session-and-location-data data ses)
                     (dbc/get-location-data-from-session ses))))})
 
