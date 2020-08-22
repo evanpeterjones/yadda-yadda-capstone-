@@ -12,7 +12,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; GENERAL SETUP ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (def db-spec (or (System/getenv "DATABASE_URL")
-                 (edn/read-string (try (slurp "resource/db.edn") (catch java.io.FileNotFoundException)))
+                 (edn/read-string (slurp "resources/db.edn"))
                  {:dbtype "postgresql"
                   :dbname "evanpeterjones"
                   :subprotocol "postgresql"
@@ -264,8 +264,8 @@
                                     :offset (if (= String (type offset))
                                               (Integer/parseInt offset)
                                               offset)})
-       (map #(.getValue (:json_agg %1)))       
-       str))
+       (map #(.getValue (:json_agg %1)))
+       (apply str)))
 
 (defn get-post-by-id [post-id]
   "wrapper for hugsql query"

@@ -5,7 +5,9 @@
       @myAccount="swapDialog('myAccount')"
       @newQRCode="swapDialog('QRCode')"
     />
-      
+
+  <h1> test {{ itemData }}</h1>
+      <!--
     <div v-if="!location">
       <Splash 
         @newPostDialog="swapDialog('newPost')"/>
@@ -15,6 +17,8 @@
         @newPostDialog="swapDialog('newPost')" 
       />
     </div>
+
+    -->
 
     <component 
       :is="CurrDialog"
@@ -48,7 +52,8 @@ export default {
         'QRCode' : QRCode, 
         'myPosts' : myPosts, 
         'myAccount' : myAccount
-      }
+      }, 
+      itemData : null
     }
   },
   computed: {
@@ -69,6 +74,13 @@ export default {
     if (!navigator.cookieEnabled) {
       this.cookies_required();
     }
+
+    this.$http.get("/itemData").then((result) => { 
+      console.log("itemData: " + result.data);
+      this.itemData = result.data
+    }).catch(error => {
+      console.error(error)
+    });
 
     this.$store.watch((state) => state.replyTo, (old, newVal) => {
       if (this.$store.getters.replyTo) {

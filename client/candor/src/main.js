@@ -171,10 +171,10 @@ if (Vue.prototype.$cookies.get('yapp-session')) {
     console.log("UserID: " + result.data);
     store.commit("setUserId", result.data);
   }).catch(error => {
-    console.log("yikes");
     console.error(error)
   });
 
+  /*
   Vue.prototype.$http.get('/getLocationFromSession', {
     params: {
       ses: Vue.prototype.$cookies.get('yapp-session')
@@ -184,6 +184,7 @@ if (Vue.prototype.$cookies.get('yapp-session')) {
   }).catch(error => {
     console.log(error)
   });
+  */
 }
 
 store.watch((store) => store.location, (newLocation, oldLocation) => {
@@ -201,8 +202,7 @@ store.watch((store) => store.location, (newLocation, oldLocation) => {
   Vue.prototype.$http.get("/feed", {
     params: {
       offset: 0,
-      loc_id: store.getters.loc_id_pk,
-      cookie: Vue.prototype.$cookies.get('yapp-session')
+      loc_id: store.getters.loc_id_pk
     }
   }).then(result => {
     if (result.data.length != 0) {

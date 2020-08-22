@@ -14,12 +14,14 @@
         @keyup.enter="formSubmit(zip)"
 		/>
       <br>
-      <b-button
-        pill
-        @click="formSubmit(zip)"
-      >
-        Search
-      </b-button>
+	<div class="container-fluid">
+		<b-button pill @click="getLocation()">
+			Get Location
+		</b-button>
+		<b-button pill @click="formSubmit(zip)">
+			Search
+		</b-button>
+	  </div>
     </form>
   </div>
 </template>
@@ -46,11 +48,11 @@ export default {
     },
     watch: {
 		'zip': function () {
-			this.valid = (this.zip.length == 5 || /(^\d{5}$)|(^\d{5}-\d{4}$)/.test(this.zip))
+			this.valid = (this.zip.length == 5 || /(^\d{5}$)|(^\d{5}-\d{4}$)/.test(this.zip) || this.zip.length == 0)
 		}
     },
     mounted() {
-		this.getLocation();		
+//		this.getLocation();		
     },
     methods: {
 
