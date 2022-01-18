@@ -1,6 +1,7 @@
 (ns db-connection
   (:use [clojure.pprint])
   (:require [hugsql.core :as hugsql]
+            [clojure.edn :as edn]
             [clojure.java.jdbc :as jdbc]
             [clojure.spec.alpha :as s]
             [ducts.utils.location :as loc]
@@ -11,23 +12,26 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; GENERAL SETUP ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (def db-spec (or (System/getenv "DATABASE_URL")
+                 (edn/read-string (slurp "resources/db.edn"))
                  {:dbtype "postgresql"
-                  :dbname "evan"
+                  :dbname "evanpeterjones"
                   :subprotocol "postgresql"
-                  :subname "//localhost:5432/evan"
+                  :subname "//localhost:5432/evanpeterjones"
                   :host "localhost"
                   :port "5432"
-                  :user "evan"
-                  :password "Avogadro6.02"}))
+                  :user "evanpeterjones"
+                  :password ""}))
+
+(println (str "Initialized db-spec: " db-spec))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; HUG SQL QUERIES ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (declare get-post-and-comments
          get-posts-by-alias
          get-user-information
+         get-posts-with-loc
          get-new-posts
          get-my-posts
-         get-posts
          get-post
          get-link
          query
@@ -68,17 +72,20 @@
 (defn verify-email [key]
   (query "Select 1 from email_verification where ev_key = '" key "';"))
 
-(defmacro get-results [&{:keys [query keyword]
+(defmacro get-json-results [&{:keys [query keyword]
                          :or   {query '({:empty nil})
-                                keyword :empty}}]
-  `(-> ~query
-       first
-       ~keyword))
+                                keyword :json_agg}}]
+  `(let [result# (-> ~query
+                    first
+                    ~keyword)]
+     (if (= (type result#) clojure.lang.LazySeq)
+       (apply str (map #(.getValue (:json_agg %1)) result#))
+       result#)))
 
 (defn long-link [short-link]
   (let [url (get-link db-spec {:short short-link})]
     (if url
-      (get-results url :json_agg)
+      (get-json-results url :json_agg)
       nil)))
 
 (defn query [q]
@@ -87,7 +94,7 @@
 
 (defn get-db-version
   []
-  (get-results :query (query "SELECT CURR FROM VERSION;")
+  (get-json-results :query (query "SELECT CURR FROM VERSION;")
                :keyword :curr))
 
 (defn checkup []
@@ -253,12 +260,18 @@
   (jdbc/execute! db-spec
                  [(str "UPDATE POSTS SET pst_hascomments = false WHERE PST_ID_PK = '" id "';")]))
 
+(defn get-posts [^String location ^Integer lim offset]
+  (->> (get-posts-with-loc db-spec {:location location
+                                    :lim lim
+                                    :offset (if (= String (type offset))
+                                              (Integer/parseInt offset)
+                                              offset)})
+       (map #(.getValue (:json_agg %1)))
+       (apply str)))
+
 (defn get-post-by-id [post-id]
   "wrapper for hugsql query"
-  (-> (get-post db-spec {:post_id post-id})
-      first
-      :json_agg
-      .getValue))
+  (get-json-results :query (get-post db-spec {:post_id post-id})))
 
 (defn create-new-post
   ([u c lf] (create-new-post u c lf nil))

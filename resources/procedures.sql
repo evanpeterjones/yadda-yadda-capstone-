@@ -81,7 +81,7 @@ GROUP BY PST_TIME
 ORDER BY PST_TIME DESC;
 
 
--- :name get-posts
+-- :name get-posts-with-loc
 -- :result :json
 -- :doc {:location int :lim int :offset int}
 SELECT json_agg(posts)

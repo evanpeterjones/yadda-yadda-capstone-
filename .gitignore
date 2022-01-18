@@ -1,3 +1,7 @@
 target/*
 .idea/*
 .vscode/*
+java/node_modules/*
+.settings/*
+.clj-kondo
+.lsp

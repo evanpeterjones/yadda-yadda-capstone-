@@ -10,3 +10,29 @@
 (or (System/getenv "DATABASE_URL")                  "postgres://kvzhgjwupmfymm:e19fdd9e40d5783820d13ab6fe141ebb00c8a60b47efd63337180ea068b3a4ef@ec2-107-20-173-2.compute-1.amazonaws.com:5432/d2na7ais8vs462")))
 (or (System/getenv "DATABASE_URL") "postgres://kvzhgjwupmfymm:e19fdd9e40d5783820d13ab6fe141ebb00c8a60b47efd63337180ea068b3a4ef@ec2-107-20-173-2.compute-1.amazonaws.com:5432/d2na7ais8vs462")))
 (or (System/getenv "DATABASE_URL") "postgres://kvzhgjwupmfymm:e19fdd9e40d5783820d13ab6fe141ebb00c8a60b47efd63337180ea068b3a4ef@ec2-107-20-173-2.compute-1.amazonaws.com:5432/d2na7ais8vs462")
+(require 'ducts.db)
+(require 'db-connection)
+db-spec
+(use 'db-connection)
+db-spec
+(get-db-version)
+db-spec
+(require 'ducts.db)
+(use 'db-connection)
+db-spec
+(use 'db-connection :reload-all)
+db-spec
+(require 'ducts.db :reload-all)
+(require 'db-connection :reload-all)
+db-spec
+(require 'ducts.db :reload-all)
+(require 'db-connection :reload-all)
+db-spec
+(use 'db-connection :reload-all)
+db-spec
+(get-db-version)
+*ns*
+*fns*
+*fn*
+ls
+(def server (-main))
