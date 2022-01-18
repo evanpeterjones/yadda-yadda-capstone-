@@ -5,9 +5,6 @@
       @myAccount="swapDialog('myAccount')"
       @newQRCode="swapDialog('QRCode')"
     />
-
-  <h1> test {{ itemData }}</h1>
-      <!--
     <div v-if="!location">
       <Splash 
         @newPostDialog="swapDialog('newPost')"/>
@@ -17,9 +14,9 @@
         @newPostDialog="swapDialog('newPost')" 
       />
     </div>
-
-    -->
-
+    <Post
+      content="Sorry, this fun social-media site was DDOS'd by someone in Korea, so I had to take it down, maybe one day I will revive it."
+      />
     <component 
       :is="CurrDialog"
       @closeDialog="swapDialog(null, null)"
@@ -30,6 +27,7 @@
 <script>
 import NavigationBar from './components/NavigationBar.vue'
 import NewPost from './components/NewPost.vue'
+import Post from './components/Post.vue'
 import myPosts from './components/myPosts.vue'
 import myAccount from './components/myAccount.vue'
 import QRCode from './components/QRCode.vue'
@@ -41,7 +39,7 @@ export default {
   title: 'YAPP',
   name: 'App',
   components: { 
-    NavigationBar, Splash, BModal, NewPost, QRCode, Home, myPosts, myAccount
+    NavigationBar, Splash, BModal, NewPost, QRCode, Home, myPosts, myAccount, Post
   },
   data () {
     return {

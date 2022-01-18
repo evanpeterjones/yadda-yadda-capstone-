@@ -36,4 +36,3 @@
              "verify your email"
              (str "Click this link to verify your email " url))))
 
- 

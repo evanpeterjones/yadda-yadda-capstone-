@@ -22,6 +22,8 @@
                   :user "evanpeterjones"
                   :password ""}))
 
+(println (str "Initialized db-spec: " db-spec))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; HUG SQL QUERIES ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (declare get-post-and-comments
