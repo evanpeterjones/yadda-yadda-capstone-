@@ -5,6 +5,7 @@
       @myAccount="swapDialog('myAccount')"
       @newQRCode="swapDialog('QRCode')"
     />
+    <!--
     <div v-if="!location">
       <Splash 
         @newPostDialog="swapDialog('newPost')"/>
@@ -14,8 +15,10 @@
         @newPostDialog="swapDialog('newPost')" 
       />
     </div>
+    -->
     <Post
       content="Sorry, this fun social-media site was DDOS'd by someone in Korea, so I had to take it down, maybe one day I will revive it."
+      :time=time
       />
     <component 
       :is="CurrDialog"
@@ -43,6 +46,7 @@ export default {
   },
   data () {
     return {
+      time : (new Date()).toDateString(),
       CurrDialog : null,
       components : {
         'replyPost' : NewPost,
