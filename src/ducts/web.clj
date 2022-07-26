@@ -35,16 +35,11 @@
                                   :max-age (* 60 24 30 365)}}
         :body (views/web-app)})
 
-  (GET "/feed" [offset cookie loc_id :as request]
+  (GET "/feed" [offset loc_id :as request]
        (swap! ro conj {:feed request})
        {:status 200
         :headers {"Content-Type" "application/json"}
-        :body (dbu/construct-json
-               (dbc/get-posts dbc/db-spec
-                              {:location loc_id
-                               :lim 5
-                               :offset (Integer/parseInt offset)}))})
-
+        :body (dbc/get-posts loc_id 5 offset)})
   (GET "/myPosts" request
        (swap! ro conj {:my-posts request})
        {:status 200
@@ -65,7 +60,7 @@
   (GET "/bounce" request
        {:status 200
         :headers {"Content-Type" "application/json"}
-        :body "adsf"})
+        :body "adsfhjkl"})
 
   (GET "/updateAccountInfo" [id username email] 
        {:status 200
@@ -106,7 +101,7 @@
                     (dbc/associate-session-and-location-data loc-data ses)
                     (loc/get-location-value loc-data :zip))))})
 
-  (GET "/getzip" [lat long :as req]
+  (GET "/getzip" [lat lon :as req]
        "this route returns a zipcode when given lat and longitude"
        (swap! ro conj {:get-zip req})
        {:status 200
@@ -119,7 +114,7 @@
                 (if zip
                   (str loc-data)
                   (let [ses (dbc/create-session)
-                        data (loc/get-location-data lat long)]
+                        data (loc/get-location-data lat lon)]
                     (dbc/associate-session-and-location-data data ses)
                     (dbc/get-location-data-from-session ses))))})
 
@@ -179,6 +174,11 @@
                     (views/email-verified))
                   (views/not-found)))})
 
+  (GET "/itemData" request
+       {:status 200
+        :headers {"Content-Type" "application/text"}
+        :body "{\"test\":\"asdf\"}"})
+
   (GET "/share" [lat long link content :as request]
        (swap! ro conj {:share request})
        {:status 200
@@ -191,11 +191,12 @@
                   (-> (dbc/create-new-post user (str content " " link) location-fk nil)
                       dbc/get-post-by-id)))})
 
-  (GET "/rageclick" [url :as request]
-       (swap! ro conj {:rage-click request})
-       {:status 200
-        :headers {"Content-Type" "application/json"}
-        :body (ap/pull-and-parse url)})
+  (comment
+    (GET "/rageclick" [url :as request]
+         (swap! ro conj {:rage-click request})
+         {:status 200
+          :headers {"Content-Type" "application/json"}
+          :body (ap/pull-and-parse url)}))
 
   (GET "/sessionSync" [cookie :as request]
        (swap! ro conj {:session-sync request})

@@ -8,7 +8,8 @@
     </div>
     <div 
       v-else
-      class="card card-desktop bg"
+      class="car
+      d card-desktop bg"
       style="margin:auto;width: 350px"
     >
       <slot />

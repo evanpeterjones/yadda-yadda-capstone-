@@ -14,5 +14,9 @@
 
 (defn construct-json [result]
   "this is specific to cases when json_agg function is used on query"
-  (json/write-str (map #(get % 0) 
-                       (map json/read-str (map get-json-row result)))))
+  (str "[" (apply str (map (fn [row] (-> row
+                                         get-json-row
+                                         .getValue
+                                         json/read-str
+                                         first
+                                         json/write-str)) result)) "]"))

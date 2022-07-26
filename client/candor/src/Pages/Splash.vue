@@ -14,12 +14,14 @@
         @keyup.enter="formSubmit(zip)"
 		/>
       <br>
-      <b-button
-        pill
-        @click="flight()"
-      >
-        Search
-      </b-button>
+	<div class="container-fluid">
+		<b-button pill @click="getLocation()">
+			Get Location
+		</b-button>
+		<b-button pill @click="formSubmit(zip)">
+			Search
+		</b-button>
+	  </div>
     </form>
   </div>
 </template>
@@ -41,16 +43,16 @@ export default {
     data() {
 		return {
 			zip: null,
-			valid: null
+			valid: false
 		}
     },
     watch: {
 		'zip': function () {
-			this.valid = (this.zip.length == 5 && /(^\d{5}$)|(^\d{5}-\d{4}$)/.test(this.zip)) ? true : null;
+			this.valid = (this.zip.length == 5 || /(^\d{5}$)|(^\d{5}-\d{4}$)/.test(this.zip) || this.zip.length == 0)
 		}
     },
     mounted() {
-		this.getLocation();		
+//		this.getLocation();		
     },
     methods: {
 
@@ -90,18 +92,26 @@ export default {
 			navigator.geolocation.getCurrentPosition(pos => {
 				var crd = pos.coords;
 
-				this.$http.get('/getzip', {
-					withCredentials: true,
-					params: {
-						lat : crd.latitude, 
-						long: crd.longitude
-					}
-				})
-				.then(response => {
-					this.$store.commit('setLocation', response.data[0])
-				}).catch(error => {
-					console.log(error);
-				});
+	
+				console.log(crd.latitude)
+				console.log(crd.longitude)
+				if (crd) {
+
+					this.$http.get('/getzip', {
+						withCredentials: true,
+						params: {
+							lat : crd.latitude, 
+							long: crd.longitude
+						}
+					})
+					.then(response => {
+						this.$store.commit('setLocation', response.data[0])
+					}).catch(error => {
+						console.log(error);
+					});
+				} else {
+					console.error("No location found")
+				}
 			}, err => { 
 				console.warn(`ERROR(${err.code}): ${err.message}`); 
 			}, options);

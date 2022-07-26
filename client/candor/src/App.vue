@@ -5,7 +5,7 @@
       @myAccount="swapDialog('myAccount')"
       @newQRCode="swapDialog('QRCode')"
     />
-      
+    <!--
     <div v-if="!location">
       <Splash 
         @newPostDialog="swapDialog('newPost')"/>
@@ -15,7 +15,11 @@
         @newPostDialog="swapDialog('newPost')" 
       />
     </div>
-
+    -->
+    <Post
+      content="Sorry, this fun social-media site was DDOS'd by someone in Korea, so I had to take it down, maybe one day I will revive it."
+      :time=time
+      />
     <component 
       :is="CurrDialog"
       @closeDialog="swapDialog(null, null)"
@@ -26,6 +30,7 @@
 <script>
 import NavigationBar from './components/NavigationBar.vue'
 import NewPost from './components/NewPost.vue'
+import Post from './components/Post.vue'
 import myPosts from './components/myPosts.vue'
 import myAccount from './components/myAccount.vue'
 import QRCode from './components/QRCode.vue'
@@ -37,10 +42,11 @@ export default {
   title: 'YAPP',
   name: 'App',
   components: { 
-    NavigationBar, Splash, BModal, NewPost, QRCode, Home, myPosts, myAccount
+    NavigationBar, Splash, BModal, NewPost, QRCode, Home, myPosts, myAccount, Post
   },
   data () {
     return {
+      time : (new Date()).toDateString(),
       CurrDialog : null,
       components : {
         'replyPost' : NewPost,
@@ -48,7 +54,8 @@ export default {
         'QRCode' : QRCode, 
         'myPosts' : myPosts, 
         'myAccount' : myAccount
-      }
+      }, 
+      itemData : null
     }
   },
   computed: {
@@ -69,6 +76,13 @@ export default {
     if (!navigator.cookieEnabled) {
       this.cookies_required();
     }
+
+    this.$http.get("/itemData").then((result) => { 
+      console.log("itemData: " + result.data);
+      this.itemData = result.data
+    }).catch(error => {
+      console.error(error)
+    });
 
     this.$store.watch((state) => state.replyTo, (old, newVal) => {
       if (this.$store.getters.replyTo) {
