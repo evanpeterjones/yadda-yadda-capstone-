@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="eaf07400-112f-4df3-946b-52dab795fd35" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/#project.clj#" beforeDir="false" afterPath="$PROJECT_DIR$/#project.clj#" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/java/src/main/java/com/mkyong/hashing/App.java" beforeDir="false" afterPath="$PROJECT_DIR$/java/src/main/java/com/mkyong/hashing/App.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ducts/#web.clj#" beforeDir="false" afterPath="$PROJECT_DIR$/src/ducts/#web.clj#" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MacroExpansionManager">
+    <option name="directoryName" value="jn3mu7m7" />
+  </component>
+  <component name="ProjectId" id="1iqnWxUEEj8jN5lF3ZtRcgFbepa" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="project.structure.last.edited" value="Project" />
+    <property name="project.structure.proportion" value="0.0" />
+    <property name="project.structure.side.proportion" value="0.0" />
+  </component>
+  <component name="RunManager" selected="Clojure Application.main">
+    <configuration name="Unnamed" type="ClojureREPL" factoryName="Local" activateToolWindowBeforeRun="false" nameIsGenerated="true">
+      <module name="yadda-yadda" />
+      <setting name="replType" value="NREPL" />
+      <setting name="execution" value="INTELLIJ" />
+      <setting name="jvmArgs" value="" />
+      <setting name="parameters" value="" />
+      <setting name="workingDir" value="$PROJECT_DIR$" />
+      <setting name="profiles" value="" />
+      <setting name="aliases" value="" />
+      <setting name="fixLineNumbers" value="false" />
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="ClojureREPL" factoryName="Local" activateToolWindowBeforeRun="false">
+      <setting name="replType" value="NREPL" />
+      <setting name="execution" value="LEININGEN" />
+      <setting name="jvmArgs" value="" />
+      <setting name="parameters" value="" />
+      <setting name="workingDir" value="" />
+      <setting name="profiles" value="" />
+      <setting name="aliases" value="" />
+      <setting name="fixLineNumbers" value="false" />
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="ClojureREPL" factoryName="Remote" activateToolWindowBeforeRun="false">
+      <setting name="host" value="" />
+      <setting name="port" value="0" />
+      <setting name="replType" value="SOCKET" />
+      <setting name="configType" value="SPECIFY" />
+      <setting name="replPortFileType" value="STANDARD" />
+      <setting name="customPortFile" value="" />
+      <setting name="fixLineNumbers" value="false" />
+      <method v="2" />
+    </configuration>
+    <configuration name="main" type="ClojureScriptRunConfiguration" factoryName="Clojure Script">
+      <module name="yadda-yadda" />
+      <setting name="path" value="" />
+      <setting name="namespace" value="" />
+      <setting name="execution" value="INTELLIJ" />
+      <setting name="profiles" value="" />
+      <setting name="aliases" value="" />
+      <setting name="vmparams" value="" />
+      <setting name="params" value="" />
+      <setting name="workDir" value="$PROJECT_DIR$" />
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Clojure Application.main" />
+      <item itemvalue="Clojure REPL.Unnamed" />
+    </list>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="eaf07400-112f-4df3-946b-52dab795fd35" name="Default Changelist" comment="" />
+      <created>1602644024552</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1602644024552</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="256" y="71" key="#Project_Structure" timestamp="1608869658736">
+      <screen x="0" y="25" width="1536" height="935" />
+    </state>
+    <state x="256" y="71" key="#Project_Structure/0.25.1536.935@0.25.1536.935" timestamp="1608869658736" />
+    <state x="360" y="233" width="1071" height="796" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1602723302995">
+      <screen x="0" y="23" width="1792" height="1097" />
+    </state>
+    <state x="360" y="233" width="1071" height="796" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.23.1792.1097@0.23.1792.1097" timestamp="1602723302995" />
+    <state width="875" height="303" key="GridCell.Tab.0.bottom" timestamp="1602981317362">
+      <screen x="0" y="23" width="1792" height="1097" />
+    </state>
+    <state width="875" height="303" key="GridCell.Tab.0.bottom/0.23.1792.1097@0.23.1792.1097" timestamp="1602981317362" />
+    <state width="875" height="303" key="GridCell.Tab.0.center" timestamp="1602981317362">
+      <screen x="0" y="23" width="1792" height="1097" />
+    </state>
+    <state width="875" height="303" key="GridCell.Tab.0.center/0.23.1792.1097@0.23.1792.1097" timestamp="1602981317362" />
+    <state width="875" height="303" key="GridCell.Tab.0.left" timestamp="1602981317356">
+      <screen x="0" y="23" width="1792" height="1097" />
+    </state>
+    <state width="875" height="303" key="GridCell.Tab.0.left/0.23.1792.1097@0.23.1792.1097" timestamp="1602981317356" />
+    <state width="875" height="303" key="GridCell.Tab.0.right" timestamp="1602981317362">
+      <screen x="0" y="23" width="1792" height="1097" />
+    </state>
+    <state width="875" height="303" key="GridCell.Tab.0.right/0.23.1792.1097@0.23.1792.1097" timestamp="1602981317362" />
+    <state x="264" y="159" key="new project wizard" timestamp="1602981314156">
+      <screen x="0" y="23" width="1792" height="1097" />
+    </state>
+    <state x="264" y="159" key="new project wizard/0.23.1792.1097@0.23.1792.1097" timestamp="1602981314156" />
+  </component>
+</project>

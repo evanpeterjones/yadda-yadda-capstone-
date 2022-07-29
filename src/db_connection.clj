@@ -30,6 +30,7 @@
          get-posts-by-alias
          get-user-information
          get-posts-with-loc
+         get-post-by-id
          get-new-posts
          get-my-posts
          get-post
@@ -73,14 +74,26 @@
   (query "Select 1 from email_verification where ev_key = '" key "';"))
 
 (defmacro get-json-results [&{:keys [query keyword]
-                         :or   {query '({:empty nil})
-                                keyword :json_agg}}]
+                              :or   {query '({:empty nil})
+                                     keyword :json_agg}}]
   `(let [result# (-> ~query
-                    first
-                    ~keyword)]
+                     first
+                     ~keyword)]
      (if (= (type result#) clojure.lang.LazySeq)
        (apply str (map #(.getValue (:json_agg %1)) result#))
        result#)))
+
+(defn results [&{:keys [query keyword]
+                 :or   {query '({:empty nil})
+                        keyword :json_agg}}]
+  (let [result (-> query
+                   first
+                   keyword)]
+    (if (= (type result) clojure.lang.LazySeq)
+       (apply str (map #(.getValue (:json_agg %1)) result))
+       result)))
+
+
 
 (defn long-link [short-link]
   (let [url (get-link db-spec {:short short-link})]
@@ -92,10 +105,7 @@
   "A function for testing sql queries"
   (jdbc/query db-spec [q]))
 
-(defn get-db-version
-  []
-  (get-json-results :query (query "SELECT CURR FROM VERSION;")
-               :keyword :curr))
+(defn get-db-version [] (->> "SELECT CURR FROM VERSION;" (jdbc/query db-spec) first :curr))
 
 (defn checkup []
   "check if db needs to be upgraded and perform upgrade"
@@ -268,10 +278,6 @@
                                               offset)})
        (map #(.getValue (:json_agg %1)))
        (apply str)))
-
-(defn get-post-by-id [post-id]
-  "wrapper for hugsql query"
-  (get-json-results :query (get-post db-spec {:post_id post-id})))
 
 (defn create-new-post
   ([u c lf] (create-new-post u c lf nil))

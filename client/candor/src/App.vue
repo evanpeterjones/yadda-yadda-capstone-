@@ -5,7 +5,6 @@
       @myAccount="swapDialog('myAccount')"
       @newQRCode="swapDialog('QRCode')"
     />
-    <!--
     <div v-if="!location">
       <Splash 
         @newPostDialog="swapDialog('newPost')"/>
@@ -15,11 +14,12 @@
         @newPostDialog="swapDialog('newPost')" 
       />
     </div>
-    -->
-    <Post
+<!--
+      <Post
       content="Sorry, this fun social-media site was DDOS'd by someone in Korea, so I had to take it down, maybe one day I will revive it."
       :time=time
       />
+      -->
     <component 
       :is="CurrDialog"
       @closeDialog="swapDialog(null, null)"
@@ -147,5 +147,4 @@ html {
   border-radius: 62px;
   box-shadow: 0 0 5px #222222;
 }
-
 </style>
